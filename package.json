@@ -1,0 +1,25 @@
+{
+  "name": "52pjhelper",
+  "version": "1.0.0",
+  "description": "提升论坛管理效率",
+  "main": "index.js",
+  "scripts": {
+    "dev": "wxt",
+    "build": "wxt build",
+    "zip": "wxt zip",
+    "postinstall": "wxt prepare"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "AGPL-3.0-only",
+  "packageManager": "pnpm@10.28.0",
+  "devDependencies": {
+    "@wxt-dev/module-vue": "^1.0.3",
+    "prettier": "^3.8.0",
+    "typescript": "^5.9.3",
+    "wxt": "^0.20.13"
+  },
+  "dependencies": {
+    "vue": "^3.5.27"
+  }
+}
