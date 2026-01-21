@@ -6,6 +6,7 @@ declare global {
   const EffectScope: typeof import('vue').EffectScope
   const InvalidMatchPattern: typeof import('wxt/utils/match-patterns').InvalidMatchPattern
   const MatchPattern: typeof import('wxt/utils/match-patterns').MatchPattern
+  const QuickQueryManager: typeof import('D:/code/front-end/52pjhelper/src/utils/quickQuery').QuickQueryManager
   const applyNavConfig: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').applyNavConfig
   const browser: typeof import('wxt/browser').browser
   const computed: typeof import('vue').computed
@@ -119,6 +120,9 @@ declare global {
   // @ts-ignore
   export type { NavMenuConfig, UserNavConfig } from 'D:/code/front-end/52pjhelper/src/utils/navigationHider'
   import('D:/code/front-end/52pjhelper/src/utils/navigationHider')
+  // @ts-ignore
+  export type { QuickQueryManager } from 'D:/code/front-end/52pjhelper/src/utils/quickQuery'
+  import('D:/code/front-end/52pjhelper/src/utils/quickQuery')
 }
 // for vue template auto import
 import { UnwrapRef } from 'vue'
@@ -129,6 +133,7 @@ declare module 'vue' {
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
     readonly InvalidMatchPattern: UnwrapRef<typeof import('wxt/utils/match-patterns')['InvalidMatchPattern']>
     readonly MatchPattern: UnwrapRef<typeof import('wxt/utils/match-patterns')['MatchPattern']>
+    readonly QuickQueryManager: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/quickQuery')['QuickQueryManager']>
     readonly applyNavConfig: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['applyNavConfig']>
     readonly browser: UnwrapRef<typeof import('wxt/browser')['browser']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
