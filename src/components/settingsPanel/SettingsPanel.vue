@@ -1,30 +1,32 @@
 <template>
-  <div class="nav-console">
-    <!-- 选项卡头部 -->
-    <div class="tabs-header">
-      <div
+  <main class="settings-panel">
+    <!-- 选项卡导航 -->
+    <nav class="tabs-header" role="tablist">
+      <button
+        role="tab"
+        :aria-selected="activeTab === 'navigation'"
+        :tabindex="activeTab === 'navigation' ? 0 : -1"
         class="tab-item"
         :class="{ active: activeTab === 'navigation' }"
-        @click="activeTab = 'navigation'"
-      >
+        @click="activeTab = 'navigation'">
         导航菜单设置
-      </div>
-      <div
+      </button>
+      <button
+        role="tab"
+        :aria-selected="activeTab === 'quickQuery'"
+        :tabindex="activeTab === 'quickQuery' ? 0 : -1"
         class="tab-item"
         :class="{ active: activeTab === 'quickQuery' }"
-        @click="activeTab = 'quickQuery'"
-      >
-        便捷查询设置
-      </div>
-    </div>
+        @click="activeTab = 'quickQuery'">
+        更多设置
+      </button>
+    </nav>
 
     <!-- 选项卡内容 -->
     <div class="tabs-content">
       <!-- 导航菜单设置 -->
-      <div v-show="activeTab === 'navigation'" class="tab-panel">
-        <p class="description">
-          点击菜单按钮切换显示/隐藏状态，蓝色背景表示显示，灰色背景表示隐藏。
-        </p>
+      <section v-show="activeTab === 'navigation'" role="tabpanel" class="tab-panel" aria-labelledby="navigation-tab">
+        <p class="description">点击菜单按钮切换显示/隐藏状态，蓝色背景表示显示，灰色背景表示隐藏。</p>
 
         <div class="menu-grid">
           <button
@@ -32,44 +34,40 @@
             :key="menu.id"
             class="menu-btn"
             :class="{ 'is-hidden': isMenuHidden(menu.id) }"
-            @click="toggleMenu(menu.id)"
-          >
+            :aria-pressed="!isMenuHidden(menu.id)"
+            @click="toggleMenu(menu.id)">
             {{ menu.name }}
           </button>
         </div>
 
-        <div class="actions">
-          <button class="btn btn-secondary" @click="resetConfig">
-            重置为默认
-          </button>
-        </div>
-      </div>
+        <footer class="actions">
+          <button class="btn btn-secondary" @click="resetConfig">重置为默认</button>
+        </footer>
+      </section>
 
       <!-- 便捷查询设置 -->
-      <div v-show="activeTab === 'quickQuery'" class="tab-panel">
-        <p class="description">
-          鼠标移动到用户头像时，自动显示该用户的违规记录。
-        </p>
+      <section v-show="activeTab === 'quickQuery'" role="tabpanel" class="tab-panel" aria-labelledby="quickQuery-tab">
+        <p class="description">鼠标移动到用户头像时，自动显示该用户的违规记录。</p>
 
         <div class="toggle-container">
-          <div class="toggle-label">
+          <label class="toggle-label">
             <span>启用便捷查询</span>
             <div class="toggle-switch" @click.stop="toggleQuickQuery">
-              <input type="checkbox" :checked="quickQueryEnabled" disabled />
+              <input type="checkbox" :checked="quickQueryEnabled" disabled aria-label="启用便捷查询" />
               <span class="slider"></span>
             </div>
-          </div>
+          </label>
         </div>
-      </div>
+      </section>
     </div>
 
     <!-- 消息提示 -->
-    <div class="message-container">
-      <div v-if="message" class="message" :class="messageType">
+    <aside class="message-container" role="status" aria-live="polite">
+      <output v-if="message" class="message" :class="messageType">
         {{ message }}
-      </div>
-    </div>
-  </div>
+      </output>
+    </aside>
+  </main>
 </template>
 
 <script setup lang="ts">
@@ -146,10 +144,7 @@ const toggleQuickQuery = async () => {
 
       if (response.success) {
         quickQueryEnabled.value = response.enabled
-        showMessage(
-          quickQueryEnabled.value ? '便捷查询已启用' : '便捷查询已禁用',
-          'success'
-        )
+        showMessage(quickQueryEnabled.value ? '便捷查询已启用' : '便捷查询已禁用', 'success')
       } else {
         showMessage('切换便捷查询失败', 'error')
       }
@@ -193,7 +188,7 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.nav-console {
+.settings-panel {
   min-width: 350px;
   max-width: 400px;
   height: 450px;
@@ -204,8 +199,8 @@ onMounted(async () => {
 /* 选项卡头部 */
 .tabs-header {
   display: flex;
-  border-bottom: 2px solid #e4e7ed;
-  background-color: #f5f7fa;
+  border-bottom: 2px solid var(--border-color);
+  background-color: var(--bg-secondary);
 }
 
 .tab-item {
@@ -213,7 +208,7 @@ onMounted(async () => {
   padding: 12px 16px;
   text-align: center;
   font-size: 14px;
-  color: #606266;
+  color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.3s;
   border-bottom: 2px solid transparent;
@@ -222,15 +217,15 @@ onMounted(async () => {
 }
 
 .tab-item:hover {
-  color: #409eff;
-  background-color: #ecf5ff;
+  color: var(--primary-color);
+  background-color: var(--bg-hover);
 }
 
 .tab-item.active {
-  color: #409eff;
+  color: var(--primary-color);
   font-weight: 600;
-  border-bottom-color: #409eff;
-  background-color: white;
+  border-bottom-color: var(--primary-color);
+  background-color: var(--bg-primary);
 }
 
 /* 选项卡内容 */
@@ -257,7 +252,7 @@ onMounted(async () => {
 
 .description {
   margin: 0 0 20px 0;
-  color: #666;
+  color: var(--text-secondary);
   font-size: 14px;
   line-height: 1.6;
 }
@@ -271,9 +266,9 @@ onMounted(async () => {
 
 .menu-btn {
   padding: 8px 12px;
-  border: 1px solid #dcdfe6;
+  border: 1px solid var(--border-color-light);
   border-radius: 6px;
-  background-color: #409eff;
+  background-color: var(--primary-color);
   color: white;
   font-size: 14px;
   cursor: pointer;
@@ -282,19 +277,19 @@ onMounted(async () => {
 }
 
 .menu-btn:hover {
-  background-color: #66b1ff;
-  border-color: #66b1ff;
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
 }
 
 .menu-btn.is-hidden {
-  background-color: #f0f0f0;
-  color: #999;
-  border-color: #e4e7ed;
+  background-color: var(--menu-hidden-bg);
+  color: var(--text-tertiary);
+  border-color: var(--border-color);
 }
 
 .menu-btn.is-hidden:hover {
-  background-color: #e4e7ed;
-  border-color: #dcdee2;
+  background-color: var(--menu-hidden-hover);
+  border-color: var(--border-color-light);
 }
 
 .actions {
@@ -312,12 +307,12 @@ onMounted(async () => {
 }
 
 .btn-secondary {
-  background-color: #6c757d;
+  background-color: var(--btn-secondary-bg);
   color: white;
 }
 
 .btn-secondary:hover {
-  background-color: #5a6268;
+  background-color: var(--btn-secondary-hover);
 }
 
 .toggle-container {
@@ -331,18 +326,18 @@ onMounted(async () => {
   cursor: pointer;
   user-select: none;
   padding: 12px;
-  background-color: #f5f7fa;
+  background-color: var(--bg-secondary);
   border-radius: 8px;
   transition: background-color 0.2s;
 }
 
 .toggle-label:hover {
-  background-color: #ecf5ff;
+  background-color: var(--bg-hover);
 }
 
 .toggle-label span {
   font-size: 14px;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .toggle-switch {
@@ -364,7 +359,7 @@ onMounted(async () => {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
+  background-color: var(--toggle-bg);
   transition: 0.3s;
   border-radius: 24px;
 }
@@ -382,7 +377,7 @@ onMounted(async () => {
 }
 
 input:checked + .slider {
-  background-color: #409eff;
+  background-color: var(--primary-color);
 }
 
 input:checked + .slider:before {
@@ -413,14 +408,14 @@ input:checked + .slider:before {
 }
 
 .message.success {
-  background-color: #f0f9eb;
-  color: #67c23a;
-  border: 1px solid #e1f3d8;
+  background-color: var(--success-bg);
+  color: var(--success-color);
+  border: 1px solid var(--success-border);
 }
 
 .message.error {
-  background-color: #fef0f0;
-  color: #f56c6c;
-  border: 1px solid #fbc4c4;
+  background-color: var(--error-bg);
+  color: var(--error-color);
+  border: 1px solid var(--error-border);
 }
 </style>

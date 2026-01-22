@@ -81,15 +81,11 @@ export class QuickQueryManager {
    * 切换功能状态
    */
   public async toggle(): Promise<boolean> {
-    console.log('toggle() 调用前状态:', this.isEnabled)
     if (this.isEnabled) {
       await this.disable()
-      console.log('便捷查询功能已禁用')
     } else {
       await this.enable()
-      console.log('便捷查询功能已启用')
     }
-    console.log('toggle() 调用后状态:', this.isEnabled)
     return this.isEnabled
   }
 

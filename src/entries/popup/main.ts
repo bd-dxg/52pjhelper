@@ -1,6 +1,9 @@
 import { createApp } from 'vue'
-import NavConsole from '../../components/navConsole/NavConsole.vue'
-import './style.css'
+import App from './App.vue'
+import { initTheme } from '../../utils/themeManager'
 
-const app = createApp(NavConsole)
+// 初始化主题系统
+initTheme()
+
+const app = createApp(App)
 app.mount('#app')
