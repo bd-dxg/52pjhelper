@@ -40,6 +40,14 @@ pnpm zip
 ```
 将构建好的扩展打包成 ZIP 文件，便于分发和安装。
 
+### TypeScript 类型检查
+```bash
+npx tsc --noEmit
+```
+运行 TypeScript 编译器进行类型检查，不生成输出文件。
+
+**重要**: 在完成任何阶段性任务后，必须运行 `npx tsc --noEmit` 进行 TypeScript 类型检查，确保没有类型错误。
+
 ## 项目架构与核心功能
 
 ### 1. 架构概览
@@ -52,22 +60,41 @@ pnpm zip
 - **配置**: `wxt.config.ts` - WXT 框架配置
 - **样式**: 组件内联样式（Vue SFC scoped styles）
 
-### 2. 核心功能 - 导航菜单管理
+### 2. 核心功能
 
-#### 功能描述
+#### 2.1 导航菜单管理
+
+**功能描述**:
 - 允许用户在吾爱破解论坛上自定义显示/隐藏导航菜单
 - 配置通过浏览器 storage 本地存储
 - 支持实时切换显示/隐藏状态
 - 提供重置为默认配置功能
+
+#### 2.2 便捷查询
+
+**功能描述**:
+- 鼠标移动到用户头像时，自动显示该用户的违规记录
+- 支持启用/禁用功能切换
+- 配置通过浏览器 storage 本地存储
+
+#### 2.3 深色主题支持
+
+**功能描述**:
+- 自动检测系统主题（深色/浅色模式）
+- 实时响应系统主题变化
+- 使用 CSS 变量实现主题切换
 
 #### 主要文件
 
 | 文件 | 作用 |
 |------|------|
 | `src/utils/navigationHider.ts` | 导航菜单管理工具类，包含配置存储和 DOM 操作方法 |
-| `src/entries/contents.ts` | Content Script，在论坛页面注入并初始化导航隐藏功能 |
-| `src/entries/popup/main.ts` | Popup 入口文件，初始化 Vue 应用 |
-| `src/components/navConsole/NavConsole.vue` | 主 UI 组件，提供菜单显示/隐藏控制界面 |
+| `src/utils/quickQuery.ts` | 便捷查询管理工具类，处理用户违规记录查询 |
+| `src/utils/themeManager.ts` | 主题管理工具类，检测和应用系统主题 |
+| `src/entries/contents.ts` | Content Script，在论坛页面注入并初始化功能 |
+| `src/entries/popup/main.ts` | Popup 入口文件，初始化 Vue 应用和主题系统 |
+| `src/entries/popup/App.vue` | 根组件，挂载设置面板 |
+| `src/components/settingsPanel/SettingsPanel.vue` | 设置面板组件，提供导航菜单和便捷查询设置界面 |
 
 #### 核心接口与类型
 
@@ -102,7 +129,21 @@ const DEFAULT_NAV_MENUS: NavMenuConfig[] = [
 ]
 ```
 
-### 3. 消息通信机制
+### 3. 主题系统
+
+项目使用 CSS 变量实现主题切换，支持深色和浅色两种模式：
+
+**主题变量定义** (`src/entries/popup/index.html`):
+- 浅色主题：`:root` 中定义默认变量
+- 深色主题：`[data-theme='dark']` 中定义深色变量
+
+**主题管理** (`src/utils/themeManager.ts`):
+- `getCurrentTheme()`: 获取当前系统主题
+- `applyTheme(theme)`: 应用主题到 HTML 根元素
+- `watchThemeChange(callback)`: 监听系统主题变化
+- `initTheme()`: 初始化主题系统
+
+### 4. 消息通信机制
 
 - **Popup → Content Script**: 通过 `browser.tabs.sendMessage` 发送配置更新消息
 - **Content Script → Popup**: 监听消息并立即应用 DOM 更改
@@ -158,6 +199,32 @@ export default defineConfig({
 | 搜索内容 | **Grep 工具**  | `grep`、`rg`、`Select-String`              |
 
 **Bash 工具仅用于**: 包管理（`pnpm install`）、版本控制（`git status`）等系统命令
+
+## 开发工作流程
+
+### TypeScript 开发规范
+
+1. **类型检查优先**: 在修改或新增 TypeScript 文件后，必须使用 `npx tsc --noEmit` 进行类型检查
+2. **阶段性验证**: 完成任何功能模块或修复后，立即运行类型检查，不要等到最后
+3. **错误定位**: 遇到 TypeScript 相关问题时，首先运行 `npx tsc --noEmit` 获取准确的错误信息
+4. **构建验证**: 在提交代码前，运行 `pnpm build` 确保项目可以正常构建
+
+### 开发流程示例
+
+```bash
+# 1. 修改代码
+# 2. 运行类型检查
+npx tsc --noEmit
+
+# 3. 如果有错误，修复后再次检查
+npx tsc --noEmit
+
+# 4. 类型检查通过后，测试功能
+pnpm dev
+
+# 5. 功能测试通过后，构建项目
+pnpm build
+```
 
 ## Git 操作规范
 

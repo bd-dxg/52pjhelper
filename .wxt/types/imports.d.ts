@@ -8,6 +8,7 @@ declare global {
   const MatchPattern: typeof import('wxt/utils/match-patterns').MatchPattern
   const QuickQueryManager: typeof import('D:/code/front-end/52pjhelper/src/utils/quickQuery').QuickQueryManager
   const applyNavConfig: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').applyNavConfig
+  const applyTheme: typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager').applyTheme
   const browser: typeof import('wxt/browser').browser
   const computed: typeof import('vue').computed
   const createApp: typeof import('vue').createApp
@@ -26,9 +27,11 @@ declare global {
   const fakeBrowser: typeof import('wxt/testing').fakeBrowser
   const getCurrentInstance: typeof import('vue').getCurrentInstance
   const getCurrentScope: typeof import('vue').getCurrentScope
+  const getCurrentTheme: typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager').getCurrentTheme
   const getCurrentWatcher: typeof import('vue').getCurrentWatcher
   const h: typeof import('vue').h
   const hideMenu: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').hideMenu
+  const initTheme: typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager').initTheme
   const initializeNavigationHider: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').initializeNavigationHider
   const inject: typeof import('vue').inject
   const injectScript: typeof import('wxt/utils/inject-script').injectScript
@@ -84,6 +87,7 @@ declare global {
   const watchEffect: typeof import('vue').watchEffect
   const watchPostEffect: typeof import('vue').watchPostEffect
   const watchSyncEffect: typeof import('vue').watchSyncEffect
+  const watchThemeChange: typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager').watchThemeChange
 }
 // for type re-export
 declare global {
@@ -123,6 +127,9 @@ declare global {
   // @ts-ignore
   export type { QuickQueryManager } from 'D:/code/front-end/52pjhelper/src/utils/quickQuery'
   import('D:/code/front-end/52pjhelper/src/utils/quickQuery')
+  // @ts-ignore
+  export type { Theme } from 'D:/code/front-end/52pjhelper/src/utils/themeManager'
+  import('D:/code/front-end/52pjhelper/src/utils/themeManager')
 }
 // for vue template auto import
 import { UnwrapRef } from 'vue'
@@ -135,6 +142,7 @@ declare module 'vue' {
     readonly MatchPattern: UnwrapRef<typeof import('wxt/utils/match-patterns')['MatchPattern']>
     readonly QuickQueryManager: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/quickQuery')['QuickQueryManager']>
     readonly applyNavConfig: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['applyNavConfig']>
+    readonly applyTheme: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager')['applyTheme']>
     readonly browser: UnwrapRef<typeof import('wxt/browser')['browser']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
     readonly createApp: UnwrapRef<typeof import('vue')['createApp']>
@@ -153,9 +161,11 @@ declare module 'vue' {
     readonly fakeBrowser: UnwrapRef<typeof import('wxt/testing')['fakeBrowser']>
     readonly getCurrentInstance: UnwrapRef<typeof import('vue')['getCurrentInstance']>
     readonly getCurrentScope: UnwrapRef<typeof import('vue')['getCurrentScope']>
+    readonly getCurrentTheme: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager')['getCurrentTheme']>
     readonly getCurrentWatcher: UnwrapRef<typeof import('vue')['getCurrentWatcher']>
     readonly h: UnwrapRef<typeof import('vue')['h']>
     readonly hideMenu: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['hideMenu']>
+    readonly initTheme: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager')['initTheme']>
     readonly initializeNavigationHider: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['initializeNavigationHider']>
     readonly inject: UnwrapRef<typeof import('vue')['inject']>
     readonly injectScript: UnwrapRef<typeof import('wxt/utils/inject-script')['injectScript']>
@@ -211,5 +221,6 @@ declare module 'vue' {
     readonly watchEffect: UnwrapRef<typeof import('vue')['watchEffect']>
     readonly watchPostEffect: UnwrapRef<typeof import('vue')['watchPostEffect']>
     readonly watchSyncEffect: UnwrapRef<typeof import('vue')['watchSyncEffect']>
+    readonly watchThemeChange: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager')['watchThemeChange']>
   }
 }
