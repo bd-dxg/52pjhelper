@@ -1,5 +1,23 @@
 <template>
   <main class="settings-panel">
+    <!-- 用户信息显示区 -->
+    <header class="user-info-header">
+      <div class="user-avatar">
+        <img v-if="userInfo.avatar" :src="userInfo.avatar" :alt="userInfo.username + ' 的头像'" />
+        <svg v-else viewBox="0 0 40 40" fill="currentColor">
+          <circle cx="20" cy="20" r="20" fill="var(--bg-secondary)" />
+          <circle cx="20" cy="15" r="8" fill="var(--text-secondary)" />
+          <path d="M10 32c0-8 10-13 10-13s10 5 10 13" stroke="var(--text-secondary)" stroke-width="3" fill="none" stroke-linecap="round" />
+        </svg>
+      </div>
+      <div class="user-details">
+        <div class="username">{{ userInfo.username }}</div>
+        <div class="user-level" :class="{ 'not-logged': !userInfo.isLoggedIn }">
+          {{ userInfo.level }}
+        </div>
+      </div>
+    </header>
+
     <!-- 选项卡导航 -->
     <nav class="tabs-header" role="tablist">
       <button
@@ -47,15 +65,53 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import NavigationSettings from '@com/NavigationSettings.vue'
 import QuickQueryToggle from '@com/QuickQueryToggle.vue'
 import QuickReplyToggle from '@com/QuickReplyToggle.vue'
 import FloorHighlighterToggle from '@com/FloorHighlighterToggle.vue'
+import type { UserInfo } from '@utils/userInfo'
+
+// 用户信息
+const userInfo = ref<UserInfo>({
+  username: '未登录',
+  level: '游客',
+  avatar: '',
+  isLoggedIn: false,
+  permissions: {
+    isAdmin: false,
+    isModerator: false,
+    isVIP: false,
+    isRegular: false
+  }
+})
 
 const message = ref('')
 const messageType = ref('')
 const activeTab = ref<'navigation' | 'quickQuery'>('navigation')
+
+// 从 content script 获取用户信息
+const updateUserInfo = async () => {
+  try {
+    const [tab] = await browser.tabs.query({ active: true, currentWindow: true })
+    if (tab.id) {
+      const response = await browser.tabs.sendMessage(tab.id, {
+        type: 'GET_USER_INFO'
+      })
+
+      if (response && response.success) {
+        userInfo.value = response.data
+      }
+    }
+  } catch (error) {
+    console.error('获取用户信息失败:', error)
+  }
+}
+
+// 组件挂载时获取用户信息
+onMounted(() => {
+  updateUserInfo()
+})
 
 // 显示消息
 const showMessage = (text: string, type: 'success' | 'error' = 'success') => {
@@ -74,6 +130,67 @@ const showMessage = (text: string, type: 'success' | 'error' = 'success') => {
   height: 550px;
   display: flex;
   flex-direction: column;
+}
+
+/* 用户信息头部 */
+.user-info-header {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  gap: 12px;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: var(--bg-secondary);
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-avatar svg {
+  width: 100%;
+  height: 100%;
+}
+
+.user-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.username {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-level {
+  font-size: 12px;
+  color: var(--text-secondary);
+  background-color: var(--bg-primary);
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.user-level.not-logged {
+  color: var(--error-color);
+  background-color: var(--error-bg);
 }
 
 /* 选项卡头部 */

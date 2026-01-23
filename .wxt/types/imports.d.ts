@@ -31,6 +31,7 @@ declare global {
   const getCurrentScope: typeof import('vue').getCurrentScope
   const getCurrentTheme: typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager').getCurrentTheme
   const getCurrentWatcher: typeof import('vue').getCurrentWatcher
+  const getUserInfo: typeof import('D:/code/front-end/52pjhelper/src/utils/userInfo').getUserInfo
   const h: typeof import('vue').h
   const hideMenu: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').hideMenu
   const initQuickReply: typeof import('D:/code/front-end/52pjhelper/src/utils/quickReply').initQuickReply
@@ -93,6 +94,7 @@ declare global {
   const watchPostEffect: typeof import('vue').watchPostEffect
   const watchSyncEffect: typeof import('vue').watchSyncEffect
   const watchThemeChange: typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager').watchThemeChange
+  const watchUserInfo: typeof import('D:/code/front-end/52pjhelper/src/utils/userInfo').watchUserInfo
 }
 // for type re-export
 declare global {
@@ -138,6 +140,9 @@ declare global {
   // @ts-ignore
   export type { Theme } from 'D:/code/front-end/52pjhelper/src/utils/themeManager'
   import('D:/code/front-end/52pjhelper/src/utils/themeManager')
+  // @ts-ignore
+  export type { UserInfo } from 'D:/code/front-end/52pjhelper/src/utils/userInfo'
+  import('D:/code/front-end/52pjhelper/src/utils/userInfo')
 }
 // for vue template auto import
 import { UnwrapRef } from 'vue'
@@ -173,6 +178,7 @@ declare module 'vue' {
     readonly getCurrentScope: UnwrapRef<typeof import('vue')['getCurrentScope']>
     readonly getCurrentTheme: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager')['getCurrentTheme']>
     readonly getCurrentWatcher: UnwrapRef<typeof import('vue')['getCurrentWatcher']>
+    readonly getUserInfo: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userInfo')['getUserInfo']>
     readonly h: UnwrapRef<typeof import('vue')['h']>
     readonly hideMenu: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['hideMenu']>
     readonly initQuickReply: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/quickReply')['initQuickReply']>
@@ -235,5 +241,6 @@ declare module 'vue' {
     readonly watchPostEffect: UnwrapRef<typeof import('vue')['watchPostEffect']>
     readonly watchSyncEffect: UnwrapRef<typeof import('vue')['watchSyncEffect']>
     readonly watchThemeChange: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager')['watchThemeChange']>
+    readonly watchUserInfo: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userInfo')['watchUserInfo']>
   }
 }

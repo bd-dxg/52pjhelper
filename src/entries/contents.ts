@@ -2,6 +2,7 @@ import { initializeNavigationHider, applyNavConfig } from '../utils/navigationHi
 import { QuickQueryManager } from '../utils/quickQuery'
 import { loadQuickReplyConfig, saveQuickReplyConfig, initQuickReply, cleanupQuickReply } from '../utils/quickReply'
 import { FloorHighlighter } from '../utils/floorHighlighter'
+import { getUserInfo } from '../utils/userInfo'
 
 // 防止重复初始化的标记
 const INIT_FLAG = '__52pj_helper_initialized__'
@@ -125,6 +126,12 @@ export default defineContentScript({
         } else {
           sendResponse({ success: false, message: 'FloorHighlighter not initialized' })
         }
+        return false
+      }
+
+      if (message.type === 'GET_USER_INFO') {
+        const userInfo = getUserInfo()
+        sendResponse({ success: true, data: userInfo })
         return false
       }
 
