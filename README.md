@@ -7,6 +7,8 @@
 - **导航菜单管理**: 允许用户自定义显示/隐藏论坛顶部导航菜单
 - **便捷查询**: 鼠标移动到用户头像时，自动显示该用户的违规记录
 - **深色主题支持**: 自动检测并适配系统主题（深色/浅色模式）
+- **快捷回复**: 在举报处理页面添加快捷回复短语下拉框
+- **楼层高亮**: 根据URL参数高亮指定楼层，提高管理效率
 - **实时预览**: 点击按钮实时切换菜单显示/隐藏状态
 - **本地存储**: 配置自动保存到浏览器本地存储
 - **一键重置**: 支持恢复默认导航菜单配置
@@ -50,8 +52,10 @@
 52pjhelper/
 ├── src/
 │   ├── components/              # Vue 3 组件目录
-│   │   └── settingsPanel/      # 设置面板组件
-│   │       └── SettingsPanel.vue
+│   │   ├── NavigationSettings.vue     # 导航菜单设置组件
+│   │   ├── QuickQueryToggle.vue       # 便捷查询功能开关组件
+│   │   ├── QuickReplyToggle.vue       # 快捷回复功能开关组件
+│   │   └── FloorHighlighterToggle.vue # 楼层高亮功能开关组件
 │   ├── configs/                 # 配置文件目录
 │   │   ├── navigation.json     # 导航菜单配置
 │   │   ├── quickReply.json     # 快捷回复配置
@@ -62,6 +66,8 @@
 │   │       ├── App.vue         # 根组件
 │   │       ├── main.ts         # 入口文件
 │   │       └── index.html      # HTML 模板
+│   ├── pages/                  # 页面组件目录
+│   │   └── SettingsPanel.vue   # 设置面板主组件（容器）
 │   └── utils/                  # 工具类目录
 │       ├── navigationHider.ts  # 导航菜单管理工具
 │       ├── quickQuery.ts       # 便捷查询管理工具

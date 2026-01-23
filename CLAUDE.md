@@ -22,6 +22,7 @@ pnpm dev          # 启动开发服务器
 pnpm build        # 构建生产版本
 pnpm zip          # 打包扩展
 npx tsc --noEmit  # TypeScript 类型检查
+npx vue-tsc --noEmit # vue3+ts 类型检查
 ```
 
 ## 项目架构
@@ -37,33 +38,52 @@ npx tsc --noEmit  # TypeScript 类型检查
 ## 核心功能
 
 ### 1. 导航菜单管理
+
 - 允许用户在吾爱破解论坛上自定义显示/隐藏导航菜单
 - 配置通过浏览器 storage 本地存储
 - 支持实时切换显示/隐藏状态
 - 提供重置为默认配置功能
 
 ### 2. 便捷查询
+
 - 鼠标移动到用户头像时，自动显示该用户的违规记录
 - 支持启用/禁用功能切换
 - 配置通过浏览器 storage 本地存储
 
 ### 3. 深色主题支持
+
 - 自动检测系统主题（深色/浅色模式）
 - 实时响应系统主题变化
 - 使用 CSS 变量实现主题切换
 
+### 4. 快捷回复
+
+- 在举报处理页面添加快捷回复短语下拉框
+- 支持启用/禁用功能切换
+- 配置通过浏览器 storage 本地存储
+
+### 5. 楼层高亮
+
+- 根据URL参数高亮指定楼层
+- 提高管理效率
+- 支持启用/禁用功能切换
+
 ## 主要文件
 
-| 文件 | 作用 |
-|------|------|
-| `src/configs/navigation.json` | 导航菜单配置 |
-| `src/configs/quickReply.json` | 快捷回复配置 |
-| `src/configs/quickQuery.json` | 便捷查询配置 |
-| `src/utils/navigationHider.ts` | 导航菜单管理工具类 |
-| `src/utils/quickQuery.ts` | 便捷查询管理工具类 |
-| `src/utils/themeManager.ts` | 主题管理工具类 |
-| `src/entries/contents.ts` | Content Script，初始化功能 |
-| `src/pages/SettingsPanel.vue` | 设置面板组件 |
+| 文件                           | 作用                       |
+| ------------------------------ | -------------------------- |
+| `src/configs/navigation.json`  | 导航菜单配置               |
+| `src/configs/quickReply.json`  | 快捷回复配置               |
+| `src/configs/quickQuery.json`  | 便捷查询配置               |
+| `src/utils/navigationHider.ts` | 导航菜单管理工具类         |
+| `src/utils/quickQuery.ts`      | 便捷查询管理工具类         |
+| `src/utils/themeManager.ts`    | 主题管理工具类             |
+| `src/entries/contents.ts`      | Content Script，初始化功能 |
+| `src/pages/SettingsPanel.vue`  | 设置面板组件（主容器）     |
+| `src/components/NavigationSettings.vue` | 导航菜单设置组件 |
+| `src/components/QuickQueryToggle.vue` | 便捷查询功能开关组件 |
+| `src/components/QuickReplyToggle.vue` | 快捷回复功能开关组件 |
+| `src/components/FloorHighlighterToggle.vue` | 楼层高亮功能开关组件 |
 
 ## 路径别名配置
 
