@@ -3,49 +3,34 @@
  * 用于管理和控制论坛导航菜单的显示/隐藏
  */
 
-// 导航菜单配置接口
+import navConfig from '@/configs/navigation.json'
+
 export interface NavMenuConfig {
   id: string
   name: string
   selector: string
 }
 
-// 用户配置接口
 export interface UserNavConfig {
   hiddenMenus: string[]
 }
 
-// 默认导航菜单配置
-export const DEFAULT_NAV_MENUS: NavMenuConfig[] = [
-  { id: 'mn_portal', name: '门户', selector: '#mn_portal' },
-  { id: 'mn_forum', name: '网站', selector: '#mn_forum' },
-  { id: 'mn_Na063', name: '新帖', selector: '#mn_Na063' },
-  { id: 'mn_forum_11', name: '专辑', selector: '#mn_forum_11' },
-  { id: 'mn_home_4', name: '家园', selector: '#mn_home_4' },
-  { id: 'mn_N12a7', name: '排行榜', selector: '#mn_N12a7' },
-  { id: 'mn_N05be', name: '总版规', selector: '#mn_N05be' },
-  { id: 'mn_N34c9', name: '投诉举报', selector: '#mn_N34c9' },
-  { id: 'mn_Na678', name: '爱盘', selector: '#mn_Na678' },
-  { id: 'mn_Ndb2c', name: '管理', selector: '#mn_Ndb2c' },
-  { id: 'mn_N0a2c', name: '帮助', selector: '#mn_N0a2c' },
-]
-
-// 存储键名
-const STORAGE_KEY = '52pjhelper_nav_config'
+export const DEFAULT_NAV_MENUS: NavMenuConfig[] = navConfig.menus
+const NAV_STORAGE_KEY = navConfig.storageKey
 
 /**
  * 保存用户配置到存储
  */
 export async function saveNavConfig(config: UserNavConfig): Promise<void> {
-  await browser.storage.local.set({ [STORAGE_KEY]: config })
+  await browser.storage.local.set({ [NAV_STORAGE_KEY]: config })
 }
 
 /**
  * 从存储加载用户配置
  */
 export async function loadNavConfig(): Promise<UserNavConfig> {
-  const result = await browser.storage.local.get(STORAGE_KEY)
-  const config = result[STORAGE_KEY]
+  const result = await browser.storage.local.get(NAV_STORAGE_KEY)
+  const config = result[NAV_STORAGE_KEY]
 
   // 严格验证配置格式，确保 hiddenMenus 是数组类型
   if (config &&

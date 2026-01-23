@@ -3,7 +3,9 @@
  * 功能：鼠标移动到头像时显示用户违规记录
  */
 
-const STORAGE_KEY = 'quickQueryEnabled'
+import quickQueryConfig from '@/configs/quickQuery.json'
+
+const QUICK_QUERY_STORAGE_KEY = quickQueryConfig.storageKey
 
 /**
  * 便捷查询管理类
@@ -33,8 +35,8 @@ export class QuickQueryManager {
    */
   private async loadConfig(): Promise<void> {
     try {
-      const result = await browser.storage.local.get(STORAGE_KEY)
-      this.isEnabled = (result[STORAGE_KEY] as boolean | undefined) ?? false
+      const result = await browser.storage.local.get(QUICK_QUERY_STORAGE_KEY)
+      this.isEnabled = (result[QUICK_QUERY_STORAGE_KEY] as boolean | undefined) ?? false
     } catch (error) {
       console.error('加载便捷查询配置失败:', error)
       this.isEnabled = false
@@ -46,7 +48,7 @@ export class QuickQueryManager {
    */
   private async saveConfig(): Promise<void> {
     try {
-      await browser.storage.local.set({ [STORAGE_KEY]: this.isEnabled })
+      await browser.storage.local.set({ [QUICK_QUERY_STORAGE_KEY]: this.isEnabled })
     } catch (error) {
       console.error('保存便捷查询配置失败:', error)
     }

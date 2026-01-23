@@ -1,0 +1,16 @@
+{
+  "storageKey": "52pjhelper_nav_config",
+  "menus": [
+    { "id": "mn_portal", "name": "门户", "selector": "#mn_portal" },
+    { "id": "mn_forum", "name": "网站", "selector": "#mn_forum" },
+    { "id": "mn_Na063", "name": "新帖", "selector": "#mn_Na063" },
+    { "id": "mn_forum_11", "name": "专辑", "selector": "#mn_forum_11" },
+    { "id": "mn_home_4", "name": "家园", "selector": "#mn_home_4" },
+    { "id": "mn_N12a7", "name": "排行榜", "selector": "#mn_N12a7" },
+    { "id": "mn_N05be", "name": "总版规", "selector": "#mn_N05be" },
+    { "id": "mn_N34c9", "name": "投诉举报", "selector": "#mn_N34c9" },
+    { "id": "mn_Na678", "name": "爱盘", "selector": "#mn_Na678" },
+    { "id": "mn_Ndb2c", "name": "管理", "selector": "#mn_Ndb2c" },
+    { "id": "mn_N0a2c", "name": "帮助", "selector": "#mn_N0a2c" }
+  ]
+}

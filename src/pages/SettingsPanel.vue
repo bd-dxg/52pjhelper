@@ -58,6 +58,18 @@
             </div>
           </label>
         </div>
+
+        <p class="description">在举报处理页面添加快捷回复短语下拉框，提高管理效率。</p>
+
+        <div class="toggle-container">
+          <label class="toggle-label">
+            <span>启用快捷回复</span>
+            <div class="toggle-switch" @click.stop="toggleQuickReply">
+              <input type="checkbox" :checked="quickReplyEnabled" disabled aria-label="启用快捷回复" />
+              <span class="slider"></span>
+            </div>
+          </label>
+        </div>
       </section>
     </div>
 
@@ -79,6 +91,7 @@ const hiddenMenus = ref<string[]>([])
 const message = ref('')
 const messageType = ref('')
 const quickQueryEnabled = ref(false)
+const quickReplyEnabled = ref(false)
 const activeTab = ref<'navigation' | 'quickQuery'>('navigation')
 
 // 检查菜单是否被隐藏
@@ -149,6 +162,33 @@ const toggleQuickQuery = async () => {
   }
 }
 
+// 切换快捷回复功能
+const toggleQuickReply = async () => {
+  try {
+    const [tab] = await browser.tabs.query({ active: true, currentWindow: true })
+    if (tab.id) {
+      try {
+        const response = await browser.tabs.sendMessage(tab.id, {
+          type: 'TOGGLE_QUICK_REPLY',
+        })
+
+        if (response && response.success) {
+          quickReplyEnabled.value = response.enabled
+          showMessage(quickReplyEnabled.value ? '快捷回复已启用' : '快捷回复已禁用', 'success')
+        } else {
+          showMessage('切换快捷回复失败', 'error')
+        }
+      } catch (error) {
+        console.error('Message error:', error)
+        showMessage('无法连接到页面，请刷新页面后重试', 'error')
+      }
+    }
+  } catch (error) {
+    console.error('Tab query error:', error)
+    showMessage('切换快捷回复失败', 'error')
+  }
+}
+
 // 显示消息
 const showMessage = (text: string, type: 'success' | 'error' = 'success') => {
   message.value = text
@@ -167,12 +207,24 @@ onMounted(async () => {
     // 获取便捷查询状态
     const [tab] = await browser.tabs.query({ active: true, currentWindow: true })
     if (tab.id) {
-      const response = await browser.tabs.sendMessage(tab.id, {
-        type: 'GET_QUICK_QUERY_STATUS',
-      })
+      try {
+        const quickQueryResponse = await browser.tabs.sendMessage(tab.id, {
+          type: 'GET_QUICK_QUERY_STATUS',
+        })
 
-      if (response.success) {
-        quickQueryEnabled.value = response.enabled
+        if (quickQueryResponse && quickQueryResponse.success) {
+          quickQueryEnabled.value = quickQueryResponse.enabled
+        }
+
+        const quickReplyResponse = await browser.tabs.sendMessage(tab.id, {
+          type: 'GET_QUICK_REPLY_STATUS',
+        })
+
+        if (quickReplyResponse && quickReplyResponse.success) {
+          quickReplyEnabled.value = quickReplyResponse.enabled
+        }
+      } catch (error) {
+        console.error('Failed to get status from content script:', error)
       }
     }
   } catch (error) {
@@ -209,6 +261,8 @@ onMounted(async () => {
   border-bottom: 2px solid transparent;
   margin-bottom: -2px;
   user-select: none;
+  background-color: var(--bg-secondary);
+  border: none;
 }
 
 .tab-item:hover {
