@@ -70,6 +70,18 @@
             </div>
           </label>
         </div>
+
+        <p class="description">根据URL参数高亮指定楼层，提高管理效率。</p>
+
+        <div class="toggle-container">
+          <label class="toggle-label">
+            <span>启用楼层高亮</span>
+            <div class="toggle-switch" @click.stop="toggleFloorHighlighter">
+              <input type="checkbox" :checked="floorHighlighterEnabled" disabled aria-label="启用楼层高亮" />
+              <span class="slider"></span>
+            </div>
+          </label>
+        </div>
       </section>
     </div>
 
@@ -92,6 +104,7 @@ const message = ref('')
 const messageType = ref('')
 const quickQueryEnabled = ref(false)
 const quickReplyEnabled = ref(false)
+const floorHighlighterEnabled = ref(false)
 const activeTab = ref<'navigation' | 'quickQuery'>('navigation')
 
 // 检查菜单是否被隐藏
@@ -189,6 +202,33 @@ const toggleQuickReply = async () => {
   }
 }
 
+// 切换楼层高亮功能
+const toggleFloorHighlighter = async () => {
+  try {
+    const [tab] = await browser.tabs.query({ active: true, currentWindow: true })
+    if (tab.id) {
+      try {
+        const response = await browser.tabs.sendMessage(tab.id, {
+          type: 'TOGGLE_FLOOR_HIGHLIGHTER',
+        })
+
+        if (response && response.success) {
+          floorHighlighterEnabled.value = response.enabled
+          showMessage(floorHighlighterEnabled.value ? '楼层高亮已启用' : '楼层高亮已禁用', 'success')
+        } else {
+          showMessage('切换楼层高亮失败', 'error')
+        }
+      } catch (error) {
+        console.error('Message error:', error)
+        showMessage('无法连接到页面，请刷新页面后重试', 'error')
+      }
+    }
+  } catch (error) {
+    console.error('Tab query error:', error)
+    showMessage('切换楼层高亮失败', 'error')
+  }
+}
+
 // 显示消息
 const showMessage = (text: string, type: 'success' | 'error' = 'success') => {
   message.value = text
@@ -223,6 +263,14 @@ onMounted(async () => {
         if (quickReplyResponse && quickReplyResponse.success) {
           quickReplyEnabled.value = quickReplyResponse.enabled
         }
+
+        const floorHighlighterResponse = await browser.tabs.sendMessage(tab.id, {
+          type: 'GET_FLOOR_HIGHLIGHTER_STATUS',
+        })
+
+        if (floorHighlighterResponse && floorHighlighterResponse.success) {
+          floorHighlighterEnabled.value = floorHighlighterResponse.enabled
+        }
       } catch (error) {
         console.error('Failed to get status from content script:', error)
       }
@@ -238,7 +286,7 @@ onMounted(async () => {
 .settings-panel {
   min-width: 350px;
   max-width: 400px;
-  height: 450px;
+  height: 550px;
   display: flex;
   flex-direction: column;
 }

@@ -1,6 +1,7 @@
 import { initializeNavigationHider, applyNavConfig } from '../utils/navigationHider'
 import { QuickQueryManager } from '../utils/quickQuery'
 import { loadQuickReplyConfig, saveQuickReplyConfig, initQuickReply, cleanupQuickReply } from '../utils/quickReply'
+import { FloorHighlighter } from '../utils/floorHighlighter'
 
 // 防止重复初始化的标记
 const INIT_FLAG = '__52pj_helper_initialized__'
@@ -8,6 +9,7 @@ const INIT_FLAG = '__52pj_helper_initialized__'
 // 创建便捷查询管理器实例
 let quickQueryManager: QuickQueryManager | null = null
 let quickReplyEnabled = false
+let floorHighlighter: FloorHighlighter | null = null
 
 export default defineContentScript({
   matches: ['https://www.52pojie.cn/*'],
@@ -34,6 +36,9 @@ export default defineContentScript({
         initQuickReply()
       }
     })
+
+    // 初始化楼层高亮功能
+    floorHighlighter = new FloorHighlighter()
 
     // 监听来自 popup 的消息
     browser.runtime.onMessage.addListener((message, _, sendResponse) => {
@@ -92,6 +97,34 @@ export default defineContentScript({
 
       if (message.type === 'GET_QUICK_REPLY_STATUS') {
         sendResponse({ success: true, enabled: quickReplyEnabled })
+        return false
+      }
+
+      if (message.type === 'TOGGLE_FLOOR_HIGHLIGHTER') {
+        if (floorHighlighter) {
+          floorHighlighter
+            .toggle()
+            .then(enabled => {
+              sendResponse({ success: true, enabled })
+            })
+            .catch(error => {
+              console.error('Toggle floor highlighter failed:', error)
+              sendResponse({ success: false, message: 'Toggle failed' })
+            })
+          return true // 异步响应，保持端口开放
+        } else {
+          sendResponse({ success: false, message: 'FloorHighlighter not initialized' })
+          return false
+        }
+      }
+
+      if (message.type === 'GET_FLOOR_HIGHLIGHTER_STATUS') {
+        if (floorHighlighter) {
+          const enabled = floorHighlighter.getStatus()
+          sendResponse({ success: true, enabled })
+        } else {
+          sendResponse({ success: false, message: 'FloorHighlighter not initialized' })
+        }
         return false
       }
 

@@ -4,6 +4,7 @@ declare global {
   const ContentScriptContext: typeof import('wxt/utils/content-script-context').ContentScriptContext
   const DEFAULT_NAV_MENUS: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').DEFAULT_NAV_MENUS
   const EffectScope: typeof import('vue').EffectScope
+  const FloorHighlighter: typeof import('D:/code/front-end/52pjhelper/src/utils/floorHighlighter').FloorHighlighter
   const InvalidMatchPattern: typeof import('wxt/utils/match-patterns').InvalidMatchPattern
   const MatchPattern: typeof import('wxt/utils/match-patterns').MatchPattern
   const QuickQueryManager: typeof import('D:/code/front-end/52pjhelper/src/utils/quickQuery').QuickQueryManager
@@ -126,6 +127,9 @@ declare global {
   export type { Component, Slot, Slots, ComponentPublicInstance, ComputedRef, DirectiveBinding, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, ShallowRef, MaybeRef, MaybeRefOrGetter, VNode, WritableComputedRef } from 'vue'
   import('vue')
   // @ts-ignore
+  export type { FloorHighlighter } from 'D:/code/front-end/52pjhelper/src/utils/floorHighlighter'
+  import('D:/code/front-end/52pjhelper/src/utils/floorHighlighter')
+  // @ts-ignore
   export type { NavMenuConfig, UserNavConfig } from 'D:/code/front-end/52pjhelper/src/utils/navigationHider'
   import('D:/code/front-end/52pjhelper/src/utils/navigationHider')
   // @ts-ignore
@@ -142,6 +146,7 @@ declare module 'vue' {
     readonly ContentScriptContext: UnwrapRef<typeof import('wxt/utils/content-script-context')['ContentScriptContext']>
     readonly DEFAULT_NAV_MENUS: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['DEFAULT_NAV_MENUS']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
+    readonly FloorHighlighter: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/floorHighlighter')['FloorHighlighter']>
     readonly InvalidMatchPattern: UnwrapRef<typeof import('wxt/utils/match-patterns')['InvalidMatchPattern']>
     readonly MatchPattern: UnwrapRef<typeof import('wxt/utils/match-patterns')['MatchPattern']>
     readonly QuickQueryManager: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/quickQuery')['QuickQueryManager']>
