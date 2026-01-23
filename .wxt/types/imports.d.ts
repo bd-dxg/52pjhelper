@@ -10,6 +10,7 @@ declare global {
   const applyNavConfig: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').applyNavConfig
   const applyTheme: typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager').applyTheme
   const browser: typeof import('wxt/browser').browser
+  const cleanupQuickReply: typeof import('D:/code/front-end/52pjhelper/src/utils/quickReply').cleanupQuickReply
   const computed: typeof import('vue').computed
   const createApp: typeof import('vue').createApp
   const createIframeUi: typeof import('wxt/utils/content-script-ui/iframe').createIframeUi
@@ -31,6 +32,7 @@ declare global {
   const getCurrentWatcher: typeof import('vue').getCurrentWatcher
   const h: typeof import('vue').h
   const hideMenu: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').hideMenu
+  const initQuickReply: typeof import('D:/code/front-end/52pjhelper/src/utils/quickReply').initQuickReply
   const initTheme: typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager').initTheme
   const initializeNavigationHider: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').initializeNavigationHider
   const inject: typeof import('vue').inject
@@ -41,6 +43,7 @@ declare global {
   const isRef: typeof import('vue').isRef
   const isShallow: typeof import('vue').isShallow
   const loadNavConfig: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').loadNavConfig
+  const loadQuickReplyConfig: typeof import('D:/code/front-end/52pjhelper/src/utils/quickReply').loadQuickReplyConfig
   const markRaw: typeof import('vue').markRaw
   const nextTick: typeof import('vue').nextTick
   const onActivated: typeof import('vue').onActivated
@@ -63,6 +66,7 @@ declare global {
   const ref: typeof import('vue').ref
   const resolveComponent: typeof import('vue').resolveComponent
   const saveNavConfig: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').saveNavConfig
+  const saveQuickReplyConfig: typeof import('D:/code/front-end/52pjhelper/src/utils/quickReply').saveQuickReplyConfig
   const shallowReactive: typeof import('vue').shallowReactive
   const shallowReadonly: typeof import('vue').shallowReadonly
   const shallowRef: typeof import('vue').shallowRef
@@ -144,6 +148,7 @@ declare module 'vue' {
     readonly applyNavConfig: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['applyNavConfig']>
     readonly applyTheme: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager')['applyTheme']>
     readonly browser: UnwrapRef<typeof import('wxt/browser')['browser']>
+    readonly cleanupQuickReply: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/quickReply')['cleanupQuickReply']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
     readonly createApp: UnwrapRef<typeof import('vue')['createApp']>
     readonly createIframeUi: UnwrapRef<typeof import('wxt/utils/content-script-ui/iframe')['createIframeUi']>
@@ -165,6 +170,7 @@ declare module 'vue' {
     readonly getCurrentWatcher: UnwrapRef<typeof import('vue')['getCurrentWatcher']>
     readonly h: UnwrapRef<typeof import('vue')['h']>
     readonly hideMenu: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['hideMenu']>
+    readonly initQuickReply: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/quickReply')['initQuickReply']>
     readonly initTheme: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager')['initTheme']>
     readonly initializeNavigationHider: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['initializeNavigationHider']>
     readonly inject: UnwrapRef<typeof import('vue')['inject']>
@@ -175,6 +181,7 @@ declare module 'vue' {
     readonly isRef: UnwrapRef<typeof import('vue')['isRef']>
     readonly isShallow: UnwrapRef<typeof import('vue')['isShallow']>
     readonly loadNavConfig: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['loadNavConfig']>
+    readonly loadQuickReplyConfig: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/quickReply')['loadQuickReplyConfig']>
     readonly markRaw: UnwrapRef<typeof import('vue')['markRaw']>
     readonly nextTick: UnwrapRef<typeof import('vue')['nextTick']>
     readonly onActivated: UnwrapRef<typeof import('vue')['onActivated']>
@@ -197,6 +204,7 @@ declare module 'vue' {
     readonly ref: UnwrapRef<typeof import('vue')['ref']>
     readonly resolveComponent: UnwrapRef<typeof import('vue')['resolveComponent']>
     readonly saveNavConfig: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['saveNavConfig']>
+    readonly saveQuickReplyConfig: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/quickReply')['saveQuickReplyConfig']>
     readonly shallowReactive: UnwrapRef<typeof import('vue')['shallowReactive']>
     readonly shallowReadonly: UnwrapRef<typeof import('vue')['shallowReadonly']>
     readonly shallowRef: UnwrapRef<typeof import('vue')['shallowRef']>

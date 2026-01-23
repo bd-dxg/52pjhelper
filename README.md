@@ -52,6 +52,10 @@
 │   ├── components/              # Vue 3 组件目录
 │   │   └── settingsPanel/      # 设置面板组件
 │   │       └── SettingsPanel.vue
+│   ├── configs/                 # 配置文件目录
+│   │   ├── navigation.json     # 导航菜单配置
+│   │   ├── quickReply.json     # 快捷回复配置
+│   │   └── quickQuery.json     # 便捷查询配置
 │   ├── entries/                 # 入口文件目录
 │   │   ├── contents.ts         # Content Script（页面注入脚本）
 │   │   └── popup/              # Popup 页面入口
@@ -63,18 +67,22 @@
 │       ├── quickQuery.ts       # 便捷查询管理工具
 │       └── themeManager.ts     # 主题管理工具
 ├── public/                     # 静态资源
+│   └── images/                 # 扩展图标
 ├── dist/                       # 编译输出目录
-├── wxt.config.ts               # WXT 框架配置
+├── wxt.config.ts               # WXT 框架配置（含路径别名）
+├── prettier.config.ts          # Prettier 配置
+├── tsconfig.json               # TypeScript 配置
 └── package.json                # 项目依赖
 ```
 
 ## 技术栈
 
 - **框架**: WXT ^0.20.13（现代化浏览器扩展开发框架）
-- **语言**: TypeScript
-- **UI 框架**: Vue 3
+- **语言**: TypeScript ^5.9.3
+- **UI 框架**: Vue ^3.5.27
 - **构建工具**: Vite（WXT 内置）
-- **包管理器**: pnpm
+- **包管理器**: pnpm@10.28.0
+- **代码格式化**: Prettier ^3.8.0
 - **浏览器支持**: Chrome (Manifest V3)
 
 ## 使用说明

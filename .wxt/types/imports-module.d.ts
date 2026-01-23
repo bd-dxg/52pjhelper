@@ -20,5 +20,6 @@ declare module '#imports' {
   export { fakeBrowser } from 'wxt/testing';
   export { DEFAULT_NAV_MENUS, saveNavConfig, loadNavConfig, hideMenu, showMenu, applyNavConfig, toggleMenu, initializeNavigationHider, NavMenuConfig, UserNavConfig } from '../src/utils/navigationHider';
   export { QuickQueryManager, QuickQueryManager } from '../src/utils/quickQuery';
+  export { loadQuickReplyConfig, saveQuickReplyConfig, initQuickReply, cleanupQuickReply } from '../src/utils/quickReply';
   export { getCurrentTheme, applyTheme, watchThemeChange, initTheme, Theme } from '../src/utils/themeManager';
 }
