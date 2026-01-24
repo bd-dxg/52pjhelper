@@ -77,25 +77,9 @@ const toggleFloorHighlighter = async () => {
 // 加载用户配置
 onMounted(async () => {
   try {
-    // 首先尝试从 storage 读取配置
+    // 只从 storage 读取配置，避免与 content script 通信失败导致的错误
     const storedValue = await loadConfigFromStorage()
     floorHighlighterEnabled.value = storedValue
-
-    // 然后尝试从 content script 获取最新状态（如果是 52pojie.cn 页面）
-    const [tab] = await browser.tabs.query({ active: true, currentWindow: true })
-    if (tab.id && tab.url?.includes('52pojie.cn')) {
-      try {
-        const floorHighlighterResponse = await browser.tabs.sendMessage(tab.id, {
-          type: 'GET_FLOOR_HIGHLIGHTER_STATUS',
-        })
-
-        if (floorHighlighterResponse && floorHighlighterResponse.success) {
-          floorHighlighterEnabled.value = floorHighlighterResponse.enabled
-        }
-      } catch (error) {
-        console.error('Failed to get floor highlighter status from content script:', error)
-      }
-    }
   } catch (error) {
     console.error('Failed to load floor highlighter settings:', error)
     emit('show-message', '加载配置失败', 'error')
@@ -103,73 +87,3 @@ onMounted(async () => {
 })
 </script>
 
-<style scoped>
-.toggle-container {
-  margin-bottom: 12px;
-}
-
-.toggle-label {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  user-select: none;
-  padding: 12px;
-  background-color: var(--bg-secondary);
-  border-radius: 8px;
-  transition: background-color 0.2s;
-}
-
-.toggle-label:hover {
-  background-color: var(--bg-hover);
-}
-
-.toggle-label span {
-  font-size: 14px;
-  color: var(--text-primary);
-}
-
-.toggle-switch {
-  position: relative;
-  width: 50px;
-  height: 24px;
-}
-
-.toggle-switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: var(--toggle-bg);
-  transition: 0.3s;
-  border-radius: 24px;
-}
-
-.slider:before {
-  position: absolute;
-  content: '';
-  height: 18px;
-  width: 18px;
-  left: 3px;
-  bottom: 3px;
-  background-color: white;
-  transition: 0.3s;
-  border-radius: 50%;
-}
-
-input:checked + .slider {
-  background-color: var(--primary-color);
-}
-
-input:checked + .slider:before {
-  transform: translateX(26px);
-}
-</style>

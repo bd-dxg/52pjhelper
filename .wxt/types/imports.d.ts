@@ -7,6 +7,7 @@ declare global {
   const FloorHighlighter: typeof import('D:/code/front-end/52pjhelper/src/utils/floorHighlighter').FloorHighlighter
   const InvalidMatchPattern: typeof import('wxt/utils/match-patterns').InvalidMatchPattern
   const MatchPattern: typeof import('wxt/utils/match-patterns').MatchPattern
+  const NativeFloorDisplay: typeof import('D:/code/front-end/52pjhelper/src/utils/nativeFloorDisplay').NativeFloorDisplay
   const QuickQueryManager: typeof import('D:/code/front-end/52pjhelper/src/utils/quickQuery').QuickQueryManager
   const applyNavConfig: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').applyNavConfig
   const applyTheme: typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager').applyTheme
@@ -156,6 +157,7 @@ declare module 'vue' {
     readonly FloorHighlighter: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/floorHighlighter')['FloorHighlighter']>
     readonly InvalidMatchPattern: UnwrapRef<typeof import('wxt/utils/match-patterns')['InvalidMatchPattern']>
     readonly MatchPattern: UnwrapRef<typeof import('wxt/utils/match-patterns')['MatchPattern']>
+    readonly NativeFloorDisplay: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/nativeFloorDisplay')['NativeFloorDisplay']>
     readonly QuickQueryManager: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/quickQuery')['QuickQueryManager']>
     readonly applyNavConfig: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['applyNavConfig']>
     readonly applyTheme: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager')['applyTheme']>

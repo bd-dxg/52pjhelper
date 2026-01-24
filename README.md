@@ -12,7 +12,9 @@
 - **实时预览**: 点击按钮实时切换菜单显示/隐藏状态
 - **用户信息缓存**: 在非 52pojie.cn 页面显示缓存的用户信息，避免显示"未登录 游客"字样
 - **一键重置**: 支持恢复默认导航菜单配置
+- **原生楼层显示**: 显示已结帖的原生楼层，方便管理悬赏贴
 - **紧凑布局**: 优化了组件布局，描述文字移至悬停提示，减少页面滚动
+- **样式统一管理**: 重构子组件样式管理，统一在父组件中管理，提高代码可维护性
 
 ## 安装与使用
 
@@ -55,7 +57,8 @@
 │   │   ├── NavigationSettings.vue     # 导航菜单设置组件
 │   │   ├── QuickQueryToggle.vue       # 便捷查询功能开关组件
 │   │   ├── QuickReplyToggle.vue       # 快捷回复功能开关组件
-│   │   └── FloorHighlighterToggle.vue # 楼层高亮功能开关组件
+│   │   ├── FloorHighlighterToggle.vue # 楼层高亮功能开关组件
+│   │   └── NativeFloorDisplayToggle.vue # 原生楼层显示功能开关组件
 │   ├── configs/                 # 配置文件目录
 │   │   ├── navigation.json     # 导航菜单配置
 │   │   ├── quickReply.json     # 快捷回复配置
@@ -74,7 +77,8 @@
 │       ├── quickReply.ts       # 快捷回复管理工具
 │       ├── floorHighlighter.ts # 楼层高亮管理工具
 │       ├── userInfo.ts         # 用户信息获取和缓存工具
-│       └── themeManager.ts     # 主题管理工具
+│       ├── themeManager.ts     # 主题管理工具
+│       └── nativeFloorDisplay.ts # 原生楼层显示工具
 ├── public/                     # 静态资源
 │   └── images/                 # 扩展图标
 ├── dist/                       # 编译输出目录

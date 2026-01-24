@@ -3,6 +3,7 @@ import { QuickQueryManager } from '../utils/quickQuery'
 import { loadQuickReplyConfig, saveQuickReplyConfig, initQuickReply, cleanupQuickReply } from '../utils/quickReply'
 import { FloorHighlighter } from '../utils/floorHighlighter'
 import { getUserInfo, saveUserInfoToCache } from '../utils/userInfo'
+import { NativeFloorDisplay } from '../utils/nativeFloorDisplay'
 
 // 防止重复初始化的标记
 const INIT_FLAG = '__52pj_helper_initialized__'
@@ -11,6 +12,7 @@ const INIT_FLAG = '__52pj_helper_initialized__'
 let quickQueryManager: QuickQueryManager | null = null
 let quickReplyEnabled = false
 let floorHighlighter: FloorHighlighter | null = null
+let nativeFloorDisplay: NativeFloorDisplay | null = null
 
 export default defineContentScript({
   matches: ['https://www.52pojie.cn/*'],
@@ -40,6 +42,12 @@ export default defineContentScript({
 
     // 初始化楼层高亮功能
     floorHighlighter = new FloorHighlighter()
+
+    // 初始化原生楼层显示功能
+    nativeFloorDisplay = new NativeFloorDisplay()
+    nativeFloorDisplay.initialize().catch(error => {
+      console.error('Failed to initialize native floor display:', error)
+    })
 
     // 监听来自 popup 的消息
     browser.runtime.onMessage.addListener((message, _, sendResponse) => {
@@ -125,6 +133,34 @@ export default defineContentScript({
           sendResponse({ success: true, enabled })
         } else {
           sendResponse({ success: false, message: 'FloorHighlighter not initialized' })
+        }
+        return false
+      }
+
+      if (message.type === 'TOGGLE_NATIVE_FLOOR_DISPLAY') {
+        if (nativeFloorDisplay) {
+          nativeFloorDisplay
+            .toggle()
+            .then(enabled => {
+              sendResponse({ success: true, enabled })
+            })
+            .catch(error => {
+              console.error('Toggle native floor display failed:', error)
+              sendResponse({ success: false, message: 'Toggle failed' })
+            })
+          return true // 异步响应，保持端口开放
+        } else {
+          sendResponse({ success: false, message: 'NativeFloorDisplay not initialized' })
+          return false
+        }
+      }
+
+      if (message.type === 'GET_NATIVE_FLOOR_DISPLAY_STATUS') {
+        if (nativeFloorDisplay) {
+          const enabled = nativeFloorDisplay.getStatus()
+          sendResponse({ success: true, enabled })
+        } else {
+          sendResponse({ success: false, message: 'NativeFloorDisplay not initialized' })
         }
         return false
       }

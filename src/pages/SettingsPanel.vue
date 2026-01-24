@@ -52,6 +52,7 @@
         <QuickQueryToggle @show-message="showMessage" />
         <QuickReplyToggle @show-message="showMessage" />
         <FloorHighlighterToggle @show-message="showMessage" />
+        <NativeFloorDisplayToggle @show-message="showMessage" />
       </section>
     </div>
 
@@ -70,6 +71,7 @@ import NavigationSettings from '@com/NavigationSettings.vue'
 import QuickQueryToggle from '@com/QuickQueryToggle.vue'
 import QuickReplyToggle from '@com/QuickReplyToggle.vue'
 import FloorHighlighterToggle from '@com/FloorHighlighterToggle.vue'
+import NativeFloorDisplayToggle from '@com/NativeFloorDisplayToggle.vue'
 import type { UserInfo } from '@utils/userInfo'
 import { getUserInfoFromCache } from '@utils/userInfo'
 
@@ -96,14 +98,22 @@ const updateUserInfo = async () => {
   try {
     const [tab] = await browser.tabs.query({ active: true, currentWindow: true })
     if (tab.id && tab.url?.includes('52pojie.cn')) {
-      const response = await browser.tabs.sendMessage(tab.id, {
-        type: 'GET_USER_INFO'
-      })
+      try {
+        const response = await browser.tabs.sendMessage(tab.id, {
+          type: 'GET_USER_INFO'
+        })
 
-      if (response && response.success) {
-        userInfo.value = response.data
-      } else {
-        // 从缓存读取用户信息
+        if (response && response.success) {
+          userInfo.value = response.data
+        } else {
+          // 从缓存读取用户信息
+          const cachedUserInfo = await getUserInfoFromCache()
+          if (cachedUserInfo) {
+            userInfo.value = cachedUserInfo
+          }
+        }
+      } catch (error) {
+        // 通信失败时，不显示错误信息，直接从缓存读取
         const cachedUserInfo = await getUserInfoFromCache()
         if (cachedUserInfo) {
           userInfo.value = cachedUserInfo
@@ -117,12 +127,8 @@ const updateUserInfo = async () => {
       }
     }
   } catch (error) {
+    // 其他错误时，不显示错误信息，保持默认值
     console.error('获取用户信息失败:', error)
-    // 从缓存读取用户信息
-    const cachedUserInfo = await getUserInfoFromCache()
-    if (cachedUserInfo) {
-      userInfo.value = cachedUserInfo
-    }
   }
 }
 
@@ -247,7 +253,7 @@ const showMessage = (text: string, type: 'success' | 'error' = 'success') => {
 
 /* 选项卡内容 */
 .tabs-content {
-  flex: 1;
+  max-height: calc(100% - 180px); /* 为消息提示和其他区域预留空间 */
   overflow-y: auto;
   padding: 20px;
 }
@@ -298,6 +304,180 @@ const showMessage = (text: string, type: 'success' | 'error' = 'success') => {
 }
 
 .message.error {
+  background-color: var(--error-bg);
+  color: var(--error-color);
+  border: 1px solid var(--error-border);
+}
+
+/* 子组件通用样式 - 使用 :deep() 穿透选择器 */
+
+/* Toggle 组件样式 */
+:deep(.toggle-container) {
+  margin-bottom: 12px;
+}
+
+:deep(.toggle-label) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  padding: 12px;
+  background-color: var(--bg-secondary);
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+:deep(.toggle-label:hover) {
+  background-color: var(--bg-hover);
+}
+
+:deep(.toggle-label span) {
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+:deep(.toggle-switch) {
+  position: relative;
+  width: 50px;
+  height: 24px;
+}
+
+:deep(.toggle-switch input) {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+:deep(.slider) {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--toggle-bg);
+  transition: 0.3s;
+  border-radius: 24px;
+}
+
+:deep(.slider:before) {
+  position: absolute;
+  content: '';
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+:deep(input:checked + .slider) {
+  background-color: var(--primary-color);
+}
+
+:deep(input:checked + .slider:before) {
+  transform: translateX(26px);
+}
+
+/* NavigationSettings 组件样式 */
+:deep(.navigation-container) {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+:deep(.description) {
+  margin: 0 0 20px 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+:deep(.menu-grid) {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 8px;
+  margin-bottom: 20px;
+  flex: 1;
+}
+
+:deep(.menu-btn) {
+  padding: 8px 12px;
+  border: 1px solid var(--border-color-light);
+  border-radius: 6px;
+  background-color: var(--primary-color);
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+:deep(.menu-btn:hover) {
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
+}
+
+:deep(.menu-btn.is-hidden) {
+  background-color: var(--menu-hidden-bg);
+  color: var(--text-tertiary);
+  border-color: var(--border-color);
+}
+
+:deep(.menu-btn.is-hidden:hover) {
+  background-color: var(--menu-hidden-hover);
+  border-color: var(--border-color-light);
+}
+
+:deep(.actions) {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  min-height: 32px; /* 设置最小高度，防止出现和消失时页面抖动 */
+}
+
+:deep(.btn) {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  height: 32px; /* 设置固定高度，确保按钮高度一致 */
+  box-sizing: border-box;
+}
+
+:deep(.btn-secondary) {
+  background-color: var(--btn-secondary-bg);
+  color: white;
+}
+
+:deep(.btn-secondary:hover) {
+  background-color: var(--btn-secondary-hover);
+}
+
+/* NavigationSettings 组件的消息样式 */
+:deep(.actions .message) {
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  white-space: nowrap;
+  height: 32px; /* 与按钮高度一致 */
+  line-height: 16px; /* 垂直居中 */
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+}
+
+:deep(.actions .message.success) {
+  background-color: var(--success-bg);
+  color: var(--success-color);
+  border: 1px solid var(--success-border);
+}
+
+:deep(.actions .message.error) {
   background-color: var(--error-bg);
   color: var(--error-color);
   border: 1px solid var(--error-border);

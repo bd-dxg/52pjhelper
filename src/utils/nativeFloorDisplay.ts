@@ -1,0 +1,128 @@
+/**
+ * 悬赏贴原生楼层显示工具类
+ * 显示已结帖的原生楼层，方便管理悬赏贴
+ */
+
+class NativeFloorDisplay {
+  private enabled = false
+  private readonly STORAGE_KEY = 'nativeFloorDisplayEnabled'
+
+  /**
+   * 初始化功能
+   */
+  async initialize(): Promise<void> {
+    try {
+      const result = await browser.storage.local.get(this.STORAGE_KEY)
+      this.enabled = Boolean(result[this.STORAGE_KEY] ?? true)
+      if (this.enabled) {
+        this.initNativeFloorDisplay()
+      }
+    } catch (error) {
+      console.error('Failed to initialize native floor display:', error)
+      this.enabled = true
+    }
+  }
+
+  /**
+   * 切换功能开关
+   */
+  async toggle(): Promise<boolean> {
+    this.enabled = !this.enabled
+    try {
+      await browser.storage.local.set({ [this.STORAGE_KEY]: this.enabled })
+      if (this.enabled) {
+        this.initNativeFloorDisplay()
+      } else {
+        this.cleanup()
+      }
+    } catch (error) {
+      console.error('Failed to toggle native floor display:', error)
+    }
+    return this.enabled
+  }
+
+  /**
+   * 获取功能状态
+   */
+  getStatus(): boolean {
+    return this.enabled
+  }
+
+  /**
+   * 判断当前页面是否为已结帖状态
+   * @returns {boolean} 悬赏贴是否已结贴
+   */
+  private isReward(): boolean {
+    return document.querySelector('.rsld.z') ? true : false
+  }
+
+  /**
+   * 获取当前页所有pidDom
+   * @returns {Array} 返回一个对象数组,包含dom和id两个属性
+   */
+  private getAllPidDom(): Array<{ id: number; dom: HTMLElement }> {
+    const allDom = Array.from(document.querySelectorAll('#postlist .plhin:not(.res-postfirst)')) as HTMLElement[]
+    const allId = allDom.map(pidDom => {
+      const match = pidDom.id.match(/pid(\d+)/)
+      return match ? Number(match[1]) : null
+    })
+    // 返回两个数组组合成的对象数组
+    return allId.map((item, index) => {
+      return {
+        id: item,
+        dom: allDom[index],
+      }
+    }).filter((item): item is { id: number; dom: HTMLElement } => item.id !== null)
+  }
+
+  /**
+   * 设置悬赏回帖的原生楼层
+   * @param {index:Number,dom: HTMLElement,} dom对象和原生楼层
+   */
+  private setNativeFloor(index: number, dom: HTMLElement): void {
+    const textAnswer = dom.querySelector('.pi strong a')
+    if (!textAnswer) return
+
+    const createAnswerDom = document.createElement('span')
+    createAnswerDom.innerHTML = `原楼层: ${index} 楼 `
+    if (index === 10) {
+      const ansText = dom.querySelector('.plc a span')?.textContent || null
+      if (ansText === '最佳答案') {
+        createAnswerDom.innerHTML += `也可能在第一页以后 `
+      }
+    } else if (index > 10) {
+      createAnswerDom.innerHTML = `原楼层大于10楼,不在第一页`
+    }
+    createAnswerDom.style.color = 'green'
+    createAnswerDom.style.fontWeight = 'bold'
+    createAnswerDom.classList.add('native-floor-tag') // 添加类名方便清理
+    textAnswer.insertBefore(createAnswerDom, textAnswer.firstChild)
+  }
+
+  /**
+   * 初始化原生楼层显示
+   */
+  private initNativeFloorDisplay(): void {
+    // 非悬赏贴直接结束
+    if (!this.isReward()) return
+    // 获取当前页所有pidDom
+    const pidListDom = this.getAllPidDom()
+    // 重新排序pidListDom
+    const pidListDomSort = pidListDom.sort((a, b) => a.id - b.id)
+    pidListDomSort.forEach((item, index) => {
+      // +2 是因为主题帖占1L 最佳答案占2L
+      this.setNativeFloor(index + 2, item.dom)
+    })
+  }
+
+  /**
+   * 清理已添加的原生楼层标签
+   */
+  private cleanup(): void {
+    document.querySelectorAll('.native-floor-tag').forEach(tag => {
+      tag.remove()
+    })
+  }
+}
+
+export { NativeFloorDisplay }
