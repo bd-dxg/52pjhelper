@@ -82,6 +82,28 @@ npx vue-tsc --noEmit # vue3+ts 类型检查
 - 使用 :deep() 穿透选择器确保父组件样式能应用到子组件
 - 移除所有子组件中的重复样式定义，提高代码可维护性
 
+### 9. 全选功能
+
+- 在管理页面添加"除第一条全选"按钮，方便批量操作
+- 添加"删除"按钮，快速执行删除操作
+- 支持启用/禁用功能切换
+- 配置通过浏览器 storage 本地存储
+
+### 10. 分表选择器优化
+
+- 将分表选择器替换为按钮式界面，提高操作效率
+- 支持隐藏特定分表，简化界面
+- 蛇形布局设计，优化按钮排列
+- 支持启用/禁用功能切换
+- 配置通过浏览器 storage 本地存储
+
+### 11. 默认查询时间
+
+- 将查询开始时间默认设置为2008-03-13
+- 自动提交查询，确保时间切换生效
+- 支持启用/禁用功能切换
+- 配置通过浏览器 storage 本地存储
+
 ## 主要文件
 
 | 文件                                        | 作用                       |
@@ -103,6 +125,15 @@ npx vue-tsc --noEmit # vue3+ts 类型检查
 | `src/components/QuickReplyToggle.vue`       | 快捷回复功能开关组件       |
 | `src/components/FloorHighlighterToggle.vue` | 楼层高亮功能开关组件       |
 | `src/components/NativeFloorDisplayToggle.vue` | 原生楼层显示功能开关组件   |
+| `src/components/SelectAllToggle.vue`          | 全选功能开关组件           |
+| `src/components/TableSelectorToggle.vue`      | 分表选择器功能开关组件     |
+| `src/components/DefaultTimeToggle.vue`        | 默认查询时间功能开关组件   |
+| `src/configs/selectAll.json`                  | 全选功能配置               |
+| `src/configs/tableSelector.json`              | 分表选择器配置             |
+| `src/configs/defaultTime.json`                | 默认查询时间配置           |
+| `src/utils/selectAll.ts`                      | 全选功能管理工具类         |
+| `src/utils/tableSelector.ts`                  | 分表选择器管理工具类       |
+| `src/utils/defaultTime.ts`                    | 默认查询时间管理工具类     |
 
 ## 路径别名配置
 

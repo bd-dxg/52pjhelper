@@ -4,6 +4,9 @@ import { loadQuickReplyConfig, saveQuickReplyConfig, initQuickReply, cleanupQuic
 import { FloorHighlighter } from '../utils/floorHighlighter'
 import { getUserInfo, saveUserInfoToCache } from '../utils/userInfo'
 import { NativeFloorDisplay } from '../utils/nativeFloorDisplay'
+import { SelectAllManager } from '../utils/selectAll'
+import { TableSelectorManager } from '../utils/tableSelector'
+import { DefaultTimeManager } from '../utils/defaultTime'
 
 // 防止重复初始化的标记
 const INIT_FLAG = '__52pj_helper_initialized__'
@@ -13,6 +16,9 @@ let quickQueryManager: QuickQueryManager | null = null
 let quickReplyEnabled = false
 let floorHighlighter: FloorHighlighter | null = null
 let nativeFloorDisplay: NativeFloorDisplay | null = null
+let selectAllManager: SelectAllManager | null = null
+let tableSelectorManager: TableSelectorManager | null = null
+let defaultTimeManager: DefaultTimeManager | null = null
 
 export default defineContentScript({
   matches: ['https://www.52pojie.cn/*'],
@@ -48,6 +54,15 @@ export default defineContentScript({
     nativeFloorDisplay.initialize().catch(error => {
       console.error('Failed to initialize native floor display:', error)
     })
+
+    // 初始化全选功能
+    selectAllManager = new SelectAllManager()
+
+    // 初始化分表选择器功能
+    tableSelectorManager = new TableSelectorManager()
+
+    // 初始化默认时间功能
+    defaultTimeManager = new DefaultTimeManager()
 
     // 监听来自 popup 的消息
     browser.runtime.onMessage.addListener((message, _, sendResponse) => {
@@ -169,6 +184,90 @@ export default defineContentScript({
         const userInfo = getUserInfo()
         saveUserInfoToCache(userInfo) // 保存到缓存
         sendResponse({ success: true, data: userInfo })
+        return false
+      }
+
+      if (message.type === 'TOGGLE_SELECT_ALL') {
+        if (selectAllManager) {
+          selectAllManager
+            .toggle()
+            .then(enabled => {
+              sendResponse({ success: true, enabled })
+            })
+            .catch(error => {
+              console.error('Toggle select all failed:', error)
+              sendResponse({ success: false, message: 'Toggle failed' })
+            })
+          return true // 异步响应，保持端口开放
+        } else {
+          sendResponse({ success: false, message: 'SelectAllManager not initialized' })
+          return false
+        }
+      }
+
+      if (message.type === 'GET_SELECT_ALL_STATUS') {
+        if (selectAllManager) {
+          const enabled = selectAllManager.getStatus()
+          sendResponse({ success: true, enabled })
+        } else {
+          sendResponse({ success: false, message: 'SelectAllManager not initialized' })
+        }
+        return false
+      }
+
+      if (message.type === 'TOGGLE_TABLE_SELECTOR') {
+        if (tableSelectorManager) {
+          tableSelectorManager
+            .toggle()
+            .then(enabled => {
+              sendResponse({ success: true, enabled })
+            })
+            .catch(error => {
+              console.error('Toggle table selector failed:', error)
+              sendResponse({ success: false, message: 'Toggle failed' })
+            })
+          return true // 异步响应，保持端口开放
+        } else {
+          sendResponse({ success: false, message: 'TableSelectorManager not initialized' })
+          return false
+        }
+      }
+
+      if (message.type === 'GET_TABLE_SELECTOR_STATUS') {
+        if (tableSelectorManager) {
+          const enabled = tableSelectorManager.getStatus()
+          sendResponse({ success: true, enabled })
+        } else {
+          sendResponse({ success: false, message: 'TableSelectorManager not initialized' })
+        }
+        return false
+      }
+
+      if (message.type === 'TOGGLE_DEFAULT_TIME') {
+        if (defaultTimeManager) {
+          defaultTimeManager
+            .toggle()
+            .then(enabled => {
+              sendResponse({ success: true, enabled })
+            })
+            .catch(error => {
+              console.error('Toggle default time failed:', error)
+              sendResponse({ success: false, message: 'Toggle failed' })
+            })
+          return true // 异步响应，保持端口开放
+        } else {
+          sendResponse({ success: false, message: 'DefaultTimeManager not initialized' })
+          return false
+        }
+      }
+
+      if (message.type === 'GET_DEFAULT_TIME_STATUS') {
+        if (defaultTimeManager) {
+          const enabled = defaultTimeManager.getStatus()
+          sendResponse({ success: true, enabled })
+        } else {
+          sendResponse({ success: false, message: 'DefaultTimeManager not initialized' })
+        }
         return false
       }
 

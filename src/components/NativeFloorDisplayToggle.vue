@@ -1,9 +1,9 @@
 <template>
   <div class="toggle-container">
     <label class="toggle-label" @click.stop="toggleNativeFloorDisplay" title="显示已结帖的原生楼层，方便管理悬赏贴">
-      <span>悬赏贴原生楼层显示</span>
+      <span>原生楼层</span>
       <div class="toggle-switch">
-        <input type="checkbox" :checked="enabled" disabled aria-label="悬赏贴原生楼层显示" />
+        <input type="checkbox" :checked="enabled" disabled aria-label="原生楼层" />
         <span class="slider"></span>
       </div>
     </label>
@@ -49,7 +49,7 @@ const toggleNativeFloorDisplay = async () => {
 
       if (response.success) {
         enabled.value = response.enabled
-        emit('show-message', enabled.value ? '原生楼层显示已启用' : '原生楼层显示已禁用', 'success')
+        emit('show-message', enabled.value ? '原生楼层已启用' : '原生楼层已禁用', 'success')
       } else {
         emit('show-message', '切换原生楼层显示失败', 'error')
       }
@@ -58,7 +58,7 @@ const toggleNativeFloorDisplay = async () => {
       const newEnabled = !enabled.value
       enabled.value = newEnabled
       await saveConfigToStorage(newEnabled)
-      emit('show-message', enabled.value ? '原生楼层显示已启用' : '原生楼层显示已禁用', 'success')
+      emit('show-message', enabled.value ? '原生楼层已启用' : '原生楼层已禁用', 'success')
     }
   } catch (error) {
     // 通信失败时直接修改本地存储

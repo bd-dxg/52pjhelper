@@ -18,11 +18,14 @@ declare module '#imports' {
   export { InvalidMatchPattern, MatchPattern } from 'wxt/utils/match-patterns';
   export { onActivated, onBeforeMount, onBeforeUnmount, onBeforeUpdate, onErrorCaptured, onDeactivated, onMounted, onServerPrefetch, onUnmounted, onUpdated, useAttrs, useSlots, computed, customRef, isReadonly, isRef, isShallow, isProxy, isReactive, markRaw, reactive, readonly, ref, shallowReactive, shallowReadonly, shallowRef, triggerRef, toRaw, toRef, toRefs, toValue, unref, watch, watchEffect, watchPostEffect, watchSyncEffect, defineComponent, defineAsyncComponent, getCurrentInstance, h, inject, nextTick, provide, useCssModule, createApp, effectScope, EffectScope, getCurrentScope, onScopeDispose, Component, Slot, Slots, ComponentPublicInstance, ComputedRef, DirectiveBinding, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, ShallowRef, MaybeRef, MaybeRefOrGetter, VNode, WritableComputedRef, onRenderTracked, onRenderTriggered, resolveComponent, useCssVars, useModel, getCurrentWatcher, onWatcherCleanup, useId, useTemplateRef } from 'vue';
   export { fakeBrowser } from 'wxt/testing';
+  export { DefaultTimeManager, DefaultTimeManager } from '../src/utils/defaultTime';
   export { FloorHighlighter, FloorHighlighter } from '../src/utils/floorHighlighter';
   export { NativeFloorDisplay } from '../src/utils/nativeFloorDisplay';
   export { DEFAULT_NAV_MENUS, saveNavConfig, loadNavConfig, hideMenu, showMenu, applyNavConfig, toggleMenu, initializeNavigationHider, NavMenuConfig, UserNavConfig } from '../src/utils/navigationHider';
   export { QuickQueryManager, QuickQueryManager } from '../src/utils/quickQuery';
   export { loadQuickReplyConfig, saveQuickReplyConfig, initQuickReply, cleanupQuickReply } from '../src/utils/quickReply';
+  export { SelectAllManager, SelectAllManager } from '../src/utils/selectAll';
+  export { TableSelectorManager, TableSelectorManager } from '../src/utils/tableSelector';
   export { getCurrentTheme, applyTheme, watchThemeChange, initTheme, Theme } from '../src/utils/themeManager';
   export { saveUserInfoToCache, getUserInfoFromCache, getUserInfo, watchUserInfo, UserInfo } from '../src/utils/userInfo';
 }

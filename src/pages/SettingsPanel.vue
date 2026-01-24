@@ -49,10 +49,19 @@
 
       <!-- 便捷查询设置 -->
       <section v-show="activeTab === 'quickQuery'" role="tabpanel" class="tab-panel" aria-labelledby="quickQuery-tab">
-        <QuickQueryToggle @show-message="showMessage" />
-        <QuickReplyToggle @show-message="showMessage" />
-        <FloorHighlighterToggle @show-message="showMessage" />
-        <NativeFloorDisplayToggle @show-message="showMessage" />
+        <div class="toggle-grid">
+          <div class="toggle-column">
+            <QuickQueryToggle @show-message="showMessage" />
+            <QuickReplyToggle @show-message="showMessage" />
+            <FloorHighlighterToggle @show-message="showMessage" />
+            <NativeFloorDisplayToggle @show-message="showMessage" />
+          </div>
+          <div class="toggle-column">
+            <SelectAllToggle @show-message="showMessage" />
+            <TableSelectorToggle @show-message="showMessage" />
+            <DefaultTimeToggle @show-message="showMessage" />
+          </div>
+        </div>
       </section>
     </div>
 
@@ -72,6 +81,9 @@ import QuickQueryToggle from '@com/QuickQueryToggle.vue'
 import QuickReplyToggle from '@com/QuickReplyToggle.vue'
 import FloorHighlighterToggle from '@com/FloorHighlighterToggle.vue'
 import NativeFloorDisplayToggle from '@com/NativeFloorDisplayToggle.vue'
+import SelectAllToggle from '@com/SelectAllToggle.vue'
+import TableSelectorToggle from '@com/TableSelectorToggle.vue'
+import DefaultTimeToggle from '@com/DefaultTimeToggle.vue'
 import type { UserInfo } from '@utils/userInfo'
 import { getUserInfoFromCache } from '@utils/userInfo'
 
@@ -310,6 +322,18 @@ const showMessage = (text: string, type: 'success' | 'error' = 'success') => {
 }
 
 /* 子组件通用样式 - 使用 :deep() 穿透选择器 */
+
+/* 双列布局样式 */
+.toggle-grid {
+  display: flex;
+  gap: 16px;
+}
+
+.toggle-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
 
 /* Toggle 组件样式 */
 :deep(.toggle-container) {

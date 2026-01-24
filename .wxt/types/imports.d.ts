@@ -3,12 +3,15 @@ export {}
 declare global {
   const ContentScriptContext: typeof import('wxt/utils/content-script-context').ContentScriptContext
   const DEFAULT_NAV_MENUS: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').DEFAULT_NAV_MENUS
+  const DefaultTimeManager: typeof import('D:/code/front-end/52pjhelper/src/utils/defaultTime').DefaultTimeManager
   const EffectScope: typeof import('vue').EffectScope
   const FloorHighlighter: typeof import('D:/code/front-end/52pjhelper/src/utils/floorHighlighter').FloorHighlighter
   const InvalidMatchPattern: typeof import('wxt/utils/match-patterns').InvalidMatchPattern
   const MatchPattern: typeof import('wxt/utils/match-patterns').MatchPattern
   const NativeFloorDisplay: typeof import('D:/code/front-end/52pjhelper/src/utils/nativeFloorDisplay').NativeFloorDisplay
   const QuickQueryManager: typeof import('D:/code/front-end/52pjhelper/src/utils/quickQuery').QuickQueryManager
+  const SelectAllManager: typeof import('D:/code/front-end/52pjhelper/src/utils/selectAll').SelectAllManager
+  const TableSelectorManager: typeof import('D:/code/front-end/52pjhelper/src/utils/tableSelector').TableSelectorManager
   const applyNavConfig: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').applyNavConfig
   const applyTheme: typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager').applyTheme
   const browser: typeof import('wxt/browser').browser
@@ -132,6 +135,9 @@ declare global {
   export type { Component, Slot, Slots, ComponentPublicInstance, ComputedRef, DirectiveBinding, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, ShallowRef, MaybeRef, MaybeRefOrGetter, VNode, WritableComputedRef } from 'vue'
   import('vue')
   // @ts-ignore
+  export type { DefaultTimeManager } from 'D:/code/front-end/52pjhelper/src/utils/defaultTime'
+  import('D:/code/front-end/52pjhelper/src/utils/defaultTime')
+  // @ts-ignore
   export type { FloorHighlighter } from 'D:/code/front-end/52pjhelper/src/utils/floorHighlighter'
   import('D:/code/front-end/52pjhelper/src/utils/floorHighlighter')
   // @ts-ignore
@@ -140,6 +146,12 @@ declare global {
   // @ts-ignore
   export type { QuickQueryManager } from 'D:/code/front-end/52pjhelper/src/utils/quickQuery'
   import('D:/code/front-end/52pjhelper/src/utils/quickQuery')
+  // @ts-ignore
+  export type { SelectAllManager } from 'D:/code/front-end/52pjhelper/src/utils/selectAll'
+  import('D:/code/front-end/52pjhelper/src/utils/selectAll')
+  // @ts-ignore
+  export type { TableSelectorManager } from 'D:/code/front-end/52pjhelper/src/utils/tableSelector'
+  import('D:/code/front-end/52pjhelper/src/utils/tableSelector')
   // @ts-ignore
   export type { Theme } from 'D:/code/front-end/52pjhelper/src/utils/themeManager'
   import('D:/code/front-end/52pjhelper/src/utils/themeManager')
@@ -153,12 +165,15 @@ declare module 'vue' {
   interface ComponentCustomProperties {
     readonly ContentScriptContext: UnwrapRef<typeof import('wxt/utils/content-script-context')['ContentScriptContext']>
     readonly DEFAULT_NAV_MENUS: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['DEFAULT_NAV_MENUS']>
+    readonly DefaultTimeManager: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/defaultTime')['DefaultTimeManager']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
     readonly FloorHighlighter: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/floorHighlighter')['FloorHighlighter']>
     readonly InvalidMatchPattern: UnwrapRef<typeof import('wxt/utils/match-patterns')['InvalidMatchPattern']>
     readonly MatchPattern: UnwrapRef<typeof import('wxt/utils/match-patterns')['MatchPattern']>
     readonly NativeFloorDisplay: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/nativeFloorDisplay')['NativeFloorDisplay']>
     readonly QuickQueryManager: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/quickQuery')['QuickQueryManager']>
+    readonly SelectAllManager: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/selectAll')['SelectAllManager']>
+    readonly TableSelectorManager: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/tableSelector')['TableSelectorManager']>
     readonly applyNavConfig: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['applyNavConfig']>
     readonly applyTheme: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager')['applyTheme']>
     readonly browser: UnwrapRef<typeof import('wxt/browser')['browser']>

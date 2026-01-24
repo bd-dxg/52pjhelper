@@ -1,0 +1,6 @@
+{
+  "storageKey": "defaultTimeEnabled",
+  "defaultEnabled": false,
+  "startTimeKey": "startTime",
+  "defaultStartTime": "2008-03-13"
+}
