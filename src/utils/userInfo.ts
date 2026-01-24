@@ -22,6 +22,34 @@ export interface UserInfo {
 }
 
 /**
+ * 存储用户信息到浏览器 storage（本地存储）
+ */
+export async function saveUserInfoToCache(userInfo: UserInfo): Promise<void> {
+  try {
+    await browser.storage.local.set({ userInfoCache: userInfo })
+  } catch (error) {
+    console.error('保存用户信息到缓存失败:', error)
+  }
+}
+
+/**
+ * 从浏览器 storage 读取用户信息缓存
+ */
+export async function getUserInfoFromCache(): Promise<UserInfo | null> {
+  try {
+    const result = await browser.storage.local.get('userInfoCache')
+    const cached = result.userInfoCache
+    if (cached && typeof cached === 'object' && 'username' in cached) {
+      return cached as UserInfo
+    }
+    return null
+  } catch (error) {
+    console.error('从缓存读取用户信息失败:', error)
+    return null
+  }
+}
+
+/**
  * 从页面 DOM 中获取用户信息
  */
 export function getUserInfo(): UserInfo {

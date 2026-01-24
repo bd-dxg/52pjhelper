@@ -32,6 +32,7 @@ declare global {
   const getCurrentTheme: typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager').getCurrentTheme
   const getCurrentWatcher: typeof import('vue').getCurrentWatcher
   const getUserInfo: typeof import('D:/code/front-end/52pjhelper/src/utils/userInfo').getUserInfo
+  const getUserInfoFromCache: typeof import('D:/code/front-end/52pjhelper/src/utils/userInfo').getUserInfoFromCache
   const h: typeof import('vue').h
   const hideMenu: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').hideMenu
   const initQuickReply: typeof import('D:/code/front-end/52pjhelper/src/utils/quickReply').initQuickReply
@@ -69,6 +70,7 @@ declare global {
   const resolveComponent: typeof import('vue').resolveComponent
   const saveNavConfig: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').saveNavConfig
   const saveQuickReplyConfig: typeof import('D:/code/front-end/52pjhelper/src/utils/quickReply').saveQuickReplyConfig
+  const saveUserInfoToCache: typeof import('D:/code/front-end/52pjhelper/src/utils/userInfo').saveUserInfoToCache
   const shallowReactive: typeof import('vue').shallowReactive
   const shallowReadonly: typeof import('vue').shallowReadonly
   const shallowRef: typeof import('vue').shallowRef
@@ -179,6 +181,7 @@ declare module 'vue' {
     readonly getCurrentTheme: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager')['getCurrentTheme']>
     readonly getCurrentWatcher: UnwrapRef<typeof import('vue')['getCurrentWatcher']>
     readonly getUserInfo: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userInfo')['getUserInfo']>
+    readonly getUserInfoFromCache: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userInfo')['getUserInfoFromCache']>
     readonly h: UnwrapRef<typeof import('vue')['h']>
     readonly hideMenu: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['hideMenu']>
     readonly initQuickReply: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/quickReply')['initQuickReply']>
@@ -216,6 +219,7 @@ declare module 'vue' {
     readonly resolveComponent: UnwrapRef<typeof import('vue')['resolveComponent']>
     readonly saveNavConfig: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['saveNavConfig']>
     readonly saveQuickReplyConfig: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/quickReply')['saveQuickReplyConfig']>
+    readonly saveUserInfoToCache: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userInfo')['saveUserInfoToCache']>
     readonly shallowReactive: UnwrapRef<typeof import('vue')['shallowReactive']>
     readonly shallowReadonly: UnwrapRef<typeof import('vue')['shallowReadonly']>
     readonly shallowRef: UnwrapRef<typeof import('vue')['shallowRef']>

@@ -71,6 +71,7 @@ import QuickQueryToggle from '@com/QuickQueryToggle.vue'
 import QuickReplyToggle from '@com/QuickReplyToggle.vue'
 import FloorHighlighterToggle from '@com/FloorHighlighterToggle.vue'
 import type { UserInfo } from '@utils/userInfo'
+import { getUserInfoFromCache } from '@utils/userInfo'
 
 // 用户信息
 const userInfo = ref<UserInfo>({
@@ -94,17 +95,34 @@ const activeTab = ref<'navigation' | 'quickQuery'>('navigation')
 const updateUserInfo = async () => {
   try {
     const [tab] = await browser.tabs.query({ active: true, currentWindow: true })
-    if (tab.id) {
+    if (tab.id && tab.url?.includes('52pojie.cn')) {
       const response = await browser.tabs.sendMessage(tab.id, {
         type: 'GET_USER_INFO'
       })
 
       if (response && response.success) {
         userInfo.value = response.data
+      } else {
+        // 从缓存读取用户信息
+        const cachedUserInfo = await getUserInfoFromCache()
+        if (cachedUserInfo) {
+          userInfo.value = cachedUserInfo
+        }
+      }
+    } else {
+      // 非 52pojie.cn 页面，直接从缓存读取
+      const cachedUserInfo = await getUserInfoFromCache()
+      if (cachedUserInfo) {
+        userInfo.value = cachedUserInfo
       }
     }
   } catch (error) {
     console.error('获取用户信息失败:', error)
+    // 从缓存读取用户信息
+    const cachedUserInfo = await getUserInfoFromCache()
+    if (cachedUserInfo) {
+      userInfo.value = cachedUserInfo
+    }
   }
 }
 

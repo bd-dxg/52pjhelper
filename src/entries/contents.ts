@@ -2,7 +2,7 @@ import { initializeNavigationHider, applyNavConfig } from '../utils/navigationHi
 import { QuickQueryManager } from '../utils/quickQuery'
 import { loadQuickReplyConfig, saveQuickReplyConfig, initQuickReply, cleanupQuickReply } from '../utils/quickReply'
 import { FloorHighlighter } from '../utils/floorHighlighter'
-import { getUserInfo } from '../utils/userInfo'
+import { getUserInfo, saveUserInfoToCache } from '../utils/userInfo'
 
 // 防止重复初始化的标记
 const INIT_FLAG = '__52pj_helper_initialized__'
@@ -131,6 +131,7 @@ export default defineContentScript({
 
       if (message.type === 'GET_USER_INFO') {
         const userInfo = getUserInfo()
+        saveUserInfoToCache(userInfo) // 保存到缓存
         sendResponse({ success: true, data: userInfo })
         return false
       }

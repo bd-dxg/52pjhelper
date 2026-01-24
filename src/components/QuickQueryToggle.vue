@@ -1,10 +1,9 @@
 <template>
   <div class="toggle-container">
-    <p class="description">鼠标移动到用户头像时，自动显示该用户的违规记录。</p>
-    <label class="toggle-label">
-      <span>启用便捷查询</span>
-      <div class="toggle-switch" @click.stop="toggleQuickQuery">
-        <input type="checkbox" :checked="quickQueryEnabled" disabled aria-label="启用便捷查询" />
+    <label class="toggle-label" @click.stop="toggleQuickQuery" title="鼠标移入头像显示用户违规记录">
+      <span>便捷查询</span>
+      <div class="toggle-switch">
+        <input type="checkbox" :checked="quickQueryEnabled" disabled aria-label="便捷查询" />
         <span class="slider"></span>
       </div>
     </label>
@@ -13,16 +12,38 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import quickQueryConfig from '@/configs/quickQuery.json'
 
 const quickQueryEnabled = ref(false)
 const emit = defineEmits(['show-message'])
+const QUICK_QUERY_STORAGE_KEY = quickQueryConfig.storageKey
+
+// 从 storage 读取配置
+const loadConfigFromStorage = async (): Promise<boolean> => {
+  try {
+    const result = await browser.storage.local.get(QUICK_QUERY_STORAGE_KEY)
+    return (result[QUICK_QUERY_STORAGE_KEY] as boolean | undefined) ?? false
+  } catch (error) {
+    console.error('加载便捷查询配置失败:', error)
+    return false
+  }
+}
+
+// 保存配置到 storage
+const saveConfigToStorage = async (enabled: boolean): Promise<void> => {
+  try {
+    await browser.storage.local.set({ [QUICK_QUERY_STORAGE_KEY]: enabled })
+  } catch (error) {
+    console.error('保存便捷查询配置失败:', error)
+  }
+}
 
 // 切换便捷查询功能
 const toggleQuickQuery = async () => {
   console.log('toggleQuickQuery 被调用，当前状态:', quickQueryEnabled.value)
   try {
     const [tab] = await browser.tabs.query({ active: true, currentWindow: true })
-    if (tab.id) {
+    if (tab.id && tab.url?.includes('52pojie.cn')) {
       const response = await browser.tabs.sendMessage(tab.id, {
         type: 'TOGGLE_QUICK_QUERY',
       })
@@ -33,18 +54,32 @@ const toggleQuickQuery = async () => {
       } else {
         emit('show-message', '切换便捷查询失败', 'error')
       }
+    } else {
+      // 非 52pojie.cn 页面，直接修改本地存储
+      const newEnabled = !quickQueryEnabled.value
+      quickQueryEnabled.value = newEnabled
+      await saveConfigToStorage(newEnabled)
+      emit('show-message', quickQueryEnabled.value ? '便捷查询已启用' : '便捷查询已禁用', 'success')
     }
   } catch (error) {
-    emit('show-message', '切换便捷查询失败', 'error')
+    // 通信失败时直接修改本地存储
+    const newEnabled = !quickQueryEnabled.value
+    quickQueryEnabled.value = newEnabled
+    await saveConfigToStorage(newEnabled)
+    emit('show-message', quickQueryEnabled.value ? '便捷查询已启用' : '便捷查询已禁用', 'success')
   }
 }
 
 // 加载用户配置
 onMounted(async () => {
   try {
-    // 获取便捷查询状态
+    // 首先尝试从 storage 读取配置
+    const storedValue = await loadConfigFromStorage()
+    quickQueryEnabled.value = storedValue
+
+    // 然后尝试从 content script 获取最新状态（如果是 52pojie.cn 页面）
     const [tab] = await browser.tabs.query({ active: true, currentWindow: true })
-    if (tab.id) {
+    if (tab.id && tab.url?.includes('52pojie.cn')) {
       try {
         const quickQueryResponse = await browser.tabs.sendMessage(tab.id, {
           type: 'GET_QUICK_QUERY_STATUS',
@@ -66,14 +101,7 @@ onMounted(async () => {
 
 <style scoped>
 .toggle-container {
-  margin-bottom: 20px;
-}
-
-.description {
-  margin: 0 0 20px 0;
-  color: var(--text-secondary);
-  font-size: 14px;
-  line-height: 1.6;
+  margin-bottom: 12px;
 }
 
 .toggle-label {

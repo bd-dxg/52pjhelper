@@ -23,5 +23,5 @@ declare module '#imports' {
   export { QuickQueryManager, QuickQueryManager } from '../src/utils/quickQuery';
   export { loadQuickReplyConfig, saveQuickReplyConfig, initQuickReply, cleanupQuickReply } from '../src/utils/quickReply';
   export { getCurrentTheme, applyTheme, watchThemeChange, initTheme, Theme } from '../src/utils/themeManager';
-  export { getUserInfo, watchUserInfo, UserInfo } from '../src/utils/userInfo';
+  export { saveUserInfoToCache, getUserInfoFromCache, getUserInfo, watchUserInfo, UserInfo } from '../src/utils/userInfo';
 }
