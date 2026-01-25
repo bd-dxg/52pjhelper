@@ -14,7 +14,7 @@
 import { ref, onMounted } from 'vue'
 import tableSelectorConfig from '@/configs/tableSelector.json'
 
-const tableSelectorEnabled = ref(true)
+const tableSelectorEnabled = ref(tableSelectorConfig.defaultEnabled)
 const emit = defineEmits(['show-message'])
 const TABLE_SELECTOR_STORAGE_KEY = tableSelectorConfig.storageKey
 

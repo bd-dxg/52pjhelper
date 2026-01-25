@@ -15,7 +15,7 @@ import { ref, onMounted } from 'vue'
 import nativeFloorDisplayConfig from '@/configs/nativeFloorDisplay.json'
 
 // 功能状态和加载状态
-const enabled = ref(true)
+const enabled = ref(nativeFloorDisplayConfig.defaultEnabled)
 const emit = defineEmits(['show-message'])
 const STORAGE_KEY = nativeFloorDisplayConfig.storageKey
 

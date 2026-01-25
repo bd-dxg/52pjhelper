@@ -14,7 +14,7 @@
 import { ref, onMounted } from 'vue'
 import defaultTimeConfig from '@/configs/defaultTime.json'
 
-const defaultTimeEnabled = ref(true)
+const defaultTimeEnabled = ref(defaultTimeConfig.defaultEnabled)
 const emit = defineEmits(['show-message'])
 const DEFAULT_TIME_STORAGE_KEY = defaultTimeConfig.storageKey
 

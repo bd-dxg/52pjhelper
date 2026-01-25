@@ -14,7 +14,7 @@
 import { ref, onMounted } from 'vue'
 import quickReplyConfig from '@/configs/quickReply.json'
 
-const quickReplyEnabled = ref(true)
+const quickReplyEnabled = ref(quickReplyConfig.defaultEnabled)
 const emit = defineEmits(['show-message'])
 const QUICK_REPLY_STORAGE_KEY = quickReplyConfig.storageKey
 

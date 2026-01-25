@@ -14,7 +14,7 @@
 import { ref, onMounted } from 'vue'
 import floorHighlighterConfig from '@/configs/floorHighlighter.json'
 
-const floorHighlighterEnabled = ref(true)
+const floorHighlighterEnabled = ref(floorHighlighterConfig.defaultEnabled)
 const emit = defineEmits(['show-message'])
 const FLOOR_HIGHLIGHTER_STORAGE_KEY = floorHighlighterConfig.storageKey
 

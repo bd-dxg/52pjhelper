@@ -14,7 +14,7 @@
 import { ref, onMounted } from 'vue'
 import quickQueryConfig from '@/configs/quickQuery.json'
 
-const quickQueryEnabled = ref(true)
+const quickQueryEnabled = ref(quickQueryConfig.defaultEnabled)
 const emit = defineEmits(['show-message'])
 const QUICK_QUERY_STORAGE_KEY = quickQueryConfig.storageKey
 
