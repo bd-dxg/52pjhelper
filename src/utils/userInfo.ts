@@ -71,17 +71,14 @@ export function getUserInfo(): UserInfo {
     // 获取用户名：从 .vwmy.qq a 元素获取
     const usernameElement = document.querySelector('.vwmy.qq a')
     const username = usernameElement?.textContent?.trim() || ''
-    console.log('用户名:', username)
 
     // 获取用户等级：从 #g_upmine 下的 font 元素获取
     const levelElement = document.querySelector('#g_upmine font')
     const level = levelElement?.textContent?.trim() || ''
-    console.log('用户等级:', level)
 
     // 获取用户头像：从 #um .avt img 元素获取
     const avatarElement = document.querySelector('#um .avt img')
     const avatar = avatarElement?.getAttribute('src') || ''
-    console.log('用户头像:', avatar)
 
     // 判断是否已登录
     const isLoggedIn = !!(username && username !== '未登录')

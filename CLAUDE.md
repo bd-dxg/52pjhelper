@@ -97,10 +97,9 @@ npx vue-tsc --noEmit # vue3+ts 类型检查
 - 支持启用/禁用功能切换
 - 配置通过浏览器 storage 本地存储
 
-### 11. 默认查询时间
+### 12. 管理页面查询
 
-- 将查询开始时间默认设置为2008-03-13
-- 自动提交查询，确保时间切换生效
+- 在管理页面（forum.php?mod=modcp&action=moderate&op=threads）鼠标移动到用户名链接时，自动显示该用户的违规记录
 - 支持启用/禁用功能切换
 - 配置通过浏览器 storage 本地存储
 
@@ -131,9 +130,11 @@ npx vue-tsc --noEmit # vue3+ts 类型检查
 | `src/configs/selectAll.json`                  | 全选功能配置               |
 | `src/configs/tableSelector.json`              | 分表选择器配置             |
 | `src/configs/defaultTime.json`                | 默认查询时间配置           |
+| `src/configs/userLinkQuery.json`              | 管理页面查询配置           |
 | `src/utils/selectAll.ts`                      | 全选功能管理工具类         |
 | `src/utils/tableSelector.ts`                  | 分表选择器管理工具类       |
 | `src/utils/defaultTime.ts`                    | 默认查询时间管理工具类     |
+| `src/utils/userLinkQuery.ts`                  | 管理页面查询管理工具类     |
 
 ## 路径别名配置
 

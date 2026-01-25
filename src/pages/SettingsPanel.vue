@@ -60,6 +60,7 @@
             <SelectAllToggle @show-message="showMessage" />
             <TableSelectorToggle @show-message="showMessage" />
             <DefaultTimeToggle @show-message="showMessage" />
+            <UserLinkQueryToggle @show-message="showMessage" />
           </div>
         </div>
       </section>
@@ -84,6 +85,7 @@ import NativeFloorDisplayToggle from '@com/NativeFloorDisplayToggle.vue'
 import SelectAllToggle from '@com/SelectAllToggle.vue'
 import TableSelectorToggle from '@com/TableSelectorToggle.vue'
 import DefaultTimeToggle from '@com/DefaultTimeToggle.vue'
+import UserLinkQueryToggle from '@com/UserLinkQueryToggle.vue'
 import type { UserInfo } from '@utils/userInfo'
 import { getUserInfoFromCache } from '@utils/userInfo'
 

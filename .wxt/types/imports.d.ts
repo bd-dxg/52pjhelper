@@ -12,6 +12,7 @@ declare global {
   const QuickQueryManager: typeof import('D:/code/front-end/52pjhelper/src/utils/quickQuery').QuickQueryManager
   const SelectAllManager: typeof import('D:/code/front-end/52pjhelper/src/utils/selectAll').SelectAllManager
   const TableSelectorManager: typeof import('D:/code/front-end/52pjhelper/src/utils/tableSelector').TableSelectorManager
+  const UserLinkQueryManager: typeof import('D:/code/front-end/52pjhelper/src/utils/userLinkQuery').UserLinkQueryManager
   const applyNavConfig: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').applyNavConfig
   const applyTheme: typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager').applyTheme
   const browser: typeof import('wxt/browser').browser
@@ -158,6 +159,9 @@ declare global {
   // @ts-ignore
   export type { UserInfo } from 'D:/code/front-end/52pjhelper/src/utils/userInfo'
   import('D:/code/front-end/52pjhelper/src/utils/userInfo')
+  // @ts-ignore
+  export type { UserLinkQueryManager } from 'D:/code/front-end/52pjhelper/src/utils/userLinkQuery'
+  import('D:/code/front-end/52pjhelper/src/utils/userLinkQuery')
 }
 // for vue template auto import
 import { UnwrapRef } from 'vue'
@@ -174,6 +178,7 @@ declare module 'vue' {
     readonly QuickQueryManager: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/quickQuery')['QuickQueryManager']>
     readonly SelectAllManager: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/selectAll')['SelectAllManager']>
     readonly TableSelectorManager: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/tableSelector')['TableSelectorManager']>
+    readonly UserLinkQueryManager: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userLinkQuery')['UserLinkQueryManager']>
     readonly applyNavConfig: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['applyNavConfig']>
     readonly applyTheme: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager')['applyTheme']>
     readonly browser: UnwrapRef<typeof import('wxt/browser')['browser']>

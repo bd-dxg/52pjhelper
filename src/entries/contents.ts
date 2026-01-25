@@ -1,5 +1,6 @@
 import { initializeNavigationHider, applyNavConfig } from '../utils/navigationHider'
 import { QuickQueryManager } from '../utils/quickQuery'
+import { UserLinkQueryManager } from '../utils/userLinkQuery'
 import { loadQuickReplyConfig, saveQuickReplyConfig, initQuickReply, cleanupQuickReply } from '../utils/quickReply'
 import { FloorHighlighter } from '../utils/floorHighlighter'
 import { getUserInfo, saveUserInfoToCache } from '../utils/userInfo'
@@ -13,6 +14,7 @@ const INIT_FLAG = '__52pj_helper_initialized__'
 
 // 创建便捷查询管理器实例
 let quickQueryManager: QuickQueryManager | null = null
+let userLinkQueryManager: UserLinkQueryManager | null = null
 let quickReplyEnabled = false
 let floorHighlighter: FloorHighlighter | null = null
 let nativeFloorDisplay: NativeFloorDisplay | null = null
@@ -37,6 +39,9 @@ export default defineContentScript({
 
     // 初始化便捷查询功能
     quickQueryManager = new QuickQueryManager()
+
+    // 初始化用户链接查询功能
+    userLinkQueryManager = new UserLinkQueryManager()
 
     // 初始化快捷回复功能
     loadQuickReplyConfig().then(enabled => {
@@ -66,8 +71,6 @@ export default defineContentScript({
 
     // 监听来自 popup 的消息
     browser.runtime.onMessage.addListener((message, _, sendResponse) => {
-      console.log('收到消息:', message.type)
-
       if (message.type === 'UPDATE_NAVIGATION') {
         applyNavConfig(message.config)
         sendResponse({ success: true, message: 'Navigation updated' })
@@ -267,6 +270,34 @@ export default defineContentScript({
           sendResponse({ success: true, enabled })
         } else {
           sendResponse({ success: false, message: 'DefaultTimeManager not initialized' })
+        }
+        return false
+      }
+
+      if (message.type === 'TOGGLE_USER_LINK_QUERY') {
+        if (userLinkQueryManager) {
+          userLinkQueryManager
+            .toggle()
+            .then(enabled => {
+              sendResponse({ success: true, enabled })
+            })
+            .catch(error => {
+              console.error('Toggle user link query failed:', error)
+              sendResponse({ success: false, message: 'Toggle failed' })
+            })
+          return true // 异步响应，保持端口开放
+        } else {
+          sendResponse({ success: false, message: 'UserLinkQueryManager not initialized' })
+          return false
+        }
+      }
+
+      if (message.type === 'GET_USER_LINK_QUERY_STATUS') {
+        if (userLinkQueryManager) {
+          const enabled = userLinkQueryManager.getStatus()
+          sendResponse({ success: true, enabled })
+        } else {
+          sendResponse({ success: false, message: 'UserLinkQueryManager not initialized' })
         }
         return false
       }

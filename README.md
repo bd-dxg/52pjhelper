@@ -13,6 +13,7 @@
 - **全选功能**: 在管理页面添加"除第一条全选"按钮，方便批量操作
 - **分表选择器**: 将分表选择器替换为按钮式界面，提高操作效率
 - **默认查询时间**: 将查询开始时间默认设置为2008-03-13，自动提交查询
+- **管理页面查询**: 在管理页面鼠标移动到用户名链接时，自动显示该用户的违规记录
 - **实时预览**: 点击按钮实时切换菜单显示/隐藏状态
 - **用户信息缓存**: 在非 52pojie.cn 页面显示缓存的用户信息，避免显示"未登录 游客"字样
 - **一键重置**: 支持恢复默认导航菜单配置
@@ -64,14 +65,16 @@
 │   │   ├── NativeFloorDisplayToggle.vue # 原生楼层显示功能开关组件
 │   │   ├── SelectAllToggle.vue          # 全选功能开关组件
 │   │   ├── TableSelectorToggle.vue      # 分表选择器功能开关组件
-│   │   └── DefaultTimeToggle.vue        # 默认查询时间功能开关组件
+│   │   ├── DefaultTimeToggle.vue        # 默认查询时间功能开关组件
+│   │   └── UserLinkQueryToggle.vue      # 管理页面查询功能开关组件
 │   ├── configs/                 # 配置文件目录
 │   │   ├── navigation.json     # 导航菜单配置
 │   │   ├── quickReply.json     # 快捷回复配置
 │   │   ├── quickQuery.json     # 便捷查询配置
 │   │   ├── selectAll.json      # 全选功能配置
 │   │   ├── tableSelector.json  # 分表选择器配置
-│   │   └── defaultTime.json    # 默认查询时间配置
+│   │   ├── defaultTime.json    # 默认查询时间配置
+│   │   └── userLinkQuery.json  # 管理页面查询配置
 │   ├── entries/                 # 入口文件目录
 │   │   ├── contents.ts         # Content Script（页面注入脚本）
 │   │   └── popup/              # Popup 页面入口
@@ -90,7 +93,8 @@
 │       ├── nativeFloorDisplay.ts # 原生楼层显示工具
 │       ├── selectAll.ts        # 全选功能管理工具
 │       ├── tableSelector.ts    # 分表选择器管理工具
-│       └── defaultTime.ts      # 默认查询时间管理工具
+│       ├── defaultTime.ts      # 默认查询时间管理工具
+│       └── userLinkQuery.ts    # 管理页面查询管理工具
 ├── public/                     # 静态资源
 │   └── images/                 # 扩展图标
 ├── dist/                       # 编译输出目录
@@ -147,6 +151,13 @@
 2. 访问管理页面（forum.php?mod=modcp&action=thread&op=post）
 3. 查询开始时间会自动设置为2008-03-13
 4. 页面会自动提交查询，确保时间切换生效
+
+### 管理页面查询
+
+1. 在"更多设置"选项卡中，启用"管理页面查询"开关
+2. 访问管理页面（forum.php?mod=modcp&action=moderate&op=threads）
+3. 将鼠标移动到用户名链接上
+4. 自动显示该用户的违规记录（如有）
 
 ### 主题切换
 

@@ -28,4 +28,5 @@ declare module '#imports' {
   export { TableSelectorManager, TableSelectorManager } from '../src/utils/tableSelector';
   export { getCurrentTheme, applyTheme, watchThemeChange, initTheme, Theme } from '../src/utils/themeManager';
   export { saveUserInfoToCache, getUserInfoFromCache, getUserInfo, watchUserInfo, UserInfo } from '../src/utils/userInfo';
+  export { UserLinkQueryManager, UserLinkQueryManager } from '../src/utils/userLinkQuery';
 }
