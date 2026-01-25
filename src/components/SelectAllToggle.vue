@@ -14,7 +14,7 @@
 import { ref, onMounted } from 'vue'
 import selectAllConfig from '@/configs/selectAll.json'
 
-const selectAllEnabled = ref(false)
+const selectAllEnabled = ref(true)
 const emit = defineEmits(['show-message'])
 const SELECT_ALL_STORAGE_KEY = selectAllConfig.storageKey
 

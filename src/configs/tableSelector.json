@@ -1,6 +1,6 @@
 {
   "storageKey": "tableSelectorEnabled",
-  "defaultEnabled": false,
+  "defaultEnabled": true,
   "hiddenTableIndexesKey": "hiddenTableIndexes",
   "defaultHiddenTableIndexes": [3, 4, 5, 6]
 }

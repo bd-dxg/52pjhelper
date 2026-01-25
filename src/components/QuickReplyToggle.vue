@@ -14,7 +14,7 @@
 import { ref, onMounted } from 'vue'
 import quickReplyConfig from '@/configs/quickReply.json'
 
-const quickReplyEnabled = ref(false)
+const quickReplyEnabled = ref(true)
 const emit = defineEmits(['show-message'])
 const QUICK_REPLY_STORAGE_KEY = quickReplyConfig.storageKey
 
@@ -22,10 +22,10 @@ const QUICK_REPLY_STORAGE_KEY = quickReplyConfig.storageKey
 const loadConfigFromStorage = async (): Promise<boolean> => {
   try {
     const result = await browser.storage.local.get(QUICK_REPLY_STORAGE_KEY)
-    return (result[QUICK_REPLY_STORAGE_KEY] as boolean | undefined) ?? false
+    return (result[QUICK_REPLY_STORAGE_KEY] as boolean | undefined) ?? quickReplyConfig.defaultEnabled
   } catch (error) {
     console.error('加载快捷回复配置失败:', error)
-    return false
+    return quickReplyConfig.defaultEnabled
   }
 }
 

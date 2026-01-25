@@ -1,3 +1,4 @@
 {
-  "storageKey": "quickQueryEnabled"
+  "storageKey": "quickQueryEnabled",
+  "defaultEnabled": true
 }

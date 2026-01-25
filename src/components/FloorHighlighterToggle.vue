@@ -14,7 +14,7 @@
 import { ref, onMounted } from 'vue'
 import floorHighlighterConfig from '@/configs/floorHighlighter.json'
 
-const floorHighlighterEnabled = ref(false)
+const floorHighlighterEnabled = ref(true)
 const emit = defineEmits(['show-message'])
 const FLOOR_HIGHLIGHTER_STORAGE_KEY = floorHighlighterConfig.storageKey
 
@@ -22,10 +22,10 @@ const FLOOR_HIGHLIGHTER_STORAGE_KEY = floorHighlighterConfig.storageKey
 const loadConfigFromStorage = async (): Promise<boolean> => {
   try {
     const result = await browser.storage.local.get(FLOOR_HIGHLIGHTER_STORAGE_KEY)
-    return (result[FLOOR_HIGHLIGHTER_STORAGE_KEY] as boolean | undefined) ?? true
+    return (result[FLOOR_HIGHLIGHTER_STORAGE_KEY] as boolean | undefined) ?? floorHighlighterConfig.defaultEnabled
   } catch (error) {
     console.error('加载楼层高亮配置失败:', error)
-    return true
+    return floorHighlighterConfig.defaultEnabled
   }
 }
 

@@ -12,20 +12,21 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import nativeFloorDisplayConfig from '@/configs/nativeFloorDisplay.json'
 
 // 功能状态和加载状态
-const enabled = ref(false)
+const enabled = ref(true)
 const emit = defineEmits(['show-message'])
-const STORAGE_KEY = 'nativeFloorDisplayEnabled'
+const STORAGE_KEY = nativeFloorDisplayConfig.storageKey
 
 // 从 storage 读取配置
 const loadConfigFromStorage = async (): Promise<boolean> => {
   try {
     const result = await browser.storage.local.get(STORAGE_KEY)
-    return (result[STORAGE_KEY] as boolean | undefined) ?? true
+    return (result[STORAGE_KEY] as boolean | undefined) ?? nativeFloorDisplayConfig.defaultEnabled
   } catch (error) {
     console.error('加载原生楼层显示配置失败:', error)
-    return true
+    return nativeFloorDisplayConfig.defaultEnabled
   }
 }
 

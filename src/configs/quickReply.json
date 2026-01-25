@@ -1,5 +1,6 @@
 {
   "storageKey": "quickReplyEnabled",
+  "defaultEnabled": true,
   "options": [
     {
       "value": "-1",

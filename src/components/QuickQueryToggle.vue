@@ -14,7 +14,7 @@
 import { ref, onMounted } from 'vue'
 import quickQueryConfig from '@/configs/quickQuery.json'
 
-const quickQueryEnabled = ref(false)
+const quickQueryEnabled = ref(true)
 const emit = defineEmits(['show-message'])
 const QUICK_QUERY_STORAGE_KEY = quickQueryConfig.storageKey
 
@@ -22,10 +22,10 @@ const QUICK_QUERY_STORAGE_KEY = quickQueryConfig.storageKey
 const loadConfigFromStorage = async (): Promise<boolean> => {
   try {
     const result = await browser.storage.local.get(QUICK_QUERY_STORAGE_KEY)
-    return (result[QUICK_QUERY_STORAGE_KEY] as boolean | undefined) ?? false
+    return (result[QUICK_QUERY_STORAGE_KEY] as boolean | undefined) ?? quickQueryConfig.defaultEnabled
   } catch (error) {
     console.error('加载便捷查询配置失败:', error)
-    return false
+    return quickQueryConfig.defaultEnabled
   }
 }
 

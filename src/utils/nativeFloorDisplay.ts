@@ -3,9 +3,11 @@
  * 显示已结帖的原生楼层，方便管理悬赏贴
  */
 
+import nativeFloorDisplayConfig from '@/configs/nativeFloorDisplay.json'
+
 class NativeFloorDisplay {
   private enabled = false
-  private readonly STORAGE_KEY = 'nativeFloorDisplayEnabled'
+  private readonly STORAGE_KEY = nativeFloorDisplayConfig.storageKey
 
   /**
    * 初始化功能
@@ -13,13 +15,13 @@ class NativeFloorDisplay {
   async initialize(): Promise<void> {
     try {
       const result = await browser.storage.local.get(this.STORAGE_KEY)
-      this.enabled = Boolean(result[this.STORAGE_KEY] ?? true)
+      this.enabled = Boolean(result[this.STORAGE_KEY] ?? nativeFloorDisplayConfig.defaultEnabled)
       if (this.enabled) {
         this.initNativeFloorDisplay()
       }
     } catch (error) {
       console.error('Failed to initialize native floor display:', error)
-      this.enabled = true
+      this.enabled = nativeFloorDisplayConfig.defaultEnabled
     }
   }
 

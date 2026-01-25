@@ -1,3 +1,4 @@
 {
-  "storageKey": "floorHighlighterEnabled"
+  "storageKey": "floorHighlighterEnabled",
+  "defaultEnabled": true
 }
