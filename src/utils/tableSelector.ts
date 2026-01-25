@@ -40,7 +40,7 @@ export class TableSelectorManager {
   private async loadConfig(): Promise<void> {
     try {
       const result = await browser.storage.local.get([TABLE_SELECTOR_STORAGE_KEY, HIDDEN_TABLE_INDEXES_KEY])
-      this.isEnabled = (result[TABLE_SELECTOR_STORAGE_KEY] as boolean | undefined) ?? false
+      this.isEnabled = (result[TABLE_SELECTOR_STORAGE_KEY] as boolean | undefined) ?? tableSelectorConfig.defaultEnabled
       this.hiddenTableIndexes = (result[HIDDEN_TABLE_INDEXES_KEY] as number[] | undefined) ?? tableSelectorConfig.defaultHiddenTableIndexes
     } catch (error) {
       console.error('加载分表选择器配置失败:', error)
@@ -211,21 +211,15 @@ export class TableSelectorManager {
    * 清理已注入的内容
    */
   private cleanupInjectedContent(): void {
-    console.log('清理分表选择器注入的内容')
-
     // 方法1：通过引用移除容器
     if (this.container) {
-      console.log('移除分表选择器容器（通过引用）')
       this.container.remove()
       this.container = null
     }
 
-    // 方法2：通过选择器查找并移除所有可能残留的容器
-    const containers = document.querySelectorAll('.table-btn-container')
-    containers.forEach(container => {
-      console.log('找到并移除残留的分表选择器容器（通过选择器）')
-      container.remove()
-    })
+    // 方法2：通过 data 属性查找并移除所有可能残留的容器（性能优化）
+    document.querySelectorAll('[data-feature-id="table-selector-container"]')
+      .forEach(container => container.remove())
 
     this.allButtons = []
 
@@ -263,6 +257,7 @@ export class TableSelectorManager {
     // 创建容器
     this.container = document.createElement('div')
     this.container.className = 'table-btn-container'
+    this.container.dataset.featureId = 'table-selector-container'
 
     const leftBox = document.createElement('div')
     leftBox.className = 'table-btn-left'
@@ -326,7 +321,10 @@ export class TableSelectorManager {
     const searchSubmit = document.querySelector('#searchsubmit') as HTMLButtonElement
 
     if (select && searchSubmit) {
-      select.querySelector('option')!.value = tableName
+      const option = select.querySelector('option')
+      if (option) {
+        option.value = tableName
+      }
       searchSubmit.click()
     }
   }

@@ -36,7 +36,7 @@ export class DefaultTimeManager {
   private async loadConfig(): Promise<void> {
     try {
       const result = await browser.storage.local.get([DEFAULT_TIME_STORAGE_KEY, START_TIME_KEY])
-      this.isEnabled = (result[DEFAULT_TIME_STORAGE_KEY] as boolean | undefined) ?? false
+      this.isEnabled = (result[DEFAULT_TIME_STORAGE_KEY] as boolean | undefined) ?? defaultTimeConfig.defaultEnabled
       this.startTime = (result[START_TIME_KEY] as string | undefined) ?? defaultTimeConfig.defaultStartTime
     } catch (error) {
       console.error('加载默认时间配置失败:', error)
@@ -148,7 +148,6 @@ export class DefaultTimeManager {
    * 移除默认时间设置
    */
   private removeDefaultTime(): void {
-    console.log('清理默认时间设置')
     // 不需要恢复原始值，因为用户可能已经手动修改
     // 禁用后不再自动设置时间即可
   }

@@ -5,7 +5,7 @@
 ## 功能特性
 
 - **导航菜单管理**: 允许用户自定义显示/隐藏论坛顶部导航菜单
-- **便捷查询**: 鼠标移动到用户头像时，自动显示该用户的违规记录
+- **头像查询**: 鼠标移动到用户头像时，自动显示该用户的违规记录
 - **深色主题支持**: 自动检测并适配系统主题（深色/浅色模式）
 - **快捷回复**: 在举报处理页面添加快捷回复短语下拉框
 - **楼层高亮**: 根据URL参数高亮指定楼层，提高管理效率
@@ -59,7 +59,7 @@
 ├── src/
 │   ├── components/              # Vue 3 组件目录
 │   │   ├── NavigationSettings.vue     # 导航菜单设置组件
-│   │   ├── QuickQueryToggle.vue       # 便捷查询功能开关组件
+│   │   ├── AvatarQueryToggle.vue      # 头像查询功能开关组件
 │   │   ├── QuickReplyToggle.vue       # 快捷回复功能开关组件
 │   │   ├── FloorHighlighterToggle.vue # 楼层高亮功能开关组件
 │   │   ├── NativeFloorDisplayToggle.vue # 原生楼层显示功能开关组件
@@ -70,7 +70,7 @@
 │   ├── configs/                 # 配置文件目录
 │   │   ├── navigation.json     # 导航菜单配置
 │   │   ├── quickReply.json     # 快捷回复配置
-│   │   ├── quickQuery.json     # 便捷查询配置
+│   │   ├── avatarQuery.json    # 头像查询配置
 │   │   ├── selectAll.json      # 全选功能配置
 │   │   ├── tableSelector.json  # 分表选择器配置
 │   │   ├── defaultTime.json    # 默认查询时间配置
@@ -85,16 +85,17 @@
 │   │   └── SettingsPanel.vue   # 设置面板主组件（容器）
 │   └── utils/                  # 工具类目录
 │       ├── navigationHider.ts  # 导航菜单管理工具
-│       ├── quickQuery.ts       # 便捷查询管理工具
-│       ├── quickReply.ts       # 快捷回复管理工具
-│       ├── floorHighlighter.ts # 楼层高亮管理工具
-│       ├── userInfo.ts         # 用户信息获取和缓存工具
-│       ├── themeManager.ts     # 主题管理工具
+│       ├── avatarQuery.ts       # 头像查询管理工具
+│       ├── quickReply.ts        # 快捷回复管理工具
+│       ├── floorHighlighter.ts  # 楼层高亮管理工具
+│       ├── userInfo.ts          # 用户信息获取和缓存工具
+│       ├── themeManager.ts      # 主题管理工具
 │       ├── nativeFloorDisplay.ts # 原生楼层显示工具
-│       ├── selectAll.ts        # 全选功能管理工具
-│       ├── tableSelector.ts    # 分表选择器管理工具
-│       ├── defaultTime.ts      # 默认查询时间管理工具
-│       └── userLinkQuery.ts    # 管理页面查询管理工具
+│       ├── selectAll.ts         # 全选功能管理工具
+│       ├── tableSelector.ts     # 分表选择器管理工具
+│       ├── defaultTime.ts       # 默认查询时间管理工具
+│       ├── userLinkQuery.ts     # 管理页面查询管理工具
+│       └── userViolationFetcher.ts # 用户违规信息获取公共工具
 ├── public/                     # 静态资源
 │   └── images/                 # 扩展图标
 ├── dist/                       # 编译输出目录
@@ -123,9 +124,9 @@
 3. 蓝色背景表示菜单当前可见，灰色背景表示菜单当前隐藏
 4. 点击"重置为默认"按钮可恢复所有菜单的显示状态
 
-### 便捷查询
+### 头像查询
 
-1. 在"更多设置"选项卡中，启用"便捷查询"开关
+1. 在"更多设置"选项卡中，启用"头像查询"开关
 2. 访问吾爱破解论坛，将鼠标移动到用户头像上
 3. 自动显示该用户的违规记录（如有）
 

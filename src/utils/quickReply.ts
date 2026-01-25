@@ -13,7 +13,7 @@ const QUICK_REPLY_STORAGE_KEY = quickReplyConfig.storageKey
 // 加载快捷回复配置
 export async function loadQuickReplyConfig(): Promise<boolean> {
   const result = await browser.storage.local.get(QUICK_REPLY_STORAGE_KEY)
-  return (result[QUICK_REPLY_STORAGE_KEY] as boolean) ?? false
+  return (result[QUICK_REPLY_STORAGE_KEY] as boolean) ?? quickReplyConfig.defaultEnabled
 }
 
 // 保存快捷回复配置

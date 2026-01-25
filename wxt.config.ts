@@ -22,7 +22,7 @@ export default defineConfig({
   manifest: {
     name: '吾爱管理效率助手',
     description: '提升论坛管理效率',
-    version: '1.9.0',
+    version: '2.0.7',
     action: {
       default_icon: 'images/icon-128.png',
     },

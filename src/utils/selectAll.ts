@@ -37,7 +37,7 @@ export class SelectAllManager {
   private async loadConfig(): Promise<void> {
     try {
       const result = await browser.storage.local.get(SELECT_ALL_STORAGE_KEY)
-      this.isEnabled = (result[SELECT_ALL_STORAGE_KEY] as boolean | undefined) ?? false
+      this.isEnabled = (result[SELECT_ALL_STORAGE_KEY] as boolean | undefined) ?? selectAllConfig.defaultEnabled
     } catch (error) {
       console.error('加载全选功能配置失败:', error)
       this.isEnabled = false
@@ -143,38 +143,19 @@ export class SelectAllManager {
    * 清理已注入的内容
    */
   private cleanupInjectedContent(): void {
-    console.log('清理全选功能注入的内容')
-
     // 方法1：通过引用移除按钮
     if (this.selectAllBtn) {
-      console.log('移除全选按钮（通过引用）')
       this.selectAllBtn.remove()
       this.selectAllBtn = null
     }
     if (this.deleteBtn) {
-      console.log('移除删除按钮（通过引用）')
       this.deleteBtn.remove()
       this.deleteBtn = null
     }
 
-    // 方法2：通过选择器查找并移除所有可能残留的按钮
-    // 查找文本为"除第一条 全选"的按钮
-    const selectAllButtons = document.querySelectorAll('button')
-    selectAllButtons.forEach(button => {
-      if (button.textContent === '除第一条 全选' && button.style.margin === '0px 10px') {
-        console.log('找到并移除残留的全选按钮（通过选择器）')
-        button.remove()
-      }
-    })
-
-    // 查找文本为"删除"的按钮（但不是原始的#deletesubmit）
-    const deleteButtons = document.querySelectorAll('button')
-    deleteButtons.forEach(button => {
-      if (button.textContent === '删除' && button.id !== 'deletesubmit' && button.style.margin === '0px 10px') {
-        console.log('找到并移除残留的删除按钮（通过选择器）')
-        button.remove()
-      }
-    })
+    // 方法2：通过 data 属性查找并移除所有可能残留的按钮（性能优化）
+    document.querySelectorAll('[data-feature-id^="select-all-"]')
+      .forEach(btn => btn.remove())
   }
 
   /**
@@ -197,6 +178,7 @@ export class SelectAllManager {
     this.selectAllBtn.type = 'button'
     this.selectAllBtn.textContent = '除第一条 全选'
     this.selectAllBtn.style.margin = '0 10px'
+    this.selectAllBtn.dataset.featureId = 'select-all-btn'
     this.selectAllBtn.addEventListener('click', this.handleSelectAll)
     target.appendChild(this.selectAllBtn)
 
@@ -207,6 +189,7 @@ export class SelectAllManager {
       this.deleteBtn.type = 'button'
       this.deleteBtn.textContent = '删除'
       this.deleteBtn.style.margin = '0 10px'
+      this.deleteBtn.dataset.featureId = 'select-all-delete-btn'
       this.deleteBtn.addEventListener('click', this.handleDelete)
       target.appendChild(this.deleteBtn)
     }
@@ -218,8 +201,8 @@ export class SelectAllManager {
   private handleSelectAll = (): void => {
     const inputs = document.querySelectorAll('input[name="delete[]"]')
     inputs.forEach((item, index) => {
-      if (index !== 0) {
-        (item as HTMLInputElement).checked = true
+      if (index !== 0 && item instanceof HTMLInputElement) {
+        item.checked = true
       }
     })
   }

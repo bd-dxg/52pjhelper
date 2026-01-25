@@ -9,10 +9,15 @@ class NativeFloorDisplay {
   private enabled = false
   private readonly STORAGE_KEY = nativeFloorDisplayConfig.storageKey
 
+  constructor() {
+    // 异步初始化，不阻塞构造函数
+    void this.initialize()
+  }
+
   /**
    * 初始化功能
    */
-  async initialize(): Promise<void> {
+  private async initialize(): Promise<void> {
     try {
       const result = await browser.storage.local.get(this.STORAGE_KEY)
       this.enabled = Boolean(result[this.STORAGE_KEY] ?? nativeFloorDisplayConfig.defaultEnabled)

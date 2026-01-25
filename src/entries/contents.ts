@@ -1,5 +1,5 @@
 import { initializeNavigationHider, applyNavConfig } from '../utils/navigationHider'
-import { QuickQueryManager } from '../utils/quickQuery'
+import { AvatarQueryManager } from '../utils/avatarQuery'
 import { UserLinkQueryManager } from '../utils/userLinkQuery'
 import { loadQuickReplyConfig, saveQuickReplyConfig, initQuickReply, cleanupQuickReply } from '../utils/quickReply'
 import { FloorHighlighter } from '../utils/floorHighlighter'
@@ -12,8 +12,8 @@ import { DefaultTimeManager } from '../utils/defaultTime'
 // 防止重复初始化的标记
 const INIT_FLAG = '__52pj_helper_initialized__'
 
-// 创建便捷查询管理器实例
-let quickQueryManager: QuickQueryManager | null = null
+// 创建头像查询管理器实例
+let avatarQueryManager: AvatarQueryManager | null = null
 let userLinkQueryManager: UserLinkQueryManager | null = null
 let quickReplyEnabled = false
 let floorHighlighter: FloorHighlighter | null = null
@@ -37,8 +37,8 @@ export default defineContentScript({
       console.error('Failed to initialize navigation hider:', error)
     })
 
-    // 初始化便捷查询功能
-    quickQueryManager = new QuickQueryManager()
+    // 初始化头像查询功能
+    avatarQueryManager = new AvatarQueryManager()
 
     // 初始化用户链接查询功能
     userLinkQueryManager = new UserLinkQueryManager()
@@ -56,9 +56,6 @@ export default defineContentScript({
 
     // 初始化原生楼层显示功能
     nativeFloorDisplay = new NativeFloorDisplay()
-    nativeFloorDisplay.initialize().catch(error => {
-      console.error('Failed to initialize native floor display:', error)
-    })
 
     // 初始化全选功能
     selectAllManager = new SelectAllManager()
@@ -77,30 +74,30 @@ export default defineContentScript({
         return false
       }
 
-      if (message.type === 'TOGGLE_QUICK_QUERY') {
-        if (quickQueryManager) {
-          quickQueryManager
+      if (message.type === 'TOGGLE_AVATAR_QUERY') {
+        if (avatarQueryManager) {
+          avatarQueryManager
             .toggle()
             .then(enabled => {
               sendResponse({ success: true, enabled })
             })
             .catch(error => {
-              console.error('Toggle quick query failed:', error)
+              console.error('Toggle avatar query failed:', error)
               sendResponse({ success: false, message: 'Toggle failed' })
             })
           return true // 异步响应，保持端口开放
         } else {
-          sendResponse({ success: false, message: 'QuickQueryManager not initialized' })
+          sendResponse({ success: false, message: 'AvatarQueryManager not initialized' })
           return false
         }
       }
 
-      if (message.type === 'GET_QUICK_QUERY_STATUS') {
-        if (quickQueryManager) {
-          const enabled = quickQueryManager.getStatus()
+      if (message.type === 'GET_AVATAR_QUERY_STATUS') {
+        if (avatarQueryManager) {
+          const enabled = avatarQueryManager.getStatus()
           sendResponse({ success: true, enabled })
         } else {
-          sendResponse({ success: false, message: 'QuickQueryManager not initialized' })
+          sendResponse({ success: false, message: 'AvatarQueryManager not initialized' })
         }
         return false
       }

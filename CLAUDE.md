@@ -41,7 +41,7 @@ npx vue-tsc --noEmit # vue3+ts 类型检查
 - 支持实时切换显示/隐藏状态
 - 提供重置为默认配置功能
 
-### 2. 便捷查询
+### 2. 头像查询
 
 - 鼠标移动到用户头像时，自动显示该用户的违规记录
 - 支持启用/禁用功能切换
@@ -109,32 +109,34 @@ npx vue-tsc --noEmit # vue3+ts 类型检查
 | ------------------------------------------- | -------------------------- |
 | `src/configs/navigation.json`               | 导航菜单配置               |
 | `src/configs/quickReply.json`               | 快捷回复配置               |
-| `src/configs/quickQuery.json`               | 便捷查询配置               |
+| `src/configs/avatarQuery.json`              | 头像查询配置               |
+| `src/configs/userLinkQuery.json`            | 管理页面查询配置           |
+| `src/configs/selectAll.json`                | 全选功能配置               |
+| `src/configs/tableSelector.json`            | 分表选择器配置             |
+| `src/configs/defaultTime.json`              | 默认查询时间配置           |
 | `src/utils/navigationHider.ts`              | 导航菜单管理工具类         |
-| `src/utils/quickQuery.ts`                   | 便捷查询管理工具类         |
+| `src/utils/avatarQuery.ts`                  | 头像查询管理工具类         |
+| `src/utils/userLinkQuery.ts`                | 管理页面查询管理工具类     |
+| `src/utils/userViolationFetcher.ts`         | 用户违规信息获取公共工具   |
 | `src/utils/quickReply.ts`                   | 快捷回复管理工具类         |
 | `src/utils/floorHighlighter.ts`             | 楼层高亮管理工具类         |
 | `src/utils/userInfo.ts`                     | 用户信息获取和缓存工具类   |
 | `src/utils/themeManager.ts`                 | 主题管理工具类             |
 | `src/utils/nativeFloorDisplay.ts`           | 原生楼层显示管理工具类     |
+| `src/utils/selectAll.ts`                    | 全选功能管理工具类         |
+| `src/utils/tableSelector.ts`                | 分表选择器管理工具类       |
+| `src/utils/defaultTime.ts`                  | 默认查询时间管理工具类     |
 | `src/entries/contents.ts`                   | Content Script，初始化功能 |
 | `src/pages/SettingsPanel.vue`               | 设置面板组件（主容器）     |
 | `src/components/NavigationSettings.vue`     | 导航菜单设置组件           |
-| `src/components/QuickQueryToggle.vue`       | 便捷查询功能开关组件       |
+| `src/components/AvatarQueryToggle.vue`      | 头像查询功能开关组件       |
+| `src/components/UserLinkQueryToggle.vue`    | 管理页面查询功能开关组件   |
 | `src/components/QuickReplyToggle.vue`       | 快捷回复功能开关组件       |
 | `src/components/FloorHighlighterToggle.vue` | 楼层高亮功能开关组件       |
 | `src/components/NativeFloorDisplayToggle.vue` | 原生楼层显示功能开关组件   |
-| `src/components/SelectAllToggle.vue`          | 全选功能开关组件           |
-| `src/components/TableSelectorToggle.vue`      | 分表选择器功能开关组件     |
-| `src/components/DefaultTimeToggle.vue`        | 默认查询时间功能开关组件   |
-| `src/configs/selectAll.json`                  | 全选功能配置               |
-| `src/configs/tableSelector.json`              | 分表选择器配置             |
-| `src/configs/defaultTime.json`                | 默认查询时间配置           |
-| `src/configs/userLinkQuery.json`              | 管理页面查询配置           |
-| `src/utils/selectAll.ts`                      | 全选功能管理工具类         |
-| `src/utils/tableSelector.ts`                  | 分表选择器管理工具类       |
-| `src/utils/defaultTime.ts`                    | 默认查询时间管理工具类     |
-| `src/utils/userLinkQuery.ts`                  | 管理页面查询管理工具类     |
+| `src/components/SelectAllToggle.vue`        | 全选功能开关组件           |
+| `src/components/TableSelectorToggle.vue`    | 分表选择器功能开关组件     |
+| `src/components/DefaultTimeToggle.vue`      | 默认查询时间功能开关组件   |
 
 ## 路径别名配置
 

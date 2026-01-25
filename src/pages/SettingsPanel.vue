@@ -51,7 +51,7 @@
       <section v-show="activeTab === 'quickQuery'" role="tabpanel" class="tab-panel" aria-labelledby="quickQuery-tab">
         <div class="toggle-grid">
           <div class="toggle-column">
-            <QuickQueryToggle @show-message="showMessage" />
+            <AvatarQueryToggle @show-message="showMessage" />
             <QuickReplyToggle @show-message="showMessage" />
             <FloorHighlighterToggle @show-message="showMessage" />
             <NativeFloorDisplayToggle @show-message="showMessage" />
@@ -78,7 +78,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import NavigationSettings from '@com/NavigationSettings.vue'
-import QuickQueryToggle from '@com/QuickQueryToggle.vue'
+import AvatarQueryToggle from '@com/AvatarQueryToggle.vue'
 import QuickReplyToggle from '@com/QuickReplyToggle.vue'
 import FloorHighlighterToggle from '@com/FloorHighlighterToggle.vue'
 import NativeFloorDisplayToggle from '@com/NativeFloorDisplayToggle.vue'
