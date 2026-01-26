@@ -55,6 +55,7 @@
             <QuickReplyToggle @show-message="showMessage" />
             <FloorHighlighterToggle @show-message="showMessage" />
             <NativeFloorDisplayToggle @show-message="showMessage" />
+            <AutoFillToggle @show-message="showMessage" />
           </div>
           <div class="toggle-column">
             <SelectAllToggle @show-message="showMessage" />
@@ -86,6 +87,7 @@ import SelectAllToggle from '@com/SelectAllToggle.vue'
 import TableSelectorToggle from '@com/TableSelectorToggle.vue'
 import DefaultTimeToggle from '@com/DefaultTimeToggle.vue'
 import UserLinkQueryToggle from '@com/UserLinkQueryToggle.vue'
+import AutoFillToggle from '@com/AutoFillToggle.vue'
 import type { UserInfo } from '@utils/userInfo'
 import { getUserInfoFromCache } from '@utils/userInfo'
 

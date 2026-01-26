@@ -103,6 +103,32 @@ npx vue-tsc --noEmit # vue3+ts 类型检查
 - 支持启用/禁用功能切换
 - 配置通过浏览器 storage 本地存储
 
+### 13. 自动填充
+
+- 智能监控多种表单，满足条件时自动填充回复内容
+- 使用 MutationObserver 监听动态创建的表单
+- 支持启用/禁用功能切换
+- 配置通过浏览器 storage 本地存储
+- 使用配置驱动的表单检测机制，易于扩展
+- 使用 WeakSet 防止重复绑定，避免内存泄漏
+
+**支持的表单：**
+
+1. **评分表单（rateform）**
+   - 监控 `score2`（威望）和 `score6`（热心值）输入框
+   - 当 `score2 > 0` 或 `score6 = 1` 时自动填充
+   - 填充内容："已经处理，感谢您对吾爱破解论坛的支持！"
+
+2. **处理表单（moderateform）**
+   - 监控 `typeid` 下拉框的选项
+   - 选择"已答复"时填充："欢迎分析讨论交流，吾爱破解论坛有你更精彩！"
+   - 选择"已处理"时填充："已经处理，感谢您对吾爱破解论坛的支持！"
+
+3. **举报表单（reportform）**
+   - 监控所有 `select[name*="creditsvalue"]` 元素
+   - 当选择正数值（如 +1, +2, +5）时自动填充对应的 `input[name*="msg"]`
+   - 填充内容："已经处理，感谢您对吾爱破解论坛的支持！"
+
 ## 主要文件
 
 | 文件                                        | 作用                       |
@@ -114,6 +140,7 @@ npx vue-tsc --noEmit # vue3+ts 类型检查
 | `src/configs/selectAll.json`                | 全选功能配置               |
 | `src/configs/tableSelector.json`            | 分表选择器配置             |
 | `src/configs/defaultTime.json`              | 默认查询时间配置           |
+| `src/configs/autoFill.json`                 | 自动填充配置               |
 | `src/utils/navigationHider.ts`              | 导航菜单管理工具类         |
 | `src/utils/avatarQuery.ts`                  | 头像查询管理工具类         |
 | `src/utils/userLinkQuery.ts`                | 管理页面查询管理工具类     |
@@ -126,6 +153,7 @@ npx vue-tsc --noEmit # vue3+ts 类型检查
 | `src/utils/selectAll.ts`                    | 全选功能管理工具类         |
 | `src/utils/tableSelector.ts`                | 分表选择器管理工具类       |
 | `src/utils/defaultTime.ts`                  | 默认查询时间管理工具类     |
+| `src/utils/autoFill.ts`                     | 自动填充管理工具类         |
 | `src/entries/contents.ts`                   | Content Script，初始化功能 |
 | `src/pages/SettingsPanel.vue`               | 设置面板组件（主容器）     |
 | `src/components/NavigationSettings.vue`     | 导航菜单设置组件           |
@@ -137,6 +165,7 @@ npx vue-tsc --noEmit # vue3+ts 类型检查
 | `src/components/SelectAllToggle.vue`        | 全选功能开关组件           |
 | `src/components/TableSelectorToggle.vue`    | 分表选择器功能开关组件     |
 | `src/components/DefaultTimeToggle.vue`      | 默认查询时间功能开关组件   |
+| `src/components/AutoFillToggle.vue`         | 自动填充功能开关组件       |
 
 ## 路径别名配置
 

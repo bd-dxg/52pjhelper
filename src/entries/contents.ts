@@ -8,6 +8,7 @@ import { NativeFloorDisplay } from '../utils/nativeFloorDisplay'
 import { SelectAllManager } from '../utils/selectAll'
 import { TableSelectorManager } from '../utils/tableSelector'
 import { DefaultTimeManager } from '../utils/defaultTime'
+import { autoFillManager } from '../utils/autoFill'
 
 // 防止重复初始化的标记
 const INIT_FLAG = '__52pj_helper_initialized__'
@@ -65,6 +66,9 @@ export default defineContentScript({
 
     // 初始化默认时间功能
     defaultTimeManager = new DefaultTimeManager()
+
+    // 初始化自动填充功能
+    autoFillManager.init()
 
     // 监听来自 popup 的消息
     browser.runtime.onMessage.addListener((message, _, sendResponse) => {

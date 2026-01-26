@@ -15,6 +15,7 @@ declare global {
   const UserLinkQueryManager: typeof import('D:/code/front-end/52pjhelper/src/utils/userLinkQuery').UserLinkQueryManager
   const applyNavConfig: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').applyNavConfig
   const applyTheme: typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager').applyTheme
+  const autoFillManager: typeof import('D:/code/front-end/52pjhelper/src/utils/autoFill').autoFillManager
   const browser: typeof import('wxt/browser').browser
   const cleanupQuickReply: typeof import('D:/code/front-end/52pjhelper/src/utils/quickReply').cleanupQuickReply
   const computed: typeof import('vue').computed
@@ -183,6 +184,7 @@ declare module 'vue' {
     readonly UserLinkQueryManager: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userLinkQuery')['UserLinkQueryManager']>
     readonly applyNavConfig: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['applyNavConfig']>
     readonly applyTheme: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager')['applyTheme']>
+    readonly autoFillManager: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/autoFill')['autoFillManager']>
     readonly browser: UnwrapRef<typeof import('wxt/browser')['browser']>
     readonly cleanupQuickReply: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/quickReply')['cleanupQuickReply']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>

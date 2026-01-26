@@ -1,0 +1,8 @@
+{
+  "storageKey": "autoFillEnabled",
+  "defaultEnabled": true,
+  "messages": {
+    "default": "已经处理，感谢您对吾爱破解论坛的支持！",
+    "replied": "欢迎分析讨论交流，吾爱破解论坛有你更精彩！"
+  }
+}
