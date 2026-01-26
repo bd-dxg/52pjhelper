@@ -291,7 +291,6 @@ export class UserLinkQueryManager {
     this.popupElement.style.top = `${top}px`
   }
 
-
   /**
    * 附加事件监听器
    */
@@ -453,7 +452,6 @@ export class UserLinkQueryManager {
     this.scheduleHidePopup()
   }
 
-
   /**
    * 安排隐藏悬浮层
    */
@@ -519,6 +517,6 @@ export class UserLinkQueryManager {
    * 检查是否在管理页面
    */
   private isManagementPage(): boolean {
-    return window.location.href.includes('forum.php?mod=modcp&action=moderate&op=threads')
+    return window.location.href.includes('https://www.52pojie.cn/forum.php?mod=modcp&action=moderate')
   }
 }
