@@ -69,7 +69,7 @@ export function getUserInfo(): UserInfo {
 
   try {
     // 获取用户名：从 .vwmy.qq a 元素获取
-    const usernameElement = document.querySelector('.vwmy.qq a')
+    const usernameElement = document.querySelector('.vwmy a')
     const username = usernameElement?.textContent?.trim() || ''
 
     // 获取用户等级：从 #g_upmine 下的 font 元素获取
