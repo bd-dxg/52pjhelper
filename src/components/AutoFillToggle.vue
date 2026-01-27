@@ -15,6 +15,7 @@ import { ref, onMounted } from 'vue'
 import autoFillConfig from '@/configs/autoFill.json'
 
 const enabled = ref(autoFillConfig.defaultEnabled)
+const emit = defineEmits(['show-message'])
 const STORAGE_KEY = autoFillConfig.storageKey
 
 onMounted(async () => {
@@ -29,16 +30,21 @@ const toggleAutoFill = async () => {
       const response = await browser.tabs.sendMessage(tab.id, { type: 'TOGGLE_AUTO_FILL' })
       if (response?.success) {
         enabled.value = response.enabled
+        emit('show-message', enabled.value ? '自动填充已启用' : '自动填充已禁用', 'success')
+      } else {
+        emit('show-message', '切换自动填充失败', 'error')
       }
     } else {
       const newEnabled = !enabled.value
       enabled.value = newEnabled
       await browser.storage.local.set({ [STORAGE_KEY]: newEnabled })
+      emit('show-message', enabled.value ? '自动填充已启用' : '自动填充已禁用', 'success')
     }
   } catch (error) {
     const newEnabled = !enabled.value
     enabled.value = newEnabled
     await browser.storage.local.set({ [STORAGE_KEY]: newEnabled })
+    emit('show-message', enabled.value ? '自动填充已启用' : '自动填充已禁用', 'success')
   }
 }
 </script>
