@@ -16,14 +16,21 @@ declare global {
   const UserLinkQueryManager: typeof import('D:/code/front-end/52pjhelper/src/utils/userLinkQuery').UserLinkQueryManager
   const applyNavConfig: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').applyNavConfig
   const applyTheme: typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager').applyTheme
-  const autoFillManager: typeof import('D:/code/front-end/52pjhelper/src/utils/autoFill').autoFillManager
   const browser: typeof import('wxt/browser').browser
   const cleanupQuickReply: typeof import('D:/code/front-end/52pjhelper/src/utils/quickReply').cleanupQuickReply
   const computed: typeof import('vue').computed
   const createApp: typeof import('vue').createApp
+  const createAvatarQuery: typeof import('D:/code/front-end/52pjhelper/src/utils/avatarQuery').createAvatarQuery
+  const createDefaultTime: typeof import('D:/code/front-end/52pjhelper/src/utils/defaultTime').createDefaultTime
+  const createDuplicatePostDetection: typeof import('D:/code/front-end/52pjhelper/src/utils/duplicatePostDetection').createDuplicatePostDetection
+  const createFloorHighlighter: typeof import('D:/code/front-end/52pjhelper/src/utils/floorHighlighter').createFloorHighlighter
   const createIframeUi: typeof import('wxt/utils/content-script-ui/iframe').createIframeUi
   const createIntegratedUi: typeof import('wxt/utils/content-script-ui/integrated').createIntegratedUi
+  const createNativeFloorDisplay: typeof import('D:/code/front-end/52pjhelper/src/utils/nativeFloorDisplay').createNativeFloorDisplay
+  const createSelectAll: typeof import('D:/code/front-end/52pjhelper/src/utils/selectAll').createSelectAll
   const createShadowRootUi: typeof import('wxt/utils/content-script-ui/shadow-root').createShadowRootUi
+  const createTableSelector: typeof import('D:/code/front-end/52pjhelper/src/utils/tableSelector').createTableSelector
+  const createUserLinkQuery: typeof import('D:/code/front-end/52pjhelper/src/utils/userLinkQuery').createUserLinkQuery
   const customRef: typeof import('vue').customRef
   const defineAppConfig: typeof import('wxt/utils/define-app-config').defineAppConfig
   const defineAsyncComponent: typeof import('vue').defineAsyncComponent
@@ -38,7 +45,6 @@ declare global {
   const extractUidFromHref: typeof import('D:/code/front-end/52pjhelper/src/utils/userViolationFetcher').extractUidFromHref
   const fakeBrowser: typeof import('wxt/testing').fakeBrowser
   const fetchUserViolation: typeof import('D:/code/front-end/52pjhelper/src/utils/userViolationFetcher').fetchUserViolation
-  const getAutoFillManager: typeof import('D:/code/front-end/52pjhelper/src/utils/autoFill').getAutoFillManager
   const getCurrentInstance: typeof import('vue').getCurrentInstance
   const getCurrentScope: typeof import('vue').getCurrentScope
   const getCurrentTheme: typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager').getCurrentTheme
@@ -146,28 +152,28 @@ declare global {
   export type { Component, Slot, Slots, ComponentPublicInstance, ComputedRef, DirectiveBinding, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, ShallowRef, MaybeRef, MaybeRefOrGetter, VNode, WritableComputedRef } from 'vue'
   import('vue')
   // @ts-ignore
-  export type { AutoFillConfig } from 'D:/code/front-end/52pjhelper/src/utils/autoFill'
-  import('D:/code/front-end/52pjhelper/src/utils/autoFill')
-  // @ts-ignore
-  export type { AvatarQueryManager } from 'D:/code/front-end/52pjhelper/src/utils/avatarQuery'
+  export type { AvatarQueryManager, IAvatarQuery } from 'D:/code/front-end/52pjhelper/src/utils/avatarQuery'
   import('D:/code/front-end/52pjhelper/src/utils/avatarQuery')
   // @ts-ignore
-  export type { DefaultTimeManager } from 'D:/code/front-end/52pjhelper/src/utils/defaultTime'
+  export type { DefaultTimeManager, IDefaultTime } from 'D:/code/front-end/52pjhelper/src/utils/defaultTime'
   import('D:/code/front-end/52pjhelper/src/utils/defaultTime')
   // @ts-ignore
-  export type { DuplicatePostDetectionManager } from 'D:/code/front-end/52pjhelper/src/utils/duplicatePostDetection'
+  export type { DuplicatePostDetectionManager, IDuplicatePostDetection } from 'D:/code/front-end/52pjhelper/src/utils/duplicatePostDetection'
   import('D:/code/front-end/52pjhelper/src/utils/duplicatePostDetection')
   // @ts-ignore
-  export type { FloorHighlighter } from 'D:/code/front-end/52pjhelper/src/utils/floorHighlighter'
+  export type { FloorHighlighter, IFloorHighlighter } from 'D:/code/front-end/52pjhelper/src/utils/floorHighlighter'
   import('D:/code/front-end/52pjhelper/src/utils/floorHighlighter')
+  // @ts-ignore
+  export type { NativeFloorDisplay, INativeFloorDisplay } from 'D:/code/front-end/52pjhelper/src/utils/nativeFloorDisplay'
+  import('D:/code/front-end/52pjhelper/src/utils/nativeFloorDisplay')
   // @ts-ignore
   export type { NavMenuConfig, UserNavConfig } from 'D:/code/front-end/52pjhelper/src/utils/navigationHider'
   import('D:/code/front-end/52pjhelper/src/utils/navigationHider')
   // @ts-ignore
-  export type { SelectAllManager } from 'D:/code/front-end/52pjhelper/src/utils/selectAll'
+  export type { SelectAllManager, ISelectAll } from 'D:/code/front-end/52pjhelper/src/utils/selectAll'
   import('D:/code/front-end/52pjhelper/src/utils/selectAll')
   // @ts-ignore
-  export type { TableSelectorManager } from 'D:/code/front-end/52pjhelper/src/utils/tableSelector'
+  export type { TableSelectorManager, ITableSelector } from 'D:/code/front-end/52pjhelper/src/utils/tableSelector'
   import('D:/code/front-end/52pjhelper/src/utils/tableSelector')
   // @ts-ignore
   export type { Theme } from 'D:/code/front-end/52pjhelper/src/utils/themeManager'
@@ -176,7 +182,7 @@ declare global {
   export type { UserInfo } from 'D:/code/front-end/52pjhelper/src/utils/userInfo'
   import('D:/code/front-end/52pjhelper/src/utils/userInfo')
   // @ts-ignore
-  export type { UserLinkQueryManager } from 'D:/code/front-end/52pjhelper/src/utils/userLinkQuery'
+  export type { UserLinkQueryManager, IUserLinkQuery } from 'D:/code/front-end/52pjhelper/src/utils/userLinkQuery'
   import('D:/code/front-end/52pjhelper/src/utils/userLinkQuery')
 }
 // for vue template auto import
@@ -198,14 +204,21 @@ declare module 'vue' {
     readonly UserLinkQueryManager: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userLinkQuery')['UserLinkQueryManager']>
     readonly applyNavConfig: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['applyNavConfig']>
     readonly applyTheme: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager')['applyTheme']>
-    readonly autoFillManager: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/autoFill')['autoFillManager']>
     readonly browser: UnwrapRef<typeof import('wxt/browser')['browser']>
     readonly cleanupQuickReply: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/quickReply')['cleanupQuickReply']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
     readonly createApp: UnwrapRef<typeof import('vue')['createApp']>
+    readonly createAvatarQuery: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/avatarQuery')['createAvatarQuery']>
+    readonly createDefaultTime: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/defaultTime')['createDefaultTime']>
+    readonly createDuplicatePostDetection: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/duplicatePostDetection')['createDuplicatePostDetection']>
+    readonly createFloorHighlighter: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/floorHighlighter')['createFloorHighlighter']>
     readonly createIframeUi: UnwrapRef<typeof import('wxt/utils/content-script-ui/iframe')['createIframeUi']>
     readonly createIntegratedUi: UnwrapRef<typeof import('wxt/utils/content-script-ui/integrated')['createIntegratedUi']>
+    readonly createNativeFloorDisplay: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/nativeFloorDisplay')['createNativeFloorDisplay']>
+    readonly createSelectAll: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/selectAll')['createSelectAll']>
     readonly createShadowRootUi: UnwrapRef<typeof import('wxt/utils/content-script-ui/shadow-root')['createShadowRootUi']>
+    readonly createTableSelector: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/tableSelector')['createTableSelector']>
+    readonly createUserLinkQuery: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userLinkQuery')['createUserLinkQuery']>
     readonly customRef: UnwrapRef<typeof import('vue')['customRef']>
     readonly defineAppConfig: UnwrapRef<typeof import('wxt/utils/define-app-config')['defineAppConfig']>
     readonly defineAsyncComponent: UnwrapRef<typeof import('vue')['defineAsyncComponent']>
@@ -220,7 +233,6 @@ declare module 'vue' {
     readonly extractUidFromHref: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userViolationFetcher')['extractUidFromHref']>
     readonly fakeBrowser: UnwrapRef<typeof import('wxt/testing')['fakeBrowser']>
     readonly fetchUserViolation: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userViolationFetcher')['fetchUserViolation']>
-    readonly getAutoFillManager: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/autoFill')['getAutoFillManager']>
     readonly getCurrentInstance: UnwrapRef<typeof import('vue')['getCurrentInstance']>
     readonly getCurrentScope: UnwrapRef<typeof import('vue')['getCurrentScope']>
     readonly getCurrentTheme: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager')['getCurrentTheme']>

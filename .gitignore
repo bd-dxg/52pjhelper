@@ -2,3 +2,6 @@ node_modules
 dist
 
 .claude/settings*
+findings.md
+progress.md
+task_plan.md

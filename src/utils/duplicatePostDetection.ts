@@ -5,106 +5,33 @@
 
 import duplicatePostDetectionConfig from '@/configs/duplicatePostDetection.json'
 
-const DUPLICATE_POST_DETECTION_STORAGE_KEY = duplicatePostDetectionConfig.storageKey
+const STORAGE_KEY = duplicatePostDetectionConfig.storageKey
 
 /**
- * 重复发帖检测管理类
+ * 重复发帖检测管理器接口
  */
-export class DuplicatePostDetectionManager {
-  private isEnabled: boolean = false
-  private styleElement: HTMLStyleElement | null = null
+export interface IDuplicatePostDetection {
+  enable(): Promise<void>
+  disable(): Promise<void>
+  toggle(): Promise<boolean>
+  getStatus(): boolean
+}
 
-  constructor() {
-    // 异步初始化，不阻塞构造函数
-    void this.init()
-  }
-
-  /**
-   * 初始化
-   */
-  private async init(): Promise<void> {
-    await this.loadConfig()
-    if (this.isEnabled) {
-      this.injectStyles()
-      this.detectDuplicatePosts()
-    }
-  }
-
-  /**
-   * 从存储加载配置
-   */
-  private async loadConfig(): Promise<void> {
-    try {
-      const result = await browser.storage.local.get(DUPLICATE_POST_DETECTION_STORAGE_KEY)
-      this.isEnabled = (result[DUPLICATE_POST_DETECTION_STORAGE_KEY] as boolean | undefined) ?? duplicatePostDetectionConfig.defaultEnabled
-    } catch (error) {
-      console.error('加载重复发帖检测配置失败:', error)
-      this.isEnabled = false
-    }
-  }
-
-  /**
-   * 保存配置到存储
-   */
-  private async saveConfig(): Promise<void> {
-    try {
-      await browser.storage.local.set({ [DUPLICATE_POST_DETECTION_STORAGE_KEY]: this.isEnabled })
-    } catch (error) {
-      console.error('保存重复发帖检测配置失败:', error)
-    }
-  }
-
-  /**
-   * 启用重复发帖检测功能
-   */
-  public async enable(): Promise<void> {
-    if (this.isEnabled) return // 如果已经启用，直接返回
-
-    this.isEnabled = true
-    await this.saveConfig()
-    this.injectStyles()
-    this.detectDuplicatePosts()
-  }
-
-  /**
-   * 禁用重复发帖检测功能
-   */
-  public async disable(): Promise<void> {
-    if (!this.isEnabled) return // 如果已经禁用，直接返回
-
-    this.isEnabled = false
-    await this.saveConfig()
-    this.removeStyles()
-    this.removeHighlights()
-  }
-
-  /**
-   * 切换功能状态
-   */
-  public async toggle(): Promise<boolean> {
-    if (this.isEnabled) {
-      await this.disable()
-    } else {
-      await this.enable()
-    }
-    return this.isEnabled
-  }
-
-  /**
-   * 获取当前状态
-   */
-  public getStatus(): boolean {
-    return this.isEnabled
-  }
+/**
+ * 创建重复发帖检测管理器实例
+ */
+export function createDuplicatePostDetection(): IDuplicatePostDetection {
+  let isEnabled = false
+  let styleElement: HTMLStyleElement | null = null
 
   /**
    * 注入高亮样式
    */
-  private injectStyles(): void {
-    if (this.styleElement) return
+  const injectStyles = (): void => {
+    if (styleElement) return
 
-    this.styleElement = document.createElement('style')
-    this.styleElement.textContent = `
+    styleElement = document.createElement('style')
+    styleElement.textContent = `
       .duplicate-post-highlight {
         background-color: #fff3cd !important;
         border: 2px solid #ffc107 !important;
@@ -115,23 +42,23 @@ export class DuplicatePostDetectionManager {
         background-color: #ffeaa7 !important;
       }
     `
-    document.head.appendChild(this.styleElement)
+    document.head.appendChild(styleElement)
   }
 
   /**
    * 移除样式
    */
-  private removeStyles(): void {
-    if (this.styleElement) {
-      this.styleElement.remove()
-      this.styleElement = null
+  const removeStyles = (): void => {
+    if (styleElement) {
+      styleElement.remove()
+      styleElement = null
     }
   }
 
   /**
    * 移除所有高亮
    */
-  private removeHighlights(): void {
+  const removeHighlights = (): void => {
     const highlightedRows = document.querySelectorAll('.duplicate-post-highlight')
     highlightedRows.forEach(row => {
       row.classList.remove('duplicate-post-highlight')
@@ -141,7 +68,7 @@ export class DuplicatePostDetectionManager {
   /**
    * 检测重复发帖
    */
-  private detectDuplicatePosts(): void {
+  const detectDuplicatePosts = (): void => {
     // 检查是否是目标页面
     const isTargetPage = duplicatePostDetectionConfig.targetPages.some(page => {
       // 支持精确匹配和模糊匹配
@@ -179,7 +106,7 @@ export class DuplicatePostDetectionManager {
         // 获取作者信息（cite a[c="1"]）
         const authorLink = row.querySelector('th[class="common"] + .by cite a[c="1"]')
 
-        if (authorLink && authorLink.textContent) {
+        if (authorLink?.textContent) {
           const author = authorLink.textContent.trim()
           todayPosts.push({
             author: author,
@@ -192,7 +119,8 @@ export class DuplicatePostDetectionManager {
     // 查找重复作者的帖子
     const authorCounts: { [key: string]: number } = {}
     todayPosts.forEach(post => {
-      authorCounts[post.author] = (authorCounts[post.author] || 0) + 1
+      authorCounts[post.author] ??= 0
+      authorCounts[post.author]++
     })
 
     // 高亮重复作者的帖子
@@ -202,5 +130,119 @@ export class DuplicatePostDetectionManager {
         post.row.classList.add('duplicate-post-highlight')
       }
     })
+  }
+
+  /**
+   * 从存储加载配置
+   */
+  const loadConfig = async (): Promise<void> => {
+    try {
+      const result = await browser.storage.local.get(STORAGE_KEY)
+      isEnabled = (result[STORAGE_KEY] as boolean | undefined) ?? duplicatePostDetectionConfig.defaultEnabled
+    } catch (error) {
+      console.error('加载重复发帖检测配置失败:', error)
+      isEnabled = false
+    }
+  }
+
+  /**
+   * 保存配置到存储
+   */
+  const saveConfig = async (): Promise<void> => {
+    try {
+      await browser.storage.local.set({ [STORAGE_KEY]: isEnabled })
+    } catch (error) {
+      console.error('保存重复发帖检测配置失败:', error)
+    }
+  }
+
+  /**
+   * 启用重复发帖检测功能
+   */
+  const enable = async (): Promise<void> => {
+    if (isEnabled) return // 如果已经启用，直接返回
+
+    isEnabled = true
+    await saveConfig()
+    injectStyles()
+    detectDuplicatePosts()
+  }
+
+  /**
+   * 禁用重复发帖检测功能
+   */
+  const disable = async (): Promise<void> => {
+    if (!isEnabled) return // 如果已经禁用，直接返回
+
+    isEnabled = false
+    await saveConfig()
+    removeStyles()
+    removeHighlights()
+  }
+
+  /**
+   * 切换功能状态
+   */
+  const toggle = async (): Promise<boolean> => {
+    if (isEnabled) {
+      await disable()
+    } else {
+      await enable()
+    }
+    return isEnabled
+  }
+
+  /**
+   * 获取当前状态
+   */
+  const getStatus = (): boolean => isEnabled
+
+  /**
+   * 初始化
+   */
+  const init = async (): Promise<void> => {
+    await loadConfig()
+    if (isEnabled) {
+      injectStyles()
+      detectDuplicatePosts()
+    }
+  }
+
+  // 异步初始化，不阻塞构造
+  void init()
+
+  return {
+    enable,
+    disable,
+    toggle,
+    getStatus
+  }
+}
+
+/**
+ * 为了保持向后兼容，导出一个类包装器
+ * @deprecated 请使用 createDuplicatePostDetection() 函数
+ */
+export class DuplicatePostDetectionManager {
+  private instance: IDuplicatePostDetection
+
+  constructor() {
+    this.instance = createDuplicatePostDetection()
+  }
+
+  async enable(): Promise<void> {
+    return this.instance.enable()
+  }
+
+  async disable(): Promise<void> {
+    return this.instance.disable()
+  }
+
+  async toggle(): Promise<boolean> {
+    return this.instance.toggle()
+  }
+
+  getStatus(): boolean {
+    return this.instance.getStatus()
   }
 }

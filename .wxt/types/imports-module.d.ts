@@ -18,19 +18,18 @@ declare module '#imports' {
   export { InvalidMatchPattern, MatchPattern } from 'wxt/utils/match-patterns';
   export { onActivated, onBeforeMount, onBeforeUnmount, onBeforeUpdate, onErrorCaptured, onDeactivated, onMounted, onServerPrefetch, onUnmounted, onUpdated, useAttrs, useSlots, computed, customRef, isReadonly, isRef, isShallow, isProxy, isReactive, markRaw, reactive, readonly, ref, shallowReactive, shallowReadonly, shallowRef, triggerRef, toRaw, toRef, toRefs, toValue, unref, watch, watchEffect, watchPostEffect, watchSyncEffect, defineComponent, defineAsyncComponent, getCurrentInstance, h, inject, nextTick, provide, useCssModule, createApp, effectScope, EffectScope, getCurrentScope, onScopeDispose, Component, Slot, Slots, ComponentPublicInstance, ComputedRef, DirectiveBinding, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, ShallowRef, MaybeRef, MaybeRefOrGetter, VNode, WritableComputedRef, onRenderTracked, onRenderTriggered, resolveComponent, useCssVars, useModel, getCurrentWatcher, onWatcherCleanup, useId, useTemplateRef } from 'vue';
   export { fakeBrowser } from 'wxt/testing';
-  export { getAutoFillManager, autoFillManager, AutoFillConfig } from '../src/utils/autoFill';
-  export { AvatarQueryManager, AvatarQueryManager } from '../src/utils/avatarQuery';
-  export { DefaultTimeManager, DefaultTimeManager } from '../src/utils/defaultTime';
-  export { DuplicatePostDetectionManager, DuplicatePostDetectionManager } from '../src/utils/duplicatePostDetection';
-  export { FloorHighlighter, FloorHighlighter } from '../src/utils/floorHighlighter';
-  export { NativeFloorDisplay } from '../src/utils/nativeFloorDisplay';
+  export { createAvatarQuery, AvatarQueryManager, AvatarQueryManager, IAvatarQuery } from '../src/utils/avatarQuery';
+  export { createDefaultTime, DefaultTimeManager, DefaultTimeManager, IDefaultTime } from '../src/utils/defaultTime';
+  export { createDuplicatePostDetection, DuplicatePostDetectionManager, DuplicatePostDetectionManager, IDuplicatePostDetection } from '../src/utils/duplicatePostDetection';
+  export { createFloorHighlighter, FloorHighlighter, FloorHighlighter, IFloorHighlighter } from '../src/utils/floorHighlighter';
+  export { createNativeFloorDisplay, NativeFloorDisplay, NativeFloorDisplay, INativeFloorDisplay } from '../src/utils/nativeFloorDisplay';
   export { DEFAULT_NAV_MENUS, saveNavConfig, loadNavConfig, hideMenu, showMenu, applyNavConfig, toggleMenu, initializeNavigationHider, NavMenuConfig, UserNavConfig } from '../src/utils/navigationHider';
   export { loadQuickReplyConfig, saveQuickReplyConfig, initQuickReply, cleanupQuickReply } from '../src/utils/quickReply';
   export { initializeRowClickToCheck, enableRowClickToCheck, disableRowClickToCheck, toggleRowClickToCheck, getRowClickToCheckStatus } from '../src/utils/rowClickToCheck';
-  export { SelectAllManager, SelectAllManager } from '../src/utils/selectAll';
-  export { TableSelectorManager, TableSelectorManager } from '../src/utils/tableSelector';
+  export { createSelectAll, SelectAllManager, SelectAllManager, ISelectAll } from '../src/utils/selectAll';
+  export { createTableSelector, TableSelectorManager, TableSelectorManager, ITableSelector } from '../src/utils/tableSelector';
   export { getCurrentTheme, applyTheme, watchThemeChange, initTheme, Theme } from '../src/utils/themeManager';
   export { saveUserInfoToCache, getUserInfoFromCache, getUserInfo, watchUserInfo, UserInfo } from '../src/utils/userInfo';
-  export { UserLinkQueryManager, UserLinkQueryManager } from '../src/utils/userLinkQuery';
+  export { createUserLinkQuery, UserLinkQueryManager, UserLinkQueryManager, IUserLinkQuery } from '../src/utils/userLinkQuery';
   export { fetchUserViolation, extractUidFromHref } from '../src/utils/userViolationFetcher';
 }

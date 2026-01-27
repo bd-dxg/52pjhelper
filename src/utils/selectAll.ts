@@ -5,200 +5,38 @@
 
 import selectAllConfig from '@/configs/selectAll.json'
 
-const SELECT_ALL_STORAGE_KEY = selectAllConfig.storageKey
+const STORAGE_KEY = selectAllConfig.storageKey
 
 /**
- * 全选功能管理类
+ * 全选功能管理器接口
  */
-export class SelectAllManager {
-  private isEnabled: boolean = false
-  private selectAllBtn: HTMLButtonElement | null = null
-  private deleteBtn: HTMLButtonElement | null = null
+export interface ISelectAll {
+  enable(): Promise<void>
+  disable(): Promise<void>
+  toggle(): Promise<boolean>
+  getStatus(): boolean
+}
 
-  constructor() {
-    // 异步初始化，不阻塞构造函数
-    void this.init()
-  }
-
-  /**
-   * 初始化
-   */
-  private async init(): Promise<void> {
-    await this.loadConfig()
-    if (this.isEnabled) {
-      this.injectStyles()
-      this.attachEventListeners()
-    }
-  }
-
-  /**
-   * 从存储加载配置
-   */
-  private async loadConfig(): Promise<void> {
-    try {
-      const result = await browser.storage.local.get(SELECT_ALL_STORAGE_KEY)
-      this.isEnabled = (result[SELECT_ALL_STORAGE_KEY] as boolean | undefined) ?? selectAllConfig.defaultEnabled
-    } catch (error) {
-      console.error('加载全选功能配置失败:', error)
-      this.isEnabled = false
-    }
-  }
-
-  /**
-   * 保存配置到存储
-   */
-  private async saveConfig(): Promise<void> {
-    try {
-      await browser.storage.local.set({ [SELECT_ALL_STORAGE_KEY]: this.isEnabled })
-    } catch (error) {
-      console.error('保存全选功能配置失败:', error)
-    }
-  }
-
-  /**
-   * 启用全选功能
-   */
-  public async enable(): Promise<void> {
-    if (this.isEnabled) return // 如果已经启用，直接返回
-
-    this.isEnabled = true
-    await this.saveConfig()
-    this.injectStyles()
-    this.attachEventListeners()
-  }
-
-  /**
-   * 禁用全选功能
-   */
-  public async disable(): Promise<void> {
-    if (!this.isEnabled) return // 如果已经禁用，直接返回
-
-    this.isEnabled = false
-    await this.saveConfig()
-    this.removeStyles()
-    this.removeEventListeners()
-    this.cleanupInjectedContent()
-  }
-
-  /**
-   * 切换功能状态
-   */
-  public async toggle(): Promise<boolean> {
-    if (this.isEnabled) {
-      await this.disable()
-    } else {
-      await this.enable()
-    }
-    return this.isEnabled
-  }
-
-  /**
-   * 获取当前状态
-   */
-  public getStatus(): boolean {
-    return this.isEnabled
-  }
-
-  /**
-   * 注入样式
-   */
-  private injectStyles(): void {
-    // 全选功能不需要额外的CSS样式，使用内联样式
-    // 原始油猴脚本只有 button.style.margin = '0 10px'
-  }
-
-  /**
-   * 移除样式
-   */
-  private removeStyles(): void {
-    // 全选功能没有注入样式，不需要移除
-  }
-
-  /**
-   * 附加事件监听器
-   */
-  private attachEventListeners(): void {
-    // 检查是否在管理页面
-    if (!this.isManagementPage()) return
-
-    // 初始化按钮
-    this.initButtons()
-  }
-
-  /**
-   * 移除事件监听器
-   */
-  private removeEventListeners(): void {
-    if (this.selectAllBtn) {
-      this.selectAllBtn.removeEventListener('click', this.handleSelectAll)
-      this.selectAllBtn = null
-    }
-    if (this.deleteBtn) {
-      this.deleteBtn.removeEventListener('click', this.handleDelete)
-      this.deleteBtn = null
-    }
-  }
-
-  /**
-   * 清理已注入的内容
-   */
-  private cleanupInjectedContent(): void {
-    // 方法1：通过引用移除按钮
-    if (this.selectAllBtn) {
-      this.selectAllBtn.remove()
-      this.selectAllBtn = null
-    }
-    if (this.deleteBtn) {
-      this.deleteBtn.remove()
-      this.deleteBtn = null
-    }
-
-    // 方法2：通过 data 属性查找并移除所有可能残留的按钮（性能优化）
-    document.querySelectorAll('[data-feature-id^="select-all-"]')
-      .forEach(btn => btn.remove())
-  }
+/**
+ * 创建全选功能管理器实例
+ */
+export function createSelectAll(): ISelectAll {
+  let isEnabled = false
+  let selectAllBtn: HTMLButtonElement | null = null
+  let deleteBtn: HTMLButtonElement | null = null
 
   /**
    * 检查是否在管理页面
    */
-  private isManagementPage(): boolean {
+  const isManagementPage = (): boolean => {
     const url = window.location.href
     return url.includes('forum.php?mod=modcp&action=thread&op=post')
   }
 
   /**
-   * 初始化按钮
-   */
-  private initButtons(): void {
-    const target = document.querySelector('.mtm.mbm')
-    if (!target) return
-
-    // 创建"除第一条全选"按钮 - 使用原始油猴脚本的样式
-    this.selectAllBtn = document.createElement('button')
-    this.selectAllBtn.type = 'button'
-    this.selectAllBtn.textContent = '除第一条 全选'
-    this.selectAllBtn.style.margin = '0 10px'
-    this.selectAllBtn.dataset.featureId = 'select-all-btn'
-    this.selectAllBtn.addEventListener('click', this.handleSelectAll)
-    target.appendChild(this.selectAllBtn)
-
-    // 创建"删除"按钮 - 使用原始油猴脚本的样式
-    const originalDeleteBtn = document.querySelector('#deletesubmit')
-    if (originalDeleteBtn) {
-      this.deleteBtn = document.createElement('button')
-      this.deleteBtn.type = 'button'
-      this.deleteBtn.textContent = '删除'
-      this.deleteBtn.style.margin = '0 10px'
-      this.deleteBtn.dataset.featureId = 'select-all-delete-btn'
-      this.deleteBtn.addEventListener('click', this.handleDelete)
-      target.appendChild(this.deleteBtn)
-    }
-  }
-
-  /**
    * 处理全选按钮点击
    */
-  private handleSelectAll = (): void => {
+  const handleSelectAll = (): void => {
     const inputs = document.querySelectorAll('input[name="delete[]"]')
     inputs.forEach((item, index) => {
       if (index !== 0 && item instanceof HTMLInputElement) {
@@ -210,10 +48,193 @@ export class SelectAllManager {
   /**
    * 处理删除按钮点击
    */
-  private handleDelete = (): void => {
+  const handleDelete = (): void => {
     const originalDeleteBtn = document.querySelector('#deletesubmit') as HTMLButtonElement
+    originalDeleteBtn?.click()
+  }
+
+  /**
+   * 初始化按钮
+   */
+  const initButtons = (): void => {
+    const target = document.querySelector('.mtm.mbm')
+    if (!target) return
+
+    // 创建"除第一条全选"按钮 - 使用原始油猴脚本的样式
+    selectAllBtn = document.createElement('button')
+    selectAllBtn.type = 'button'
+    selectAllBtn.textContent = '除第一条 全选'
+    selectAllBtn.style.margin = '0 10px'
+    selectAllBtn.dataset.featureId = 'select-all-btn'
+    selectAllBtn.addEventListener('click', handleSelectAll)
+    target.appendChild(selectAllBtn)
+
+    // 创建"删除"按钮 - 使用原始油猴脚本的样式
+    const originalDeleteBtn = document.querySelector('#deletesubmit')
     if (originalDeleteBtn) {
-      originalDeleteBtn.click()
+      deleteBtn = document.createElement('button')
+      deleteBtn.type = 'button'
+      deleteBtn.textContent = '删除'
+      deleteBtn.style.margin = '0 10px'
+      deleteBtn.dataset.featureId = 'select-all-delete-btn'
+      deleteBtn.addEventListener('click', handleDelete)
+      target.appendChild(deleteBtn)
     }
+  }
+
+  /**
+   * 附加事件监听器
+   */
+  const attachEventListeners = (): void => {
+    // 检查是否在管理页面
+    if (!isManagementPage()) return
+
+    // 初始化按钮
+    initButtons()
+  }
+
+  /**
+   * 移除事件监听器
+   */
+  const removeEventListeners = (): void => {
+    if (selectAllBtn) {
+      selectAllBtn.removeEventListener('click', handleSelectAll)
+      selectAllBtn = null
+    }
+    if (deleteBtn) {
+      deleteBtn.removeEventListener('click', handleDelete)
+      deleteBtn = null
+    }
+  }
+
+  /**
+   * 清理已注入的内容
+   */
+  const cleanupInjectedContent = (): void => {
+    // 方法1：通过引用移除按钮
+    if (selectAllBtn) {
+      selectAllBtn.remove()
+      selectAllBtn = null
+    }
+    if (deleteBtn) {
+      deleteBtn.remove()
+      deleteBtn = null
+    }
+
+    // 方法2：通过 data 属性查找并移除所有可能残留的按钮（性能优化）
+    document.querySelectorAll('[data-feature-id^="select-all-"]')
+      .forEach(btn => btn.remove())
+  }
+
+  /**
+   * 从存储加载配置
+   */
+  const loadConfig = async (): Promise<void> => {
+    try {
+      const result = await browser.storage.local.get(STORAGE_KEY)
+      isEnabled = (result[STORAGE_KEY] as boolean | undefined) ?? selectAllConfig.defaultEnabled
+    } catch (error) {
+      console.error('加载全选功能配置失败:', error)
+      isEnabled = false
+    }
+  }
+
+  /**
+   * 保存配置到存储
+   */
+  const saveConfig = async (): Promise<void> => {
+    try {
+      await browser.storage.local.set({ [STORAGE_KEY]: isEnabled })
+    } catch (error) {
+      console.error('保存全选功能配置失败:', error)
+    }
+  }
+
+  /**
+   * 启用全选功能
+   */
+  const enable = async (): Promise<void> => {
+    if (isEnabled) return // 如果已经启用，直接返回
+
+    isEnabled = true
+    await saveConfig()
+    attachEventListeners()
+  }
+
+  /**
+   * 禁用全选功能
+   */
+  const disable = async (): Promise<void> => {
+    if (!isEnabled) return // 如果已经禁用，直接返回
+
+    isEnabled = false
+    await saveConfig()
+    removeEventListeners()
+    cleanupInjectedContent()
+  }
+
+  /**
+   * 切换功能状态
+   */
+  const toggle = async (): Promise<boolean> => {
+    if (isEnabled) {
+      await disable()
+    } else {
+      await enable()
+    }
+    return isEnabled
+  }
+
+  /**
+   * 获取当前状态
+   */
+  const getStatus = (): boolean => isEnabled
+
+  /**
+   * 初始化
+   */
+  const init = async (): Promise<void> => {
+    await loadConfig()
+    if (isEnabled) {
+      attachEventListeners()
+    }
+  }
+
+  // 异步初始化，不阻塞构造
+  void init()
+
+  return {
+    enable,
+    disable,
+    toggle,
+    getStatus
+  }
+}
+
+/**
+ * 为了保持向后兼容，导出一个类包装器
+ * @deprecated 请使用 createSelectAll() 函数
+ */
+export class SelectAllManager {
+  private instance: ISelectAll
+
+  constructor() {
+    this.instance = createSelectAll()
+  }
+
+  async enable(): Promise<void> {
+    return this.instance.enable()
+  }
+
+  async disable(): Promise<void> {
+    return this.instance.disable()
+  }
+
+  async toggle(): Promise<boolean> {
+    return this.instance.toggle()
+  }
+
+  getStatus(): boolean {
+    return this.instance.getStatus()
   }
 }

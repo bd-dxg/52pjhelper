@@ -5,91 +5,35 @@
 
 import nativeFloorDisplayConfig from '@/configs/nativeFloorDisplay.json'
 
-class NativeFloorDisplay {
-  private enabled = false
-  private readonly STORAGE_KEY = nativeFloorDisplayConfig.storageKey
+const STORAGE_KEY = nativeFloorDisplayConfig.storageKey
 
-  constructor() {
-    // 异步初始化，不阻塞构造函数
-    void this.initialize()
-  }
+/**
+ * 原生楼层显示管理器接口
+ */
+export interface INativeFloorDisplay {
+  enable(): Promise<void>
+  disable(): Promise<void>
+  toggle(): Promise<boolean>
+  getStatus(): boolean
+}
 
-  /**
-   * 初始化功能
-   */
-  private async initialize(): Promise<void> {
-    try {
-      const result = await browser.storage.local.get(this.STORAGE_KEY)
-      this.enabled = Boolean(result[this.STORAGE_KEY] ?? nativeFloorDisplayConfig.defaultEnabled)
-      if (this.enabled) {
-        this.initNativeFloorDisplay()
-      }
-    } catch (error) {
-      console.error('Failed to initialize native floor display:', error)
-      this.enabled = nativeFloorDisplayConfig.defaultEnabled
-    }
-  }
-
-  /**
-   * 启用功能
-   */
-  public async enable(): Promise<void> {
-    if (this.enabled) return
-    this.enabled = true
-    try {
-      await browser.storage.local.set({ [this.STORAGE_KEY]: this.enabled })
-      this.initNativeFloorDisplay()
-    } catch (error) {
-      console.error('Failed to enable native floor display:', error)
-    }
-  }
-
-  /**
-   * 禁用功能
-   */
-  public async disable(): Promise<void> {
-    if (!this.enabled) return
-    this.enabled = false
-    try {
-      await browser.storage.local.set({ [this.STORAGE_KEY]: this.enabled })
-      this.cleanup()
-    } catch (error) {
-      console.error('Failed to disable native floor display:', error)
-    }
-  }
-
-  /**
-   * 切换功能开关
-   */
-  async toggle(): Promise<boolean> {
-    if (this.enabled) {
-      await this.disable()
-    } else {
-      await this.enable()
-    }
-    return this.enabled
-  }
-
-  /**
-   * 获取功能状态
-   */
-  getStatus(): boolean {
-    return this.enabled
-  }
+/**
+ * 创建原生楼层显示管理器实例
+ */
+export function createNativeFloorDisplay(): INativeFloorDisplay {
+  let enabled = false
 
   /**
    * 判断当前页面是否为已结帖状态
-   * @returns {boolean} 悬赏贴是否已结贴
    */
-  private isReward(): boolean {
+  const isReward = (): boolean => {
     return document.querySelector('.rsld.z') ? true : false
   }
 
   /**
    * 获取当前页所有pidDom
-   * @returns {Array} 返回一个对象数组,包含dom和id两个属性
    */
-  private getAllPidDom(): Array<{ id: number; dom: HTMLElement }> {
+  const getAllPidDom = (): Array<{ id: number; dom: HTMLElement }> => {
     const allDom = Array.from(document.querySelectorAll('#postlist .plhin:not(.res-postfirst)')) as HTMLElement[]
     const allId = allDom.map(pidDom => {
       const match = pidDom.id.match(/pid(\d+)/)
@@ -106,16 +50,15 @@ class NativeFloorDisplay {
 
   /**
    * 设置悬赏回帖的原生楼层
-   * @param {index:Number,dom: HTMLElement,} dom对象和原生楼层
    */
-  private setNativeFloor(index: number, dom: HTMLElement): void {
+  const setNativeFloor = (index: number, dom: HTMLElement): void => {
     const textAnswer = dom.querySelector('.pi strong a')
     if (!textAnswer) return
 
     const createAnswerDom = document.createElement('span')
     createAnswerDom.innerHTML = `原楼层: ${index} 楼 `
     if (index === 10) {
-      const ansText = dom.querySelector('.plc a span')?.textContent || null
+      const ansText = dom.querySelector('.plc a span')?.textContent ?? null
       if (ansText === '最佳答案') {
         createAnswerDom.innerHTML += `也可能在第一页以后 `
       }
@@ -131,27 +74,134 @@ class NativeFloorDisplay {
   /**
    * 初始化原生楼层显示
    */
-  private initNativeFloorDisplay(): void {
+  const initNativeFloorDisplay = (): void => {
     // 非悬赏贴直接结束
-    if (!this.isReward()) return
+    if (!isReward()) return
     // 获取当前页所有pidDom
-    const pidListDom = this.getAllPidDom()
+    const pidListDom = getAllPidDom()
     // 重新排序pidListDom
     const pidListDomSort = pidListDom.sort((a, b) => a.id - b.id)
     pidListDomSort.forEach((item, index) => {
       // +2 是因为主题帖占1L 最佳答案占2L
-      this.setNativeFloor(index + 2, item.dom)
+      setNativeFloor(index + 2, item.dom)
     })
   }
 
   /**
    * 清理已添加的原生楼层标签
    */
-  private cleanup(): void {
+  const cleanup = (): void => {
     document.querySelectorAll('.native-floor-tag').forEach(tag => {
       tag.remove()
     })
   }
+
+  /**
+   * 从存储加载配置
+   */
+  const loadConfig = async (): Promise<void> => {
+    try {
+      const result = await browser.storage.local.get(STORAGE_KEY)
+      enabled = Boolean(result[STORAGE_KEY] ?? nativeFloorDisplayConfig.defaultEnabled)
+    } catch (error) {
+      console.error('Failed to initialize native floor display:', error)
+      enabled = nativeFloorDisplayConfig.defaultEnabled
+    }
+  }
+
+  /**
+   * 保存配置到存储
+   */
+  const saveConfig = async (): Promise<void> => {
+    try {
+      await browser.storage.local.set({ [STORAGE_KEY]: enabled })
+    } catch (error) {
+      console.error('Failed to save native floor display config:', error)
+    }
+  }
+
+  /**
+   * 启用功能
+   */
+  const enable = async (): Promise<void> => {
+    if (enabled) return
+    enabled = true
+    await saveConfig()
+    initNativeFloorDisplay()
+  }
+
+  /**
+   * 禁用功能
+   */
+  const disable = async (): Promise<void> => {
+    if (!enabled) return
+    enabled = false
+    await saveConfig()
+    cleanup()
+  }
+
+  /**
+   * 切换功能开关
+   */
+  const toggle = async (): Promise<boolean> => {
+    if (enabled) {
+      await disable()
+    } else {
+      await enable()
+    }
+    return enabled
+  }
+
+  /**
+   * 获取功能状态
+   */
+  const getStatus = (): boolean => enabled
+
+  /**
+   * 初始化
+   */
+  const init = async (): Promise<void> => {
+    await loadConfig()
+    if (enabled) {
+      initNativeFloorDisplay()
+    }
+  }
+
+  // 异步初始化，不阻塞构造
+  void init()
+
+  return {
+    enable,
+    disable,
+    toggle,
+    getStatus
+  }
 }
 
-export { NativeFloorDisplay }
+/**
+ * 为了保持向后兼容，导出一个类包装器
+ * @deprecated 请使用 createNativeFloorDisplay() 函数
+ */
+export class NativeFloorDisplay {
+  private instance: INativeFloorDisplay
+
+  constructor() {
+    this.instance = createNativeFloorDisplay()
+  }
+
+  async enable(): Promise<void> {
+    return this.instance.enable()
+  }
+
+  async disable(): Promise<void> {
+    return this.instance.disable()
+  }
+
+  async toggle(): Promise<boolean> {
+    return this.instance.toggle()
+  }
+
+  getStatus(): boolean {
+    return this.instance.getStatus()
+  }
+}

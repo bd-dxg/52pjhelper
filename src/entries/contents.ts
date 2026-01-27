@@ -8,7 +8,7 @@ import { NativeFloorDisplay } from '../utils/nativeFloorDisplay'
 import { SelectAllManager } from '../utils/selectAll'
 import { TableSelectorManager } from '../utils/tableSelector'
 import { DefaultTimeManager } from '../utils/defaultTime'
-import { autoFillManager } from '../utils/autoFill'
+import * as autoFill from '../utils/autofills/index'
 import { initializeRowClickToCheck, enableRowClickToCheck, disableRowClickToCheck, toggleRowClickToCheck, getRowClickToCheckStatus } from '../utils/rowClickToCheck'
 import { DuplicatePostDetectionManager } from '../utils/duplicatePostDetection'
 
@@ -71,7 +71,7 @@ export default defineContentScript({
     defaultTimeManager = new DefaultTimeManager()
 
     // 初始化自动填充功能
-    autoFillManager.init()
+    autoFill.init()
 
     // 初始化行点击勾选功能
     initializeRowClickToCheck().catch(error => {
@@ -192,9 +192,9 @@ export default defineContentScript({
         if (changes.autoFillEnabled) {
           const newValue = changes.autoFillEnabled.newValue
           if (newValue) {
-            autoFillManager.enable()
+            autoFill.enable()
           } else {
-            autoFillManager.disable()
+            autoFill.disable()
           }
         }
 
@@ -504,6 +504,25 @@ export default defineContentScript({
         } else {
           sendResponse({ success: false, message: 'DuplicatePostDetectionManager not initialized' })
         }
+        return false
+      }
+
+      if (message.type === 'TOGGLE_AUTO_FILL') {
+        autoFill
+          .toggle()
+          .then(result => {
+            sendResponse(result)
+          })
+          .catch(error => {
+            console.error('Toggle auto fill failed:', error)
+            sendResponse({ success: false, message: 'Toggle failed' })
+          })
+        return true // 异步响应，保持端口开放
+      }
+
+      if (message.type === 'GET_AUTO_FILL_STATUS') {
+        const enabled = autoFill.isEnabled()
+        sendResponse({ success: true, enabled })
         return false
       }
 

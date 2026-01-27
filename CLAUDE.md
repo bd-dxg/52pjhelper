@@ -22,6 +22,11 @@ npx tsc --noEmit  # TypeScript 类型检查
 npx vue-tsc --noEmit # vue3+ts 类型检查
 ```
 
+**重要提示**：
+- **禁止运行** `pnpm dev` 和 `pnpm build` 命令
+- 这些命令会启动开发服务器或构建项目，可能导致不必要的资源占用
+- 如需构建或运行项目，请由用户手动执行
+
 ## 项目架构
 
 项目采用 WXT 框架的模块化架构：
