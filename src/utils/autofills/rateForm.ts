@@ -7,13 +7,13 @@ import type { AutoFillConfig } from './base'
  * 当 score2 > 0 或 score6 = 1 时自动填充
  * 填充内容："已经处理，感谢您对吾爱破解论坛的支持！"
  */
-export const attachRateFormListeners = (form: HTMLFormElement, config: AutoFillConfig) => {
+export const attachRateFormListeners = (form: HTMLFormElement, config: AutoFillConfig): (() => void) | undefined => {
   const score2Input = form.querySelector('#score2') as HTMLInputElement
   const score6Input = form.querySelector('#score6') as HTMLInputElement
   const reasonInput = form.querySelector('#reason') as HTMLInputElement
 
   if (!score2Input || !score6Input || !reasonInput) {
-    return
+    return undefined
   }
 
   const checkAndFill = () => {
@@ -36,4 +36,12 @@ export const attachRateFormListeners = (form: HTMLFormElement, config: AutoFillC
 
   // 初始检查
   checkAndFill()
+
+  // 返回清理函数
+  return () => {
+    score2Input.removeEventListener('input', checkAndFill)
+    score6Input.removeEventListener('input', checkAndFill)
+    score2Input.removeEventListener('change', checkAndFill)
+    score6Input.removeEventListener('change', checkAndFill)
+  }
 }
