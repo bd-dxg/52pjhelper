@@ -31,7 +31,9 @@ declare global {
   const defineContentScript: typeof import('wxt/utils/define-content-script').defineContentScript
   const defineUnlistedScript: typeof import('wxt/utils/define-unlisted-script').defineUnlistedScript
   const defineWxtPlugin: typeof import('wxt/utils/define-wxt-plugin').defineWxtPlugin
+  const disableRowClickToCheck: typeof import('D:/code/front-end/52pjhelper/src/utils/rowClickToCheck').disableRowClickToCheck
   const effectScope: typeof import('vue').effectScope
+  const enableRowClickToCheck: typeof import('D:/code/front-end/52pjhelper/src/utils/rowClickToCheck').enableRowClickToCheck
   const extractUidFromHref: typeof import('D:/code/front-end/52pjhelper/src/utils/userViolationFetcher').extractUidFromHref
   const fakeBrowser: typeof import('wxt/testing').fakeBrowser
   const fetchUserViolation: typeof import('D:/code/front-end/52pjhelper/src/utils/userViolationFetcher').fetchUserViolation
@@ -39,6 +41,7 @@ declare global {
   const getCurrentScope: typeof import('vue').getCurrentScope
   const getCurrentTheme: typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager').getCurrentTheme
   const getCurrentWatcher: typeof import('vue').getCurrentWatcher
+  const getRowClickToCheckStatus: typeof import('D:/code/front-end/52pjhelper/src/utils/rowClickToCheck').getRowClickToCheckStatus
   const getUserInfo: typeof import('D:/code/front-end/52pjhelper/src/utils/userInfo').getUserInfo
   const getUserInfoFromCache: typeof import('D:/code/front-end/52pjhelper/src/utils/userInfo').getUserInfoFromCache
   const h: typeof import('vue').h
@@ -46,6 +49,7 @@ declare global {
   const initQuickReply: typeof import('D:/code/front-end/52pjhelper/src/utils/quickReply').initQuickReply
   const initTheme: typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager').initTheme
   const initializeNavigationHider: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').initializeNavigationHider
+  const initializeRowClickToCheck: typeof import('D:/code/front-end/52pjhelper/src/utils/rowClickToCheck').initializeRowClickToCheck
   const inject: typeof import('vue').inject
   const injectScript: typeof import('wxt/utils/inject-script').injectScript
   const isProxy: typeof import('vue').isProxy
@@ -89,6 +93,7 @@ declare global {
   const toRefs: typeof import('vue').toRefs
   const toValue: typeof import('vue').toValue
   const toggleMenu: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').toggleMenu
+  const toggleRowClickToCheck: typeof import('D:/code/front-end/52pjhelper/src/utils/rowClickToCheck').toggleRowClickToCheck
   const triggerRef: typeof import('vue').triggerRef
   const unref: typeof import('vue').unref
   const useAppConfig: typeof import('wxt/utils/app-config').useAppConfig
@@ -200,7 +205,9 @@ declare module 'vue' {
     readonly defineContentScript: UnwrapRef<typeof import('wxt/utils/define-content-script')['defineContentScript']>
     readonly defineUnlistedScript: UnwrapRef<typeof import('wxt/utils/define-unlisted-script')['defineUnlistedScript']>
     readonly defineWxtPlugin: UnwrapRef<typeof import('wxt/utils/define-wxt-plugin')['defineWxtPlugin']>
+    readonly disableRowClickToCheck: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/rowClickToCheck')['disableRowClickToCheck']>
     readonly effectScope: UnwrapRef<typeof import('vue')['effectScope']>
+    readonly enableRowClickToCheck: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/rowClickToCheck')['enableRowClickToCheck']>
     readonly extractUidFromHref: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userViolationFetcher')['extractUidFromHref']>
     readonly fakeBrowser: UnwrapRef<typeof import('wxt/testing')['fakeBrowser']>
     readonly fetchUserViolation: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userViolationFetcher')['fetchUserViolation']>
@@ -208,6 +215,7 @@ declare module 'vue' {
     readonly getCurrentScope: UnwrapRef<typeof import('vue')['getCurrentScope']>
     readonly getCurrentTheme: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager')['getCurrentTheme']>
     readonly getCurrentWatcher: UnwrapRef<typeof import('vue')['getCurrentWatcher']>
+    readonly getRowClickToCheckStatus: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/rowClickToCheck')['getRowClickToCheckStatus']>
     readonly getUserInfo: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userInfo')['getUserInfo']>
     readonly getUserInfoFromCache: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userInfo')['getUserInfoFromCache']>
     readonly h: UnwrapRef<typeof import('vue')['h']>
@@ -215,6 +223,7 @@ declare module 'vue' {
     readonly initQuickReply: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/quickReply')['initQuickReply']>
     readonly initTheme: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager')['initTheme']>
     readonly initializeNavigationHider: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['initializeNavigationHider']>
+    readonly initializeRowClickToCheck: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/rowClickToCheck')['initializeRowClickToCheck']>
     readonly inject: UnwrapRef<typeof import('vue')['inject']>
     readonly injectScript: UnwrapRef<typeof import('wxt/utils/inject-script')['injectScript']>
     readonly isProxy: UnwrapRef<typeof import('vue')['isProxy']>
@@ -258,6 +267,7 @@ declare module 'vue' {
     readonly toRefs: UnwrapRef<typeof import('vue')['toRefs']>
     readonly toValue: UnwrapRef<typeof import('vue')['toValue']>
     readonly toggleMenu: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['toggleMenu']>
+    readonly toggleRowClickToCheck: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/rowClickToCheck')['toggleRowClickToCheck']>
     readonly triggerRef: UnwrapRef<typeof import('vue')['triggerRef']>
     readonly unref: UnwrapRef<typeof import('vue')['unref']>
     readonly useAppConfig: UnwrapRef<typeof import('wxt/utils/app-config')['useAppConfig']>

@@ -62,6 +62,7 @@
             <TableSelectorToggle @show-message="showMessage" />
             <DefaultTimeToggle @show-message="showMessage" />
             <UserLinkQueryToggle @show-message="showMessage" />
+            <RowClickToCheckToggle @show-message="showMessage" />
           </div>
         </div>
       </section>
@@ -88,6 +89,7 @@ import TableSelectorToggle from '@com/TableSelectorToggle.vue'
 import DefaultTimeToggle from '@com/DefaultTimeToggle.vue'
 import UserLinkQueryToggle from '@com/UserLinkQueryToggle.vue'
 import AutoFillToggle from '@com/AutoFillToggle.vue'
+import RowClickToCheckToggle from '@com/RowClickToCheckToggle.vue'
 import type { UserInfo } from '@utils/userInfo'
 import { getUserInfoFromCache } from '@utils/userInfo'
 

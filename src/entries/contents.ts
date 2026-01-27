@@ -9,6 +9,7 @@ import { SelectAllManager } from '../utils/selectAll'
 import { TableSelectorManager } from '../utils/tableSelector'
 import { DefaultTimeManager } from '../utils/defaultTime'
 import { autoFillManager } from '../utils/autoFill'
+import { initializeRowClickToCheck, enableRowClickToCheck, disableRowClickToCheck, toggleRowClickToCheck, getRowClickToCheckStatus } from '../utils/rowClickToCheck'
 
 // 防止重复初始化的标记
 const INIT_FLAG = '__52pj_helper_initialized__'
@@ -69,6 +70,11 @@ export default defineContentScript({
 
     // 初始化自动填充功能
     autoFillManager.init()
+
+    // 初始化行点击勾选功能
+    initializeRowClickToCheck().catch(error => {
+      console.error('Failed to initialize row click to check:', error)
+    })
 
     // 监听来自 popup 的消息
     browser.runtime.onMessage.addListener((message, _, sendResponse) => {
@@ -301,6 +307,30 @@ export default defineContentScript({
           sendResponse({ success: false, message: 'UserLinkQueryManager not initialized' })
         }
         return false
+      }
+
+      if (message.type === 'TOGGLE_ROW_CLICK_TO_CHECK') {
+        toggleRowClickToCheck()
+          .then(enabled => {
+            sendResponse({ success: true, enabled })
+          })
+          .catch(error => {
+            console.error('Toggle row click to check failed:', error)
+            sendResponse({ success: false, message: 'Toggle failed' })
+          })
+        return true // 异步响应，保持端口开放
+      }
+
+      if (message.type === 'GET_ROW_CLICK_TO_CHECK_STATUS') {
+        getRowClickToCheckStatus()
+          .then(enabled => {
+            sendResponse({ success: true, enabled })
+          })
+          .catch(error => {
+            console.error('Get row click to check status failed:', error)
+            sendResponse({ success: false, message: 'Get status failed' })
+          })
+        return true // 异步响应，保持端口开放
       }
 
       return false

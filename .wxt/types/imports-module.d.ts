@@ -25,6 +25,7 @@ declare module '#imports' {
   export { NativeFloorDisplay } from '../src/utils/nativeFloorDisplay';
   export { DEFAULT_NAV_MENUS, saveNavConfig, loadNavConfig, hideMenu, showMenu, applyNavConfig, toggleMenu, initializeNavigationHider, NavMenuConfig, UserNavConfig } from '../src/utils/navigationHider';
   export { loadQuickReplyConfig, saveQuickReplyConfig, initQuickReply, cleanupQuickReply } from '../src/utils/quickReply';
+  export { initializeRowClickToCheck, enableRowClickToCheck, disableRowClickToCheck, toggleRowClickToCheck, getRowClickToCheckStatus } from '../src/utils/rowClickToCheck';
   export { SelectAllManager, SelectAllManager } from '../src/utils/selectAll';
   export { TableSelectorManager, TableSelectorManager } from '../src/utils/tableSelector';
   export { getCurrentTheme, applyTheme, watchThemeChange, initTheme, Theme } from '../src/utils/themeManager';

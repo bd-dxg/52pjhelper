@@ -129,6 +129,15 @@ npx vue-tsc --noEmit # vue3+ts 类型检查
    - 当选择正数值（如 +1, +2, +5）时自动填充对应的 `input[name*="msg"]`
    - 填充内容："已经处理，感谢您对吾爱破解论坛的支持！"
 
+### 14. 勾选范围
+
+- 在管理页面上点击表格行（tr）来勾选对应的复选框，提高操作效率
+- 排除有 class 属性的 tr 元素（如表头、空行等）
+- 防止点击行内超链接或按钮时触发复选框勾选
+- 使用 WeakSet 防止重复绑定，避免内存泄漏
+- 支持启用/禁用功能切换
+- 配置通过浏览器 storage 本地存储
+
 ## 主要文件
 
 | 文件                                        | 作用                       |
@@ -141,6 +150,7 @@ npx vue-tsc --noEmit # vue3+ts 类型检查
 | `src/configs/tableSelector.json`            | 分表选择器配置             |
 | `src/configs/defaultTime.json`              | 默认查询时间配置           |
 | `src/configs/autoFill.json`                 | 自动填充配置               |
+| `src/configs/rowClickToCheck.json`          | 勾选范围功能配置           |
 | `src/utils/navigationHider.ts`              | 导航菜单管理工具类         |
 | `src/utils/avatarQuery.ts`                  | 头像查询管理工具类         |
 | `src/utils/userLinkQuery.ts`                | 管理页面查询管理工具类     |
@@ -154,6 +164,7 @@ npx vue-tsc --noEmit # vue3+ts 类型检查
 | `src/utils/tableSelector.ts`                | 分表选择器管理工具类       |
 | `src/utils/defaultTime.ts`                  | 默认查询时间管理工具类     |
 | `src/utils/autoFill.ts`                     | 自动填充管理工具类         |
+| `src/utils/rowClickToCheck.ts`              | 勾选范围功能管理工具类     |
 | `src/entries/contents.ts`                   | Content Script，初始化功能 |
 | `src/pages/SettingsPanel.vue`               | 设置面板组件（主容器）     |
 | `src/components/NavigationSettings.vue`     | 导航菜单设置组件           |
@@ -166,6 +177,7 @@ npx vue-tsc --noEmit # vue3+ts 类型检查
 | `src/components/TableSelectorToggle.vue`    | 分表选择器功能开关组件     |
 | `src/components/DefaultTimeToggle.vue`      | 默认查询时间功能开关组件   |
 | `src/components/AutoFillToggle.vue`         | 自动填充功能开关组件       |
+| `src/components/RowClickToCheckToggle.vue`  | 勾选范围功能开关组件       |
 
 ## 路径别名配置
 
@@ -283,6 +295,194 @@ onMounted(async () => {
 3. **页面判断**：在发送消息前，必须检查当前页面是否是 52pojie.cn
 4. **用户体验**：通信失败时，应提供适当的 fallback 方案，而不是报错
 5. **代码简洁**：避免在初始化阶段进行不必要的通信，保持代码简洁和高效
+
+### 4. 新建功能开发注意事项
+
+#### 4.1 父子组件传值注意事项
+
+##### 4.1.1 事件通信（子组件→父组件）
+
+**子组件（发送事件）**：
+```typescript
+// 在子组件中定义事件
+const emit = defineEmits(['show-message'])
+
+// 在需要时触发事件
+emit('show-message', '消息内容', 'success')
+```
+
+**父组件（监听事件）**：
+```vue
+<!-- 在模板中绑定事件监听器 -->
+<ChildComponent @show-message="handleShowMessage" />
+
+<script setup lang="ts">
+// 事件处理函数
+const handleShowMessage = (text: string, type: 'success' | 'error' = 'success') => {
+  message.value = text
+  messageType.value = type
+}
+</script>
+```
+
+##### 4.1.2 属性传递（父组件→子组件）
+
+**父组件（传递属性）**：
+```vue
+<ChildComponent :config="someConfig" :enabled="isEnabled" />
+```
+
+**子组件（接收属性）**：
+```typescript
+// 在子组件中定义属性
+interface Props {
+  config: any
+  enabled?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  enabled: false
+})
+
+// 使用属性
+console.log(props.config)
+console.log(props.enabled)
+```
+
+##### 4.1.3 消息提示机制
+
+**统一处理原则**：
+- 所有提示信息应由父组件 `SettingsPanel.vue` 统一处理
+- 子组件只负责发送事件，不处理具体的提示逻辑
+- 这样可以保持代码一致性，避免重复实现
+
+**实现示例**（子组件中）：
+```typescript
+const toggleFeature = async () => {
+  try {
+    // 业务逻辑...
+    emit('show-message', '功能已启用', 'success')
+  } catch (error) {
+    emit('show-message', '操作失败', 'error')
+  }
+}
+```
+
+#### 4.2 组件初始化规范
+
+**正确的初始化方式**：
+```typescript
+import { ref, onMounted } from 'vue'
+import featureConfig from '@/configs/feature.json'
+
+const enabled = ref(featureConfig.defaultEnabled)
+const emit = defineEmits(['show-message'])
+const STORAGE_KEY = featureConfig.storageKey
+
+onMounted(async () => {
+  const result = await browser.storage.local.get(STORAGE_KEY)
+  enabled.value = (result[STORAGE_KEY] as boolean | undefined) ?? featureConfig.defaultEnabled
+})
+```
+
+**避免的错误做法**：
+```typescript
+// 错误做法 - 会在非 52pojie.cn 页面报错
+onMounted(async () => {
+  const [tab] = await browser.tabs.query({ active: true, currentWindow: true })
+  const response = await browser.tabs.sendMessage(tab.id!, { type: 'GET_STATUS' })
+  if (response?.success) {
+    enabled.value = response.enabled
+  }
+})
+```
+
+#### 4.3 功能开关组件模板
+
+**完整的功能开关组件结构**：
+```vue
+<template>
+  <div class="toggle-container">
+    <label class="toggle-label" @click.stop="toggleFeature" :title="featureConfig.description">
+      <span>{{ featureConfig.name }}</span>
+      <div class="toggle-switch">
+        <input type="checkbox" :checked="enabled" disabled :aria-label="featureConfig.name" />
+        <span class="slider"></span>
+      </div>
+    </label>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import featureConfig from '@/configs/feature.json'
+
+const enabled = ref(featureConfig.defaultEnabled)
+const emit = defineEmits(['show-message'])
+const STORAGE_KEY = featureConfig.storageKey
+
+onMounted(async () => {
+  const result = await browser.storage.local.get(STORAGE_KEY)
+  enabled.value = (result[STORAGE_KEY] as boolean | undefined) ?? featureConfig.defaultEnabled
+})
+
+const toggleFeature = async () => {
+  try {
+    const [tab] = await browser.tabs.query({ active: true, currentWindow: true })
+    if (tab.id && tab.url?.includes('52pojie.cn')) {
+      const response = await browser.tabs.sendMessage(tab.id, { type: 'TOGGLE_FEATURE' })
+      if (response?.success) {
+        enabled.value = response.enabled
+        emit('show-message', enabled.value ? '功能已启用' : '功能已禁用', 'success')
+      } else {
+        emit('show-message', '切换功能失败', 'error')
+      }
+    } else {
+      const newEnabled = !enabled.value
+      enabled.value = newEnabled
+      await browser.storage.local.set({ [STORAGE_KEY]: newEnabled })
+      emit('show-message', enabled.value ? '功能已启用' : '功能已禁用', 'success')
+    }
+  } catch (error) {
+    const newEnabled = !enabled.value
+    enabled.value = newEnabled
+    await browser.storage.local.set({ [STORAGE_KEY]: newEnabled })
+    emit('show-message', enabled.value ? '功能已启用' : '功能已禁用', 'success')
+  }
+}
+</script>
+```
+
+#### 4.4 功能配置文件规范
+
+**配置文件结构**：
+```json
+{
+  "name": "功能名称",
+  "description": "功能描述",
+  "defaultEnabled": true,
+  "storageKey": "featureKey"
+}
+```
+
+**存储键命名规范**：
+- 使用驼峰命名法
+- 前缀统一使用功能英文名称
+- 示例：`avatarQueryEnabled`、`quickReplyEnabled`
+
+### 5. Manifest 文件管理
+
+**版本号管理**：
+- 每次发布新版本时，需要更新 `wxt.config.ts` 中的版本号
+- 版本号格式：`主版本号.次版本号.修订号`
+- 功能新增：提升次版本号
+- Bug 修复：提升修订号
+- 重大重构：提升主版本号
+
+**权限配置**：
+- 添加新功能时，检查是否需要额外的权限
+- 权限配置在 `wxt.config.ts` 的 `permissions` 数组中
+- 只请求必要的权限，遵循最小权限原则
 
 ## 许可证
 
