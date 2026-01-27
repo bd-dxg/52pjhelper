@@ -32,10 +32,42 @@ npx vue-tsc --noEmit # vue3+ts 类型检查
 项目采用 WXT 框架的模块化架构：
 
 - **入口文件**: `src/entries/` - 包含 content script 和 popup 入口
+  - `contents/` - Content Script 模块化入口（已重构）
+    - `index.ts` - 主入口文件，协调各模块
+    - `initialization.ts` - 功能初始化模块
+    - `messageHandler.ts` - 消息处理器模块
+    - `storageListener.ts` - 存储监听器模块
 - **页面**: `src/pages/` - Vue 3 页面组件目录
 - **配置文件**: `src/configs/` - JSON 格式的配置文件
 - **工具类**: `src/utils/` - 核心功能实现
 - **配置**: `wxt.config.ts` - WXT 框架配置
+
+### Content Script 架构说明
+
+Content Script 采用模块化设计，遵循 WXT 框架的最佳实践：
+
+1. **主入口** (`index.ts`，46 行)
+   - 负责协调各个功能模块
+   - 创建管理器实例容器
+   - 防止重复初始化
+
+2. **初始化模块** (`initialization.ts`，68 行)
+   - 初始化所有功能管理器
+   - 统一管理功能启动逻辑
+
+3. **消息处理器** (`messageHandler.ts`，375 行)
+   - 处理来自 popup 的消息
+   - 统一的消息路由和响应
+
+4. **存储监听器** (`storageListener.ts`，156 行)
+   - 监听浏览器存储变化
+   - 实现跨页面状态同步
+
+**优势**：
+- 模块职责清晰，易于维护
+- 符合 WXT 框架规范
+- 代码复用性高
+- 便于单元测试
 
 ## 核心功能
 
@@ -152,6 +184,17 @@ npx vue-tsc --noEmit # vue3+ts 类型检查
 
 ## 主要文件
 
+### Content Script 入口（模块化架构）
+
+| 文件                                        | 作用                       |
+| ------------------------------------------- | -------------------------- |
+| `src/entries/contents/index.ts`             | Content Script 主入口，协调各模块 |
+| `src/entries/contents/initialization.ts`    | 功能初始化模块             |
+| `src/entries/contents/messageHandler.ts`    | 消息处理器模块             |
+| `src/entries/contents/storageListener.ts`   | 存储监听器模块             |
+
+### 配置文件
+
 | 文件                                        | 作用                       |
 | ------------------------------------------- | -------------------------- |
 | `src/configs/navigation.json`               | 导航菜单配置               |
@@ -163,7 +206,12 @@ npx vue-tsc --noEmit # vue3+ts 类型检查
 | `src/configs/defaultTime.json`              | 默认查询时间配置           |
 | `src/configs/autoFill.json`                 | 自动填充配置               |
 | `src/configs/rowClickToCheck.json`          | 勾选范围功能配置           |
-| `src/configs/duplicatePostDetection.json`    | 重复发帖检测功能配置       |
+| `src/configs/duplicatePostDetection.json`   | 重复发帖检测功能配置       |
+
+### 工具类
+
+| 文件                                        | 作用                       |
+| ------------------------------------------- | -------------------------- |
 | `src/utils/navigationHider.ts`              | 导航菜单管理工具类         |
 | `src/utils/avatarQuery.ts`                  | 头像查询管理工具类         |
 | `src/utils/userLinkQuery.ts`                | 管理页面查询管理工具类     |
@@ -179,7 +227,11 @@ npx vue-tsc --noEmit # vue3+ts 类型检查
 | `src/utils/autoFill.ts`                     | 自动填充管理工具类         |
 | `src/utils/rowClickToCheck.ts`              | 勾选范围功能管理工具类     |
 | `src/utils/duplicatePostDetection.ts`       | 重复发帖检测管理工具类     |
-| `src/entries/contents.ts`                   | Content Script，初始化功能 |
+
+### Vue 组件
+
+| 文件                                        | 作用                       |
+| ------------------------------------------- | -------------------------- |
 | `src/pages/SettingsPanel.vue`               | 设置面板组件（主容器）     |
 | `src/components/NavigationSettings.vue`     | 导航菜单设置组件           |
 | `src/components/AvatarQueryToggle.vue`      | 头像查询功能开关组件       |
@@ -205,6 +257,44 @@ npx vue-tsc --noEmit # vue3+ts 类型检查
 - `@pages` → `src/pages/`
 
 ## 开发注意事项
+
+### 0. 工具类使用规范
+
+#### 0.1 函数式 API vs 类 API
+
+项目中的工具类提供了两种使用方式：
+
+1. **推荐方式**：使用 `createXxx()` 函数（函数式编程）
+2. **已弃用方式**：使用 `XxxManager` 类（面向对象编程）
+
+**示例**：
+```typescript
+// ✅ 推荐：使用函数式 API
+import { createFloorHighlighter, type IFloorHighlighter } from '@utils/floorHighlighter'
+
+const floorHighlighter: IFloorHighlighter = createFloorHighlighter()
+
+// ❌ 已弃用：使用类 API（会显示弃用警告）
+import { FloorHighlighter } from '@utils/floorHighlighter'
+
+const floorHighlighter = new FloorHighlighter()
+```
+
+**适用的工具类**：
+- `createFloorHighlighter()` / `FloorHighlighter`
+- `createAvatarQuery()` / `AvatarQueryManager`
+- `createUserLinkQuery()` / `UserLinkQueryManager`
+- `createNativeFloorDisplay()` / `NativeFloorDisplay`
+- `createSelectAll()` / `SelectAllManager`
+- `createTableSelector()` / `TableSelectorManager`
+- `createDefaultTime()` / `DefaultTimeManager`
+- `createDuplicatePostDetection()` / `DuplicatePostDetectionManager`
+
+**为什么使用函数式 API**：
+- 更符合现代 JavaScript/TypeScript 开发习惯
+- 避免 `this` 绑定问题
+- 更容易进行函数组合和测试
+- 减少内存占用（闭包 vs 类实例）
 
 ### 1. Popup 与 Content Script 通信问题
 

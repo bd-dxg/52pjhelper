@@ -85,9 +85,14 @@
 │   │   ├── defaultTime.json    # 默认查询时间配置
 │   │   ├── autoFill.json       # 自动填充配置
 │   │   ├── userLinkQuery.json  # 管理页面查询配置
-│   │   └── rowClickToCheck.json # 勾选范围功能配置
+│   │   ├── rowClickToCheck.json # 勾选范围功能配置
+│   │   └── duplicatePostDetection.json # 重复发帖检测功能配置
 │   ├── entries/                 # 入口文件目录
-│   │   ├── contents.ts         # Content Script（页面注入脚本）
+│   │   ├── contents/            # Content Script 模块化入口
+│   │   │   ├── index.ts         # 主入口文件
+│   │   │   ├── initialization.ts # 功能初始化模块
+│   │   │   ├── messageHandler.ts # 消息处理器模块
+│   │   │   └── storageListener.ts # 存储监听器模块
 │   │   └── popup/              # Popup 页面入口
 │   │       ├── App.vue         # 根组件
 │   │       ├── main.ts         # 入口文件
@@ -128,6 +133,23 @@
 - **包管理器**: pnpm@10.28.0
 - **代码格式化**: Prettier ^3.8.0
 - **浏览器支持**: Chrome (Manifest V3)
+
+## 架构特点
+
+### Content Script 模块化设计
+
+项目采用模块化架构，将 Content Script 拆分为多个职责清晰的模块：
+
+- **主入口** (`index.ts`) - 协调各模块，防止重复初始化
+- **初始化模块** (`initialization.ts`) - 统一管理功能启动
+- **消息处理器** (`messageHandler.ts`) - 处理来自 popup 的消息
+- **存储监听器** (`storageListener.ts`) - 监听存储变化，实现跨页面同步
+
+**优势**：
+- 代码结构清晰，易于维护和扩展
+- 符合 WXT 框架的最佳实践
+- 模块职责单一，便于单元测试
+- 减少代码重复，提高复用性
 
 ## 使用说明
 
