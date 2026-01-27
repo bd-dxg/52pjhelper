@@ -52,9 +52,9 @@ const toggleMenu = async (menuId: string) => {
     hiddenMenus.value = config.hiddenMenus
     showMessage('设置已更新', 'success')
 
-    // 发送消息到 content script，通知其更新网页 DOM
+    // 发送消息到 content script，通知其更新网页 DOM（仅在 52pojie.cn 页面）
     const [tab] = await browser.tabs.query({ active: true, currentWindow: true })
-    if (tab.id) {
+    if (tab.id && tab.url?.includes('52pojie.cn')) {
       await browser.tabs.sendMessage(tab.id, {
         type: 'UPDATE_NAVIGATION',
         config,
@@ -73,9 +73,9 @@ const resetConfig = async () => {
     hiddenMenus.value = []
     showMessage('配置已重置为默认', 'success')
 
-    // 发送消息到 content script，通知其更新网页 DOM
+    // 发送消息到 content script，通知其更新网页 DOM（仅在 52pojie.cn 页面）
     const [tab] = await browser.tabs.query({ active: true, currentWindow: true })
-    if (tab.id) {
+    if (tab.id && tab.url?.includes('52pojie.cn')) {
       await browser.tabs.sendMessage(tab.id, {
         type: 'UPDATE_NAVIGATION',
         config: defaultConfig,

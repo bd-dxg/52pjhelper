@@ -44,6 +44,26 @@ class AutoFillManager {
     })
   }
 
+  /**
+   * 启用功能
+   */
+  public async enable(): Promise<void> {
+    if (this.config.enabled) return
+    this.config.enabled = true
+    await this.saveConfig()
+    this.startMonitoring()
+  }
+
+  /**
+   * 禁用功能
+   */
+  public async disable(): Promise<void> {
+    if (!this.config.enabled) return
+    this.config.enabled = false
+    await this.saveConfig()
+    this.stopMonitoring()
+  }
+
   private async loadConfig(): Promise<AutoFillConfig> {
     try {
       const result = await browser.storage.local.get(STORAGE_KEY)

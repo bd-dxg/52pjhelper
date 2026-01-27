@@ -1,4 +1,4 @@
-import { initializeNavigationHider, applyNavConfig } from '../utils/navigationHider'
+import { initializeNavigationHider, applyNavConfig, type UserNavConfig } from '../utils/navigationHider'
 import { AvatarQueryManager } from '../utils/avatarQuery'
 import { UserLinkQueryManager } from '../utils/userLinkQuery'
 import { loadQuickReplyConfig, saveQuickReplyConfig, initQuickReply, cleanupQuickReply } from '../utils/quickReply'
@@ -74,6 +74,135 @@ export default defineContentScript({
     // 初始化行点击勾选功能
     initializeRowClickToCheck().catch(error => {
       console.error('Failed to initialize row click to check:', error)
+    })
+
+    // 监听存储变化，实现跨页面状态同步
+    browser.storage.onChanged.addListener((changes, areaName) => {
+      if (areaName === 'local') {
+        // 处理导航配置变化
+        if (changes.navigationConfig) {
+          const newConfig = changes.navigationConfig.newValue
+          // 类型安全检查
+          if (newConfig && typeof newConfig === 'object' && 'hiddenMenus' in newConfig && Array.isArray(newConfig.hiddenMenus)) {
+            applyNavConfig(newConfig as UserNavConfig)
+          }
+        }
+
+        // 处理头像查询配置变化
+        if (changes.avatarQueryEnabled) {
+          const newValue = changes.avatarQueryEnabled.newValue
+          if (avatarQueryManager) {
+            if (newValue) {
+              avatarQueryManager.enable()
+            } else {
+              avatarQueryManager.disable()
+            }
+          }
+        }
+
+        // 处理快捷回复配置变化
+        if (changes.quickReplyEnabled) {
+          const newValue = Boolean(changes.quickReplyEnabled.newValue)
+          quickReplyEnabled = newValue
+          if (newValue) {
+            initQuickReply()
+          } else {
+            cleanupQuickReply()
+          }
+        }
+
+        // 处理楼层高亮配置变化
+        if (changes.floorHighlighterEnabled) {
+          const newValue = changes.floorHighlighterEnabled.newValue
+          if (floorHighlighter) {
+            if (newValue) {
+              floorHighlighter.enable()
+            } else {
+              floorHighlighter.disable()
+            }
+          }
+        }
+
+        // 处理原生楼层显示配置变化
+        if (changes.nativeFloorDisplayEnabled) {
+          const newValue = changes.nativeFloorDisplayEnabled.newValue
+          if (nativeFloorDisplay) {
+            if (newValue) {
+              nativeFloorDisplay.enable()
+            } else {
+              nativeFloorDisplay.disable()
+            }
+          }
+        }
+
+        // 处理全选功能配置变化
+        if (changes.selectAllEnabled) {
+          const newValue = changes.selectAllEnabled.newValue
+          if (selectAllManager) {
+            if (newValue) {
+              selectAllManager.enable()
+            } else {
+              selectAllManager.disable()
+            }
+          }
+        }
+
+        // 处理分表选择器配置变化
+        if (changes.tableSelectorEnabled) {
+          const newValue = changes.tableSelectorEnabled.newValue
+          if (tableSelectorManager) {
+            if (newValue) {
+              tableSelectorManager.enable()
+            } else {
+              tableSelectorManager.disable()
+            }
+          }
+        }
+
+        // 处理默认时间配置变化
+        if (changes.defaultTimeEnabled) {
+          const newValue = changes.defaultTimeEnabled.newValue
+          if (defaultTimeManager) {
+            if (newValue) {
+              defaultTimeManager.enable()
+            } else {
+              defaultTimeManager.disable()
+            }
+          }
+        }
+
+        // 处理用户链接查询配置变化
+        if (changes.userLinkQueryEnabled) {
+          const newValue = changes.userLinkQueryEnabled.newValue
+          if (userLinkQueryManager) {
+            if (newValue) {
+              userLinkQueryManager.enable()
+            } else {
+              userLinkQueryManager.disable()
+            }
+          }
+        }
+
+        // 处理自动填充配置变化
+        if (changes.autoFillEnabled) {
+          const newValue = changes.autoFillEnabled.newValue
+          if (newValue) {
+            autoFillManager.enable()
+          } else {
+            autoFillManager.disable()
+          }
+        }
+
+        // 处理行点击勾选配置变化
+        if (changes.rowClickToCheckEnabled) {
+          const newValue = changes.rowClickToCheckEnabled.newValue
+          if (newValue) {
+            enableRowClickToCheck()
+          } else {
+            disableRowClickToCheck()
+          }
+        }
+      }
     })
 
     // 监听来自 popup 的消息

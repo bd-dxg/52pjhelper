@@ -31,19 +31,41 @@ class NativeFloorDisplay {
   }
 
   /**
+   * 启用功能
+   */
+  public async enable(): Promise<void> {
+    if (this.enabled) return
+    this.enabled = true
+    try {
+      await browser.storage.local.set({ [this.STORAGE_KEY]: this.enabled })
+      this.initNativeFloorDisplay()
+    } catch (error) {
+      console.error('Failed to enable native floor display:', error)
+    }
+  }
+
+  /**
+   * 禁用功能
+   */
+  public async disable(): Promise<void> {
+    if (!this.enabled) return
+    this.enabled = false
+    try {
+      await browser.storage.local.set({ [this.STORAGE_KEY]: this.enabled })
+      this.cleanup()
+    } catch (error) {
+      console.error('Failed to disable native floor display:', error)
+    }
+  }
+
+  /**
    * 切换功能开关
    */
   async toggle(): Promise<boolean> {
-    this.enabled = !this.enabled
-    try {
-      await browser.storage.local.set({ [this.STORAGE_KEY]: this.enabled })
-      if (this.enabled) {
-        this.initNativeFloorDisplay()
-      } else {
-        this.cleanup()
-      }
-    } catch (error) {
-      console.error('Failed to toggle native floor display:', error)
+    if (this.enabled) {
+      await this.disable()
+    } else {
+      await this.enable()
     }
     return this.enabled
   }
