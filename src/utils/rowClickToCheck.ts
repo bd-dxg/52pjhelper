@@ -4,6 +4,9 @@ const STORAGE_KEY = rowClickToCheckConfig.storageKey
 
 // 存储已绑定事件的表格行，防止重复绑定
 const boundRows = new WeakSet<HTMLTableRowElement>()
+// 存储选择范围的起始和结束行
+let selectionStart: HTMLTableRowElement | null = null
+let selectionEnd: HTMLTableRowElement | null = null
 
 // 初始化功能
 export const initializeRowClickToCheck = async () => {
@@ -65,12 +68,65 @@ export const enableRowClickToCheck = () => {
         return
       }
 
-      // 切换复选框状态
-      checkbox.checked = !checkbox.checked
+      if (e.ctrlKey || e.metaKey) {
+        // Ctrl+点击：选择范围
+        handleRangeSelection(tr)
+      } else {
+        // 普通点击：切换单个复选框
+        checkbox.checked = !checkbox.checked
+      }
     })
 
     boundRows.add(tr)
   })
+}
+
+// 处理范围选择
+const handleRangeSelection = (clickedRow: HTMLTableRowElement) => {
+  // 找到表单和表格
+  const form = document.getElementById('moderate') as HTMLFormElement
+  if (!form) {
+    return
+  }
+
+  const tbody = form.querySelector('tbody')
+  if (!tbody) {
+    return
+  }
+
+  // 获取所有符合条件的表格行
+  const rows = Array.from(tbody.querySelectorAll('tr:not([class])'))
+
+  // 找到点击行在数组中的索引
+  const clickedIndex = rows.indexOf(clickedRow)
+
+  if (selectionStart === null) {
+    // 第一次按下Ctrl+点击，设置起始位置
+    selectionStart = clickedRow
+    selectionEnd = clickedRow
+
+    // 勾选点击的行
+    const checkbox = clickedRow.querySelector('input[type="checkbox"][name="delete[]"].pc') as HTMLInputElement
+    if (checkbox) {
+      checkbox.checked = true
+    }
+  } else {
+    // 第二次按下Ctrl+点击，设置结束位置并勾选范围
+    selectionEnd = clickedRow
+
+    // 确定选择范围的起始和结束索引
+    const startIndex = Math.min(rows.indexOf(selectionStart), clickedIndex)
+    const endIndex = Math.max(rows.indexOf(selectionStart), clickedIndex)
+
+    // 勾选范围内的所有行
+    for (let i = startIndex; i <= endIndex; i++) {
+      const row = rows[i] as HTMLTableRowElement
+      const checkbox = row.querySelector('input[type="checkbox"][name="delete[]"].pc') as HTMLInputElement
+      if (checkbox) {
+        checkbox.checked = true
+      }
+    }
+  }
 }
 
 // 禁用功能
@@ -90,6 +146,10 @@ export const disableRowClickToCheck = () => {
   if (!tbody) {
     return
   }
+
+  // 清除选择范围
+  selectionStart = null
+  selectionEnd = null
 
   // 获取所有符合条件的表格行
   const rows = tbody.querySelectorAll('tr:not([class])')
