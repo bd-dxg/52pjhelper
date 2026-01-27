@@ -21,6 +21,7 @@ declare module '#imports' {
   export { autoFillManager } from '../src/utils/autoFill';
   export { AvatarQueryManager, AvatarQueryManager } from '../src/utils/avatarQuery';
   export { DefaultTimeManager, DefaultTimeManager } from '../src/utils/defaultTime';
+  export { DuplicatePostDetectionManager, DuplicatePostDetectionManager } from '../src/utils/duplicatePostDetection';
   export { FloorHighlighter, FloorHighlighter } from '../src/utils/floorHighlighter';
   export { NativeFloorDisplay } from '../src/utils/nativeFloorDisplay';
   export { DEFAULT_NAV_MENUS, saveNavConfig, loadNavConfig, hideMenu, showMenu, applyNavConfig, toggleMenu, initializeNavigationHider, NavMenuConfig, UserNavConfig } from '../src/utils/navigationHider';

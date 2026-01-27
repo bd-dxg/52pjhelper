@@ -5,6 +5,7 @@ declare global {
   const ContentScriptContext: typeof import('wxt/utils/content-script-context').ContentScriptContext
   const DEFAULT_NAV_MENUS: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').DEFAULT_NAV_MENUS
   const DefaultTimeManager: typeof import('D:/code/front-end/52pjhelper/src/utils/defaultTime').DefaultTimeManager
+  const DuplicatePostDetectionManager: typeof import('D:/code/front-end/52pjhelper/src/utils/duplicatePostDetection').DuplicatePostDetectionManager
   const EffectScope: typeof import('vue').EffectScope
   const FloorHighlighter: typeof import('D:/code/front-end/52pjhelper/src/utils/floorHighlighter').FloorHighlighter
   const InvalidMatchPattern: typeof import('wxt/utils/match-patterns').InvalidMatchPattern
@@ -150,6 +151,9 @@ declare global {
   export type { DefaultTimeManager } from 'D:/code/front-end/52pjhelper/src/utils/defaultTime'
   import('D:/code/front-end/52pjhelper/src/utils/defaultTime')
   // @ts-ignore
+  export type { DuplicatePostDetectionManager } from 'D:/code/front-end/52pjhelper/src/utils/duplicatePostDetection'
+  import('D:/code/front-end/52pjhelper/src/utils/duplicatePostDetection')
+  // @ts-ignore
   export type { FloorHighlighter } from 'D:/code/front-end/52pjhelper/src/utils/floorHighlighter'
   import('D:/code/front-end/52pjhelper/src/utils/floorHighlighter')
   // @ts-ignore
@@ -179,6 +183,7 @@ declare module 'vue' {
     readonly ContentScriptContext: UnwrapRef<typeof import('wxt/utils/content-script-context')['ContentScriptContext']>
     readonly DEFAULT_NAV_MENUS: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['DEFAULT_NAV_MENUS']>
     readonly DefaultTimeManager: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/defaultTime')['DefaultTimeManager']>
+    readonly DuplicatePostDetectionManager: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/duplicatePostDetection')['DuplicatePostDetectionManager']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
     readonly FloorHighlighter: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/floorHighlighter')['FloorHighlighter']>
     readonly InvalidMatchPattern: UnwrapRef<typeof import('wxt/utils/match-patterns')['InvalidMatchPattern']>

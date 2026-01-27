@@ -10,6 +10,7 @@ import { TableSelectorManager } from '../utils/tableSelector'
 import { DefaultTimeManager } from '../utils/defaultTime'
 import { autoFillManager } from '../utils/autoFill'
 import { initializeRowClickToCheck, enableRowClickToCheck, disableRowClickToCheck, toggleRowClickToCheck, getRowClickToCheckStatus } from '../utils/rowClickToCheck'
+import { DuplicatePostDetectionManager } from '../utils/duplicatePostDetection'
 
 // 防止重复初始化的标记
 const INIT_FLAG = '__52pj_helper_initialized__'
@@ -23,6 +24,7 @@ let nativeFloorDisplay: NativeFloorDisplay | null = null
 let selectAllManager: SelectAllManager | null = null
 let tableSelectorManager: TableSelectorManager | null = null
 let defaultTimeManager: DefaultTimeManager | null = null
+let duplicatePostDetectionManager: DuplicatePostDetectionManager | null = null
 
 export default defineContentScript({
   matches: ['https://www.52pojie.cn/*'],
@@ -75,6 +77,9 @@ export default defineContentScript({
     initializeRowClickToCheck().catch(error => {
       console.error('Failed to initialize row click to check:', error)
     })
+
+    // 初始化重复发帖检测功能
+    duplicatePostDetectionManager = new DuplicatePostDetectionManager()
 
     // 监听存储变化，实现跨页面状态同步
     browser.storage.onChanged.addListener((changes, areaName) => {
@@ -200,6 +205,18 @@ export default defineContentScript({
             enableRowClickToCheck()
           } else {
             disableRowClickToCheck()
+          }
+        }
+
+        // 处理重复发帖检测配置变化
+        if (changes.duplicatePostDetectionEnabled) {
+          const newValue = changes.duplicatePostDetectionEnabled.newValue
+          if (duplicatePostDetectionManager) {
+            if (newValue) {
+              duplicatePostDetectionManager.enable()
+            } else {
+              duplicatePostDetectionManager.disable()
+            }
           }
         }
       }
@@ -460,6 +477,34 @@ export default defineContentScript({
             sendResponse({ success: false, message: 'Get status failed' })
           })
         return true // 异步响应，保持端口开放
+      }
+
+      if (message.type === 'TOGGLE_DUPLICATE_POST_DETECTION') {
+        if (duplicatePostDetectionManager) {
+          duplicatePostDetectionManager
+            .toggle()
+            .then(enabled => {
+              sendResponse({ success: true, enabled })
+            })
+            .catch(error => {
+              console.error('Toggle duplicate post detection failed:', error)
+              sendResponse({ success: false, message: 'Toggle failed' })
+            })
+          return true // 异步响应，保持端口开放
+        } else {
+          sendResponse({ success: false, message: 'DuplicatePostDetectionManager not initialized' })
+          return false
+        }
+      }
+
+      if (message.type === 'GET_DUPLICATE_POST_DETECTION_STATUS') {
+        if (duplicatePostDetectionManager) {
+          const enabled = duplicatePostDetectionManager.getStatus()
+          sendResponse({ success: true, enabled })
+        } else {
+          sendResponse({ success: false, message: 'DuplicatePostDetectionManager not initialized' })
+        }
+        return false
       }
 
       return false

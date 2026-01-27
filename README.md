@@ -19,6 +19,7 @@
   - 处理表单（moderateform）：根据处理类型自动填充不同内容
   - 举报表单（reportform）：根据积分奖励自动填充
 - **勾选范围**: 在管理页面上点击表格行（tr）来勾选对应的复选框，提高操作效率
+- **重复发帖检测**: 在论坛列表页面检测当天发布的重复发帖，高亮显示重复发帖的行
 - **实时预览**: 点击按钮实时切换菜单显示/隐藏状态
 - **用户信息缓存**: 在非 52pojie.cn 页面显示缓存的用户信息，避免显示"未登录 游客"字样
 - **一键重置**: 支持恢复默认导航菜单配置
@@ -73,7 +74,8 @@
 │   │   ├── DefaultTimeToggle.vue        # 默认查询时间功能开关组件
 │   │   ├── AutoFillToggle.vue           # 自动填充功能开关组件
 │   │   ├── UserLinkQueryToggle.vue      # 管理页面查询功能开关组件
-│   │   └── RowClickToCheckToggle.vue    # 勾选范围功能开关组件
+│   │   ├── RowClickToCheckToggle.vue    # 勾选范围功能开关组件
+│   │   └── DuplicatePostDetectionToggle.vue # 重复发帖检测功能开关组件
 │   ├── configs/                 # 配置文件目录
 │   │   ├── navigation.json     # 导航菜单配置
 │   │   ├── quickReply.json     # 快捷回复配置
@@ -106,7 +108,8 @@
 │       ├── autoFill.ts          # 自动填充管理工具
 │       ├── userLinkQuery.ts     # 管理页面查询管理工具
 │       ├── userViolationFetcher.ts # 用户违规信息获取公共工具
-│       └── rowClickToCheck.ts   # 勾选范围功能管理工具
+│       ├── rowClickToCheck.ts   # 勾选范围功能管理工具
+│       └── duplicatePostDetection.ts # 重复发帖检测管理工具
 ├── public/                     # 静态资源
 │   └── images/                 # 扩展图标
 ├── dist/                       # 编译输出目录
@@ -195,6 +198,17 @@
 2. 访问管理页面（forum.php?mod=modcp&action=thread&op=post）
 3. 点击表格行（tr）即可勾选对应的复选框
 4. 点击行内的超链接或按钮不会触发复选框勾选
+
+### 重复发帖检测
+
+1. 在"更多设置"选项卡中，启用"重复发帖检测"开关
+2. 访问目标论坛列表页面（如 https://www.52pojie.cn/forum-15-1.html）
+3. 功能会自动检测当天发布的帖子
+4. 同一作者发布的重复帖子会以黄色高亮显示
+
+**配置说明**：
+- 目标页面配置在 `src/configs/duplicatePostDetection.json` 文件中
+- 支持精确匹配和简单的通配符匹配（如 `https://www.52pojie.cn/forum-*.html`）
 
 ### 主题切换
 

@@ -63,6 +63,7 @@
             <DefaultTimeToggle @show-message="showMessage" />
             <UserLinkQueryToggle @show-message="showMessage" />
             <RowClickToCheckToggle @show-message="showMessage" />
+            <DuplicatePostDetectionToggle @show-message="showMessage" />
           </div>
         </div>
       </section>
@@ -90,6 +91,7 @@ import DefaultTimeToggle from '@com/DefaultTimeToggle.vue'
 import UserLinkQueryToggle from '@com/UserLinkQueryToggle.vue'
 import AutoFillToggle from '@com/AutoFillToggle.vue'
 import RowClickToCheckToggle from '@com/RowClickToCheckToggle.vue'
+import DuplicatePostDetectionToggle from '@com/DuplicatePostDetectionToggle.vue'
 import type { UserInfo } from '@utils/userInfo'
 import { getUserInfoFromCache } from '@utils/userInfo'
 

@@ -129,7 +129,14 @@ npx vue-tsc --noEmit # vue3+ts 类型检查
    - 当选择正数值（如 +1, +2, +5）时自动填充对应的 `input[name*="msg"]`
    - 填充内容："已经处理，感谢您对吾爱破解论坛的支持！"
 
-### 14. 勾选范围
+### 15. 重复发帖检测
+- 在论坛列表页面检测当天发布的重复发帖，高亮显示重复发帖的行
+- 支持精确匹配和模糊匹配目标页面
+- 配置通过浏览器 storage 本地存储
+- 配置文件支持动态修改目标页面
+- 自动检测日期格式（支持 2026-01-27 和 2026-1-27 两种格式）
+- 高亮显示重复发帖的行，使用黄色背景
+- 支持启用/禁用功能切换
 
 - 在管理页面上点击表格行（tr）来勾选对应的复选框，提高操作效率
 - 排除有 class 属性的 tr 元素（如表头、空行等）
@@ -151,6 +158,7 @@ npx vue-tsc --noEmit # vue3+ts 类型检查
 | `src/configs/defaultTime.json`              | 默认查询时间配置           |
 | `src/configs/autoFill.json`                 | 自动填充配置               |
 | `src/configs/rowClickToCheck.json`          | 勾选范围功能配置           |
+| `src/configs/duplicatePostDetection.json`    | 重复发帖检测功能配置       |
 | `src/utils/navigationHider.ts`              | 导航菜单管理工具类         |
 | `src/utils/avatarQuery.ts`                  | 头像查询管理工具类         |
 | `src/utils/userLinkQuery.ts`                | 管理页面查询管理工具类     |
@@ -165,6 +173,7 @@ npx vue-tsc --noEmit # vue3+ts 类型检查
 | `src/utils/defaultTime.ts`                  | 默认查询时间管理工具类     |
 | `src/utils/autoFill.ts`                     | 自动填充管理工具类         |
 | `src/utils/rowClickToCheck.ts`              | 勾选范围功能管理工具类     |
+| `src/utils/duplicatePostDetection.ts`       | 重复发帖检测管理工具类     |
 | `src/entries/contents.ts`                   | Content Script，初始化功能 |
 | `src/pages/SettingsPanel.vue`               | 设置面板组件（主容器）     |
 | `src/components/NavigationSettings.vue`     | 导航菜单设置组件           |
@@ -178,6 +187,7 @@ npx vue-tsc --noEmit # vue3+ts 类型检查
 | `src/components/DefaultTimeToggle.vue`      | 默认查询时间功能开关组件   |
 | `src/components/AutoFillToggle.vue`         | 自动填充功能开关组件       |
 | `src/components/RowClickToCheckToggle.vue`  | 勾选范围功能开关组件       |
+| `src/components/DuplicatePostDetectionToggle.vue` | 重复发帖检测功能开关组件   |
 
 ## 路径别名配置
 
