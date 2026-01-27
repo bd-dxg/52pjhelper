@@ -65,8 +65,13 @@ export function initQuickReply(): void {
   const inputs = document.querySelectorAll<HTMLInputElement>('#list_modcp_logs tbody tr td:nth-child(4) input')
   if (inputs.length === 0) return
 
-  // 为每个输入框添加下拉框
+  // 为每个输入框添加下拉框（检查是否已存在）
   inputs.forEach(input => {
+    // 检查该输入框后面是否已经有下拉框
+    const nextElement = input.nextElementSibling
+    if (nextElement?.classList.contains('quick-reply-select')) {
+      return // 已存在，跳过
+    }
     input.insertAdjacentHTML('afterend', createSelectHtml())
   })
 
