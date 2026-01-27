@@ -7,7 +7,12 @@
         <svg v-else viewBox="0 0 40 40" fill="currentColor">
           <circle cx="20" cy="20" r="20" fill="var(--bg-secondary)" />
           <circle cx="20" cy="15" r="8" fill="var(--text-secondary)" />
-          <path d="M10 32c0-8 10-13 10-13s10 5 10 13" stroke="var(--text-secondary)" stroke-width="3" fill="none" stroke-linecap="round" />
+          <path
+            d="M10 32c0-8 10-13 10-13s10 5 10 13"
+            stroke="var(--text-secondary)"
+            stroke-width="3"
+            fill="none"
+            stroke-linecap="round" />
         </svg>
       </div>
       <div class="user-details">
@@ -26,7 +31,7 @@
         :tabindex="activeTab === 'navigation' ? 0 : -1"
         class="tab-item"
         :class="{ active: activeTab === 'navigation' }"
-        @click="activeTab = 'navigation'">
+        @click="switchTab('navigation')">
         导航菜单设置
       </button>
       <button
@@ -35,7 +40,7 @@
         :tabindex="activeTab === 'quickQuery' ? 0 : -1"
         class="tab-item"
         :class="{ active: activeTab === 'quickQuery' }"
-        @click="activeTab = 'quickQuery'">
+        @click="switchTab('quickQuery')">
         更多设置
       </button>
     </nav>
@@ -50,21 +55,19 @@
       <!-- 便捷查询设置 -->
       <section v-show="activeTab === 'quickQuery'" role="tabpanel" class="tab-panel" aria-labelledby="quickQuery-tab">
         <div class="toggle-grid">
-          <div class="toggle-column">
-            <AvatarQueryToggle @show-message="showMessage" />
-            <QuickReplyToggle @show-message="showMessage" />
-            <FloorHighlighterToggle @show-message="showMessage" />
-            <NativeFloorDisplayToggle @show-message="showMessage" />
-            <AutoFillToggle @show-message="showMessage" />
-          </div>
-          <div class="toggle-column">
-            <SelectAllToggle @show-message="showMessage" />
-            <TableSelectorToggle @show-message="showMessage" />
-            <DefaultTimeToggle @show-message="showMessage" />
-            <UserLinkQueryToggle @show-message="showMessage" />
-            <RowClickToCheckToggle @show-message="showMessage" />
-            <DuplicatePostDetectionToggle @show-message="showMessage" />
-          </div>
+          <AvatarQueryToggle @show-message="showMessage" />
+          <QuickReplyToggle @show-message="showMessage" />
+          <FloorHighlighterToggle @show-message="showMessage" />
+
+          <NativeFloorDisplayToggle @show-message="showMessage" />
+          <AutoFillToggle @show-message="showMessage" />
+          <SelectAllToggle @show-message="showMessage" />
+
+          <TableSelectorToggle @show-message="showMessage" />
+          <DefaultTimeToggle @show-message="showMessage" />
+          <UserLinkQueryToggle @show-message="showMessage" />
+          <RowClickToCheckToggle @show-message="showMessage" />
+          <DuplicatePostDetectionToggle @show-message="showMessage" />
         </div>
       </section>
     </div>
@@ -105,13 +108,34 @@ const userInfo = ref<UserInfo>({
     isAdmin: false,
     isModerator: false,
     isVIP: false,
-    isRegular: false
-  }
+    isRegular: false,
+  },
 })
 
 const message = ref('')
 const messageType = ref('')
 const activeTab = ref<'navigation' | 'quickQuery'>('navigation')
+const ACTIVE_TAB_STORAGE_KEY = 'activeTab'
+
+// 从 storage 读取并恢复上次的选项卡状态
+const loadActiveTab = async () => {
+  const result = await browser.storage.local.get(ACTIVE_TAB_STORAGE_KEY)
+  const storedTab = result[ACTIVE_TAB_STORAGE_KEY] as string
+  if (storedTab && ['navigation', 'quickQuery'].includes(storedTab)) {
+    activeTab.value = storedTab as 'navigation' | 'quickQuery'
+  }
+}
+
+// 保存选项卡状态到 storage
+const saveActiveTab = async (tab: 'navigation' | 'quickQuery') => {
+  await browser.storage.local.set({ [ACTIVE_TAB_STORAGE_KEY]: tab })
+}
+
+// 切换选项卡
+const switchTab = (tab: 'navigation' | 'quickQuery') => {
+  activeTab.value = tab
+  saveActiveTab(tab)
+}
 
 // 从 content script 获取用户信息
 const updateUserInfo = async () => {
@@ -120,7 +144,7 @@ const updateUserInfo = async () => {
     if (tab.id && tab.url?.includes('52pojie.cn')) {
       try {
         const response = await browser.tabs.sendMessage(tab.id, {
-          type: 'GET_USER_INFO'
+          type: 'GET_USER_INFO',
         })
 
         if (response && response.success) {
@@ -152,9 +176,10 @@ const updateUserInfo = async () => {
   }
 }
 
-// 组件挂载时获取用户信息
+// 组件挂载时获取用户信息和选项卡状态
 onMounted(() => {
   updateUserInfo()
+  loadActiveTab()
 })
 
 // 显示消息
@@ -169,8 +194,8 @@ const showMessage = (text: string, type: 'success' | 'error' = 'success') => {
 
 <style scoped>
 .settings-panel {
-  min-width: 350px;
-  max-width: 400px;
+  min-width: 500px;
+  max-width: 550px;
   height: 550px;
   display: flex;
   flex-direction: column;
@@ -331,16 +356,11 @@ const showMessage = (text: string, type: 'success' | 'error' = 'success') => {
 
 /* 子组件通用样式 - 使用 :deep() 穿透选择器 */
 
-/* 双列布局样式 */
+/* 三列布局样式 */
 .toggle-grid {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 16px;
-}
-
-.toggle-column {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
 }
 
 /* Toggle 组件样式 */

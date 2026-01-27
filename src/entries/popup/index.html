@@ -1,77 +1,80 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>吾爱管理效率助手</title>
-  <style>
-    /* 浅色主题（默认） */
-    :root {
-      --bg-primary: #f5f7fa;
-      --bg-secondary: #ffffff;
-      --bg-hover: #ecf5ff;
-      --text-primary: #333333;
-      --text-secondary: #606266;
-      --text-tertiary: #999999;
-      --border-color: #e4e7ed;
-      --border-color-light: #dcdfe6;
-      --primary-color: #409eff;
-      --primary-hover: #66b1ff;
-      --success-bg: #f0f9eb;
-      --success-color: #67c23a;
-      --success-border: #e1f3d8;
-      --error-bg: #fef0f0;
-      --error-color: #f56c6c;
-      --error-border: #fbc4c4;
-      --btn-secondary-bg: #6c757d;
-      --btn-secondary-hover: #5a6268;
-      --menu-hidden-bg: #f0f0f0;
-      --menu-hidden-hover: #e4e7ed;
-      --toggle-bg: #cccccc;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>吾爱管理效率助手</title>
+    <style>
+      /* 浅色主题（默认） */
+      :root {
+        --bg-primary: #f5f7fa;
+        --bg-secondary: #ffffff;
+        --bg-hover: #ecf5ff;
+        --text-primary: #333333;
+        --text-secondary: #606266;
+        --text-tertiary: #999999;
+        --border-color: #e4e7ed;
+        --border-color-light: #dcdfe6;
+        --primary-color: #409eff;
+        --primary-hover: #66b1ff;
+        --success-bg: #f0f9eb;
+        --success-color: #67c23a;
+        --success-border: #e1f3d8;
+        --error-bg: #fef0f0;
+        --error-color: #f56c6c;
+        --error-border: #fbc4c4;
+        --btn-secondary-bg: #6c757d;
+        --btn-secondary-hover: #5a6268;
+        --menu-hidden-bg: #f0f0f0;
+        --menu-hidden-hover: #e4e7ed;
+        --toggle-bg: #cccccc;
+      }
 
-    /* 深色主题 */
-    [data-theme='dark'] {
-      --bg-primary: #2d2d30;
-      --bg-secondary: #1e1e1e;
-      --bg-hover: #3e3e42;
-      --text-primary: #e0e0e0;
-      --text-secondary: #b0b0b0;
-      --text-tertiary: #808080;
-      --border-color: #3e3e42;
-      --border-color-light: #4e4e52;
-      --primary-color: #409eff;
-      --primary-hover: #66b1ff;
-      --success-bg: #1e3a1e;
-      --success-color: #67c23a;
-      --success-border: #2d4a2d;
-      --error-bg: #3a1e1e;
-      --error-color: #f56c6c;
-      --error-border: #4a2d2d;
-      --btn-secondary-bg: #4e5157;
-      --btn-secondary-hover: #5e6167;
-      --menu-hidden-bg: #2d2d30;
-      --menu-hidden-hover: #3e3e42;
-      --toggle-bg: #4e4e52;
-    }
+      /* 深色主题 */
+      [data-theme='dark'] {
+        --bg-primary: #2d2d30;
+        --bg-secondary: #1e1e1e;
+        --bg-hover: #3e3e42;
+        --text-primary: #e0e0e0;
+        --text-secondary: #b0b0b0;
+        --text-tertiary: #808080;
+        --border-color: #3e3e42;
+        --border-color-light: #4e4e52;
+        --primary-color: #409eff;
+        --primary-hover: #66b1ff;
+        --success-bg: #1e3a1e;
+        --success-color: #67c23a;
+        --success-border: #2d4a2d;
+        --error-bg: #3a1e1e;
+        --error-color: #f56c6c;
+        --error-border: #4a2d2d;
+        --btn-secondary-bg: #4e5157;
+        --btn-secondary-hover: #5e6167;
+        --menu-hidden-bg: #2d2d30;
+        --menu-hidden-hover: #3e3e42;
+        --toggle-bg: #4e4e52;
+      }
 
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      background-color: var(--bg-primary);
-      color: var(--text-primary);
-      transition: background-color 0.3s, color 0.3s;
-    }
-    #app {
-      width: 350px;
-      height: 500px;
-      overflow: hidden;
-    }
-  </style>
-</head>
-<body>
-  <div id="app"></div>
-  <script type="module" src="./main.ts"></script>
-</body>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        transition:
+          background-color 0.3s,
+          color 0.3s;
+      }
+      #app {
+        min-width: 500px;
+        max-width: 550px;
+        height: 500px;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="./main.ts"></script>
+  </body>
 </html>
