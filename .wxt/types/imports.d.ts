@@ -38,6 +38,7 @@ declare global {
   const extractUidFromHref: typeof import('D:/code/front-end/52pjhelper/src/utils/userViolationFetcher').extractUidFromHref
   const fakeBrowser: typeof import('wxt/testing').fakeBrowser
   const fetchUserViolation: typeof import('D:/code/front-end/52pjhelper/src/utils/userViolationFetcher').fetchUserViolation
+  const getAutoFillManager: typeof import('D:/code/front-end/52pjhelper/src/utils/autoFill').getAutoFillManager
   const getCurrentInstance: typeof import('vue').getCurrentInstance
   const getCurrentScope: typeof import('vue').getCurrentScope
   const getCurrentTheme: typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager').getCurrentTheme
@@ -145,6 +146,9 @@ declare global {
   export type { Component, Slot, Slots, ComponentPublicInstance, ComputedRef, DirectiveBinding, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, ShallowRef, MaybeRef, MaybeRefOrGetter, VNode, WritableComputedRef } from 'vue'
   import('vue')
   // @ts-ignore
+  export type { AutoFillConfig } from 'D:/code/front-end/52pjhelper/src/utils/autoFill'
+  import('D:/code/front-end/52pjhelper/src/utils/autoFill')
+  // @ts-ignore
   export type { AvatarQueryManager } from 'D:/code/front-end/52pjhelper/src/utils/avatarQuery'
   import('D:/code/front-end/52pjhelper/src/utils/avatarQuery')
   // @ts-ignore
@@ -216,6 +220,7 @@ declare module 'vue' {
     readonly extractUidFromHref: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userViolationFetcher')['extractUidFromHref']>
     readonly fakeBrowser: UnwrapRef<typeof import('wxt/testing')['fakeBrowser']>
     readonly fetchUserViolation: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userViolationFetcher')['fetchUserViolation']>
+    readonly getAutoFillManager: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/autoFill')['getAutoFillManager']>
     readonly getCurrentInstance: UnwrapRef<typeof import('vue')['getCurrentInstance']>
     readonly getCurrentScope: UnwrapRef<typeof import('vue')['getCurrentScope']>
     readonly getCurrentTheme: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager')['getCurrentTheme']>
