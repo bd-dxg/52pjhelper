@@ -2,6 +2,7 @@
   <div class="features-section">
     <h3 class="section-title">后台管理功能</h3>
     <div class="toggle-grid">
+      <AvatarQueryToggle @show-message="handleShowMessage" />
       <QuickReplyToggle @show-message="handleShowMessage" />
       <AutoFillToggle @show-message="handleShowMessage" />
       <SelectAllToggle @show-message="handleShowMessage" />
@@ -14,6 +15,7 @@
 </template>
 
 <script setup lang="ts">
+import AvatarQueryToggle from '@com/AvatarQueryToggle.vue'
 import QuickReplyToggle from '@com/QuickReplyToggle.vue'
 import AutoFillToggle from '@com/AutoFillToggle.vue'
 import SelectAllToggle from '@com/SelectAllToggle.vue'

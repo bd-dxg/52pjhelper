@@ -2,7 +2,6 @@
   <div class="features-section">
     <h3 class="section-title">通用功能</h3>
     <div class="toggle-grid">
-      <AvatarQueryToggle @show-message="handleShowMessage" />
       <FloorHighlighterToggle @show-message="handleShowMessage" />
       <NativeFloorDisplayToggle @show-message="handleShowMessage" />
       <DuplicatePostDetectionToggle @show-message="handleShowMessage" />
@@ -11,7 +10,6 @@
 </template>
 
 <script setup lang="ts">
-import AvatarQueryToggle from '@com/AvatarQueryToggle.vue'
 import FloorHighlighterToggle from '@com/FloorHighlighterToggle.vue'
 import NativeFloorDisplayToggle from '@com/NativeFloorDisplayToggle.vue'
 import DuplicatePostDetectionToggle from '@com/DuplicatePostDetectionToggle.vue'

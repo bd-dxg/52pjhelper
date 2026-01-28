@@ -55,7 +55,7 @@
       <!-- 便捷查询设置 -->
       <section v-show="activeTab === 'quickQuery'" role="tabpanel" class="tab-panel" aria-labelledby="quickQuery-tab">
         <GeneralFeaturesToggle @show-message="showMessage" />
-        <AdminFeaturesToggle @show-message="showMessage" />
+        <AdminFeaturesToggle v-if="isAdmin" @show-message="showMessage" />
       </section>
     </div>
 
@@ -102,6 +102,8 @@ const ACTIVE_TAB_STORAGE_KEY = 'activeTab'
 const isLoggedIn = computed(() => userInfo.value.isLoggedIn)
 // 计算属性：用户显示名称
 const userDisplayName = computed(() => userInfo.value.username || '未登录')
+// 计算属性：用户是否为管理员
+const isAdmin = computed(() => userInfo.value.permissions.isAdmin)
 
 // 从 storage 读取并恢复上次的选项卡状态
 const loadActiveTab = async () => {
