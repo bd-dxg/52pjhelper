@@ -112,21 +112,30 @@ Content Script 采用模块化设计，遵循 WXT 框架的最佳实践：
 
 - 优化了组件布局，描述文字移至悬停提示，减少页面滚动
 - 标签和开关在同一行显示，节省空间
+- 优化了所有间距，提高空间利用率
 
-### 8. 样式统一管理
+### 8. 样式管理优化
 
-- 重构子组件样式管理，统一在父组件 SettingsPanel.vue 中管理
-- 使用 :deep() 穿透选择器确保父组件样式能应用到子组件
-- 移除所有子组件中的重复样式定义，提高代码可维护性
+- 每个组件管理自己的样式，符合组件化原则
+- Toggle 组件样式统一在 `src/styles/toggle.css` 中
+- 全局 CSS 变量定义在 `src/entries/popup/index.html` 中
+- 使用 `scoped` 避免样式污染，提高代码可维护性
 
-### 9. 全选功能
+### 9. 组件分组
+
+- 将功能开关按用途分为两组：通用功能组和后台管理功能组
+- 通用功能组（`GeneralFeaturesToggle.vue`）：头像查询、楼层高亮、原生楼层、重贴检测
+- 后台管理功能组（`AdminFeaturesToggle.vue`）：快捷回复、自动填充、全选、分表选择、默认时间、审核查询、勾选范围
+- 提高代码可维护性，减少主组件代码量（从 536 行减少到 349 行）
+
+### 10. 全选功能
 
 - 在管理页面添加"除第一条全选"按钮，方便批量操作
 - 添加"删除"按钮，快速执行删除操作
 - 支持启用/禁用功能切换
 - 配置通过浏览器 storage 本地存储
 
-### 10. 分表选择器优化
+### 11. 分表选择器优化
 
 - 将分表选择器替换为按钮式界面，提高操作效率
 - 支持隐藏特定分表，简化界面
@@ -234,6 +243,8 @@ Content Script 采用模块化设计，遵循 WXT 框架的最佳实践：
 | ------------------------------------------- | -------------------------- |
 | `src/pages/SettingsPanel.vue`               | 设置面板组件（主容器）     |
 | `src/components/NavigationSettings.vue`     | 导航菜单设置组件           |
+| `src/components/GeneralFeaturesToggle.vue`  | 通用功能组（头像查询、楼层高亮、原生楼层、重贴检测） |
+| `src/components/AdminFeaturesToggle.vue`    | 后台管理功能组（快捷回复、自动填充、全选、分表选择等） |
 | `src/components/AvatarQueryToggle.vue`      | 头像查询功能开关组件       |
 | `src/components/UserLinkQueryToggle.vue`    | 管理页面查询功能开关组件   |
 | `src/components/QuickReplyToggle.vue`       | 快捷回复功能开关组件       |
@@ -245,6 +256,13 @@ Content Script 采用模块化设计，遵循 WXT 框架的最佳实践：
 | `src/components/AutoFillToggle.vue`         | 自动填充功能开关组件       |
 | `src/components/RowClickToCheckToggle.vue`  | 勾选范围功能开关组件       |
 | `src/components/DuplicatePostDetectionToggle.vue` | 重复发帖检测功能开关组件   |
+
+### 样式文件
+
+| 文件                                        | 作用                       |
+| ------------------------------------------- | -------------------------- |
+| `src/entries/popup/index.html`              | 全局 CSS 变量定义（浅色/深色主题） |
+| `src/styles/toggle.css`                     | Toggle 组件共享样式        |
 
 ## 路径别名配置
 

@@ -98,3 +98,104 @@ onMounted(async () => {
 })
 </script>
 
+<style scoped>
+.navigation-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.description {
+  margin: 0 0 20px 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 8px;
+  margin-bottom: 20px;
+  flex: 1;
+}
+
+.menu-btn {
+  padding: 8px 12px;
+  border: 1px solid var(--border-color-light);
+  border-radius: 6px;
+  background-color: var(--primary-color);
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.menu-btn:hover {
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
+}
+
+.menu-btn.is-hidden {
+  background-color: var(--menu-hidden-bg);
+  color: var(--text-tertiary);
+  border-color: var(--border-color);
+}
+
+.menu-btn.is-hidden:hover {
+  background-color: var(--menu-hidden-hover);
+  border-color: var(--border-color-light);
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  min-height: 32px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  height: 32px;
+  box-sizing: border-box;
+}
+
+.btn-secondary {
+  background-color: var(--btn-secondary-bg);
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: var(--btn-secondary-hover);
+}
+
+.message {
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  white-space: nowrap;
+  height: 32px;
+  line-height: 16px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+}
+
+.message.success {
+  background-color: var(--success-bg);
+  color: var(--success-color);
+  border: 1px solid var(--success-border);
+}
+
+.message.error {
+  background-color: var(--error-bg);
+  color: var(--error-color);
+  border: 1px solid var(--error-border);
+}
+</style>

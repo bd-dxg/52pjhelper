@@ -48,3 +48,4 @@ const toggleFeature = async () => {
   }
 }
 </script>
+<style scoped src="@/styles/toggle.css"></style>

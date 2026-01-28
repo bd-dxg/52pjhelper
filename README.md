@@ -65,6 +65,8 @@
 ├── src/
 │   ├── components/              # Vue 3 组件目录
 │   │   ├── NavigationSettings.vue     # 导航菜单设置组件
+│   │   ├── GeneralFeaturesToggle.vue  # 通用功能组（头像查询、楼层高亮、原生楼层、重贴检测）
+│   │   ├── AdminFeaturesToggle.vue    # 后台管理功能组（快捷回复、自动填充、全选、分表选择等）
 │   │   ├── AvatarQueryToggle.vue      # 头像查询功能开关组件
 │   │   ├── QuickReplyToggle.vue       # 快捷回复功能开关组件
 │   │   ├── FloorHighlighterToggle.vue # 楼层高亮功能开关组件
@@ -96,9 +98,11 @@
 │   │   └── popup/              # Popup 页面入口
 │   │       ├── App.vue         # 根组件
 │   │       ├── main.ts         # 入口文件
-│   │       └── index.html      # HTML 模板
+│   │       └── index.html      # HTML 模板（含全局 CSS 变量）
 │   ├── pages/                  # 页面组件目录
 │   │   └── SettingsPanel.vue   # 设置面板主组件（容器）
+│   ├── styles/                 # 样式文件目录
+│   │   └── toggle.css          # Toggle 组件共享样式
 │   └── utils/                  # 工具类目录
 │       ├── navigationHider.ts  # 导航菜单管理工具
 │       ├── avatarQuery.ts       # 头像查询管理工具
@@ -150,6 +154,46 @@
 - 符合 WXT 框架的最佳实践
 - 模块职责单一，便于单元测试
 - 减少代码重复，提高复用性
+
+### 组件化设计
+
+#### 功能分组
+
+项目将功能开关按用途分为两组：
+
+1. **通用功能组** (`GeneralFeaturesToggle.vue`)
+   - 头像查询
+   - 楼层高亮
+   - 原生楼层显示
+   - 重复发帖检测
+
+2. **后台管理功能组** (`AdminFeaturesToggle.vue`)
+   - 快捷回复
+   - 自动填充
+   - 全选功能
+   - 分表选择器
+   - 默认查询时间
+   - 管理页面查询
+   - 勾选范围
+
+**优势**：
+- 功能分类清晰，易于查找和管理
+- 减少主组件代码量（从 536 行减少到 349 行）
+- 提高代码可维护性和可扩展性
+
+#### 样式管理
+
+项目采用组件自管理样式的方式：
+
+- **全局 CSS 变量**：定义在 `src/entries/popup/index.html` 中
+- **共享样式**：Toggle 组件样式统一在 `src/styles/toggle.css` 中
+- **组件样式**：每个组件管理自己的样式，使用 `scoped` 避免污染
+
+**优势**：
+- 避免样式冲突
+- 易于维护和修改
+- 符合组件化原则
+- 减少代码重复
 
 ## 使用说明
 
