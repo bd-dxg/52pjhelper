@@ -1,6 +1,9 @@
 {
+  "name": "快捷回复",
+  "description": "在举报处理页面添加快捷回复短语下拉框",
   "storageKey": "quickReplyEnabled",
   "defaultEnabled": true,
+  "targetPages": ["forum.php?mod=modcp&action=report"],
   "options": [
     {
       "value": "-1",

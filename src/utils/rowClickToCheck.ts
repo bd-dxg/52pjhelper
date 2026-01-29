@@ -22,7 +22,9 @@ export const initializeRowClickToCheck = async () => {
 // 启用功能
 export const enableRowClickToCheck = () => {
   // 确保是在目标页面
-  if (!window.location.href.includes('forum.php?mod=modcp&action=thread&op=post')) {
+  const url = window.location.href
+  const isTargetPage = rowClickToCheckConfig.targetPages.some(page => url.includes(page))
+  if (!isTargetPage) {
     return
   }
 
@@ -132,7 +134,9 @@ const handleRangeSelection = (clickedRow: HTMLTableRowElement) => {
 // 禁用功能
 export const disableRowClickToCheck = () => {
   // 确保是在目标页面
-  if (!window.location.href.includes('forum.php?mod=modcp&action=thread&op=post')) {
+  const url = window.location.href
+  const isTargetPage = rowClickToCheckConfig.targetPages.some(page => url.includes(page))
+  if (!isTargetPage) {
     return
   }
 

@@ -31,7 +31,9 @@ function createSelectHtml(): string {
 
 // 初始化快捷回复功能
 export function initQuickReply(): void {
-  if (!window.location.href.includes('forum.php?mod=modcp&action=report')) return
+  const url = window.location.href
+  const isTargetPage = quickReplyConfig.targetPages.some(page => url.includes(page))
+  if (!isTargetPage) return
 
   // 添加样式
   const style = document.createElement('style')

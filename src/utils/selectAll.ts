@@ -26,11 +26,11 @@ export function createSelectAll(): ISelectAll {
   let deleteBtn: HTMLButtonElement | null = null
 
   /**
-   * 检查是否在管理页面
+   * 检查是否在目标页面
    */
-  const isManagementPage = (): boolean => {
+  const isTargetPage = (): boolean => {
     const url = window.location.href
-    return url.includes('forum.php?mod=modcp&action=thread&op=post')
+    return selectAllConfig.targetPages.some(page => url.includes(page))
   }
 
   /**
@@ -86,8 +86,8 @@ export function createSelectAll(): ISelectAll {
    * 附加事件监听器
    */
   const attachEventListeners = (): void => {
-    // 检查是否在管理页面
-    if (!isManagementPage()) return
+    // 检查是否在目标页面
+    if (!isTargetPage()) return
 
     // 初始化按钮
     initButtons()

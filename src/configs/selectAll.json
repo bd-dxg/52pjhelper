@@ -1,4 +1,7 @@
 {
+  "name": "全选功能",
+  "description": "在管理页面添加全选按钮",
   "storageKey": "selectAllEnabled",
-  "defaultEnabled": true
+  "defaultEnabled": true,
+  "targetPages": ["forum.php?mod=modcp&action=thread&op=post"]
 }

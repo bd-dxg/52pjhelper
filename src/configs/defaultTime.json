@@ -1,6 +1,9 @@
 {
+  "name": "默认查询时间",
+  "description": "将查询开始时间默认设置为2008-03-13",
   "storageKey": "defaultTimeEnabled",
   "defaultEnabled": true,
   "startTimeKey": "startTime",
-  "defaultStartTime": "2008-03-13"
+  "defaultStartTime": "2008-03-13",
+  "targetPages": ["forum.php?mod=modcp&action=thread&op=post"]
 }

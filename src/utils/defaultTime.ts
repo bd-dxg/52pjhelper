@@ -28,19 +28,19 @@ export function createDefaultTime(): IDefaultTime {
   let startTime = defaultTimeConfig.defaultStartTime
 
   /**
-   * 检查是否在管理页面
+   * 检查是否在目标页面
    */
-  const isManagementPage = (): boolean => {
+  const isTargetPage = (): boolean => {
     const url = window.location.href
-    return url.includes('forum.php?mod=modcp&action=thread&op=post')
+    return defaultTimeConfig.targetPages.some(page => url.includes(page))
   }
 
   /**
    * 应用默认时间
    */
   const applyDefaultTime = (): void => {
-    // 检查是否在管理页面
-    if (!isManagementPage()) return
+    // 检查是否在目标页面
+    if (!isTargetPage()) return
 
     const startTimeInput = document.querySelector('input[name="starttime"]') as HTMLInputElement
     const searchSubmit = document.querySelector('#searchsubmit') as HTMLButtonElement

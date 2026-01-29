@@ -31,10 +31,11 @@ export function createUserLinkQuery(): IUserLinkQuery {
   let loadEventListener: (() => void) | null = null
 
   /**
-   * 检查是否在管理页面
+   * 检查是否在目标页面
    */
-  const isManagementPage = (): boolean => {
-    return window.location.href.includes('https://www.52pojie.cn/forum.php?mod=modcp&action=moderate')
+  const isTargetPage = (): boolean => {
+    const url = window.location.href
+    return userLinkQueryConfig.targetPages.some(page => url.includes(page))
   }
 
   /**
@@ -320,7 +321,7 @@ export function createUserLinkQuery(): IUserLinkQuery {
    * 附加事件监听器
    */
   const attachEventListeners = (): void => {
-    if (!isManagementPage()) {
+    if (!isTargetPage()) {
       return
     }
 
@@ -374,7 +375,7 @@ export function createUserLinkQuery(): IUserLinkQuery {
 
     // 创建新的监听器
     pageChangeListener = () => {
-      if (isManagementPage()) {
+      if (isTargetPage()) {
         attachEventListeners()
       } else {
         removeEventListeners()
@@ -442,10 +443,10 @@ export function createUserLinkQuery(): IUserLinkQuery {
     injectStyles()
     createPopup()
 
-    // 检查当前页面是否是管理页面
-    const isManagementPageNow = isManagementPage()
+    // 检查当前页面是否是目标页面
+    const isTargetPageNow = isTargetPage()
 
-    if (isManagementPageNow) {
+    if (isTargetPageNow) {
       attachEventListeners()
 
       // 额外：在页面完全加载后再次检查
@@ -464,7 +465,7 @@ export function createUserLinkQuery(): IUserLinkQuery {
         window.addEventListener('load', loadEventListener)
       }
     } else {
-      // 监听页面变化，当导航到管理页面时附加事件监听器
+      // 监听页面变化，当导航到目标页面时附加事件监听器
       setupPageChangeListener()
     }
   }
