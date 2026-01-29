@@ -35,7 +35,7 @@ export function createTableSelector(): ITableSelector {
    */
   const isManagementPage = (): boolean => {
     const url = window.location.href
-    return url.includes('forum.php?mod=modcp&action=thread&op=post')
+    return tableSelectorConfig.targetPages.some(page => url.includes(page))
   }
 
   /**
@@ -56,12 +56,17 @@ export function createTableSelector(): ITableSelector {
         display: flex;
         gap: 10px;
         align-items: flex-start;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
+        width: 380px;
+        height: 68px;
       }
       .table-btn-container button {
         font-family: monospace !important;
         width: 80px;
+        height: 26px;
         margin: 3px 5px;
+        padding: 0;
+        box-sizing: border-box;
       }
       .table-btn-left {
         display: flex;
@@ -70,6 +75,7 @@ export function createTableSelector(): ITableSelector {
         flex-shrink: 0;
         background: #a3d0ed;
         border-radius: 5px;
+        padding: 3px;
       }
       .table-btn-right {
         display: grid;
@@ -77,6 +83,7 @@ export function createTableSelector(): ITableSelector {
         grid-template-rows: repeat(2, auto);
         gap: 5px;
         flex: 1;
+        padding: 3px;
       }
       /* 蛇形布局:第二排倒序(强制指定行和列) */
       .table-btn-right button:nth-child(6) { grid-column: 1; grid-row: 2; }
@@ -123,13 +130,66 @@ export function createTableSelector(): ITableSelector {
   }
 
   /**
+   * 等待元素加载
+   */
+  const waitForElement = (selector: string, timeout = 5000): Promise<Element | null> => {
+    return new Promise(resolve => {
+      const element = document.querySelector(selector)
+      if (element) {
+        resolve(element)
+        return
+      }
+
+      const observer = new MutationObserver(() => {
+        const element = document.querySelector(selector)
+        if (element) {
+          observer.disconnect()
+          resolve(element)
+        }
+      })
+
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+      })
+
+      // 超时处理
+      setTimeout(() => {
+        observer.disconnect()
+        resolve(null)
+      }, timeout)
+    })
+  }
+
+  /**
+   * 查找包含 posttableid 的 span.ftid 容器
+   */
+  const findPostTableContainer = (): Element | null => {
+    // 查找所有 span.ftid 元素
+    const ftidSpans = Array.from(document.querySelectorAll('span.ftid'))
+
+    // 找到包含 #posttableid 的那个 span
+    for (const span of ftidSpans) {
+      if (span.querySelector('#posttableid')) {
+        return span
+      }
+    }
+
+    return null
+  }
+
+  /**
    * 初始化分表选择器
    */
-  const initTableSelector = (): void => {
-    const table = document.querySelector('td[colspan="3"]>span.ftid')
-    if (!table) return
+  const initTableSelector = async (): Promise<void> => {
+    // 等待 #posttableid 元素加载
+    await waitForElement('#posttableid')
 
-    const select = table.querySelector('#posttableid') as HTMLSelectElement
+    // 查找包含 posttableid 的 span.ftid 容器
+    const spanContainer = findPostTableContainer()
+    if (!spanContainer) return
+
+    const select = spanContainer.querySelector('#posttableid') as HTMLSelectElement
     const searchSubmit = document.querySelector('#searchsubmit') as HTMLButtonElement
     const menuItems = Array.from(document.querySelectorAll('#posttableid_ctrl_menu ul li'))
 
@@ -184,18 +244,20 @@ export function createTableSelector(): ITableSelector {
 
     container.appendChild(leftBox)
     container.appendChild(rightBox)
-    table.appendChild(container)
+
+    // 将按钮容器添加到 span.ftid 容器中
+    spanContainer.appendChild(container)
   }
 
   /**
    * 附加事件监听器
    */
-  const attachEventListeners = (): void => {
+  const attachEventListeners = async (): Promise<void> => {
     // 检查是否在管理页面
     if (!isManagementPage()) return
 
     // 初始化分表选择器
-    initTableSelector()
+    await initTableSelector()
   }
 
   /**
@@ -220,8 +282,7 @@ export function createTableSelector(): ITableSelector {
     }
 
     // 方法2：通过 data 属性查找并移除所有可能残留的容器（性能优化）
-    document.querySelectorAll('[data-feature-id="table-selector-container"]')
-      .forEach(container => container.remove())
+    document.querySelectorAll('[data-feature-id="table-selector-container"]').forEach(container => container.remove())
 
     allButtons = []
 
@@ -239,7 +300,8 @@ export function createTableSelector(): ITableSelector {
     try {
       const result = await browser.storage.local.get([STORAGE_KEY, HIDDEN_TABLE_INDEXES_KEY])
       isEnabled = (result[STORAGE_KEY] as boolean | undefined) ?? tableSelectorConfig.defaultEnabled
-      hiddenTableIndexes = (result[HIDDEN_TABLE_INDEXES_KEY] as number[] | undefined) ?? tableSelectorConfig.defaultHiddenTableIndexes
+      hiddenTableIndexes =
+        (result[HIDDEN_TABLE_INDEXES_KEY] as number[] | undefined) ?? tableSelectorConfig.defaultHiddenTableIndexes
     } catch (error) {
       console.error('加载分表选择器配置失败:', error)
       isEnabled = false
@@ -254,7 +316,7 @@ export function createTableSelector(): ITableSelector {
     try {
       await browser.storage.local.set({
         [STORAGE_KEY]: isEnabled,
-        [HIDDEN_TABLE_INDEXES_KEY]: hiddenTableIndexes
+        [HIDDEN_TABLE_INDEXES_KEY]: hiddenTableIndexes,
       })
     } catch (error) {
       console.error('保存分表选择器配置失败:', error)
@@ -270,7 +332,7 @@ export function createTableSelector(): ITableSelector {
     // 重新应用配置
     if (isEnabled) {
       cleanupInjectedContent()
-      attachEventListeners()
+      await attachEventListeners()
     }
   }
 
@@ -288,7 +350,7 @@ export function createTableSelector(): ITableSelector {
     isEnabled = true
     await saveConfig()
     injectStyles()
-    attachEventListeners()
+    await attachEventListeners()
   }
 
   /**
@@ -328,7 +390,7 @@ export function createTableSelector(): ITableSelector {
     await loadConfig()
     if (isEnabled) {
       injectStyles()
-      attachEventListeners()
+      await attachEventListeners()
     }
   }
 
@@ -341,7 +403,7 @@ export function createTableSelector(): ITableSelector {
     toggle,
     getStatus,
     setHiddenTableIndexes,
-    getHiddenTableIndexes
+    getHiddenTableIndexes,
   }
 }
 
