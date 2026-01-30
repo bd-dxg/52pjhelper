@@ -29,7 +29,7 @@ npx vue-tsc --noEmit # vue3+ts 类型检查
 
 ## 项目架构
 
-项目采用 WXT 框架的模块化架构：
+项目采用 WXT 框架的模块化架构，引入了现代化的可组合函数式编程模式：
 
 - **入口文件**: `src/entries/` - 包含 content script 和 popup 入口
   - `contents/` - Content Script 模块化入口（已重构）
@@ -38,8 +38,15 @@ npx vue-tsc --noEmit # vue3+ts 类型检查
     - `messageHandler.ts` - 消息处理器模块
     - `storageListener.ts` - 存储监听器模块
 - **页面**: `src/pages/` - Vue 3 页面组件目录
+- **组件**: `src/components/` - Vue 3 组件目录
+- **可组合函数**: `src/composables/` - Vue 3 可组合函数目录
+  - `useFeatureToggle.ts` - 功能切换可组合函数，提供统一的功能开关逻辑
 - **配置文件**: `src/configs/` - JSON 格式的配置文件
 - **工具类**: `src/utils/` - 核心功能实现
+  - `featureManager.ts` - 功能管理器，提供统一的功能管理模式
+  - `storageHelper.ts` - 存储操作辅助工具，提供统一的浏览器存储操作接口
+  - `messageHelper.ts` - 消息通信辅助工具，提供统一的浏览器消息通信接口
+  - `urlMatcher.ts` - URL 匹配工具，提供统一的 URL 匹配功能
 - **配置**: `wxt.config.ts` - WXT 框架配置
 
 ### Content Script 架构说明
@@ -236,6 +243,10 @@ Content Script 采用模块化设计，遵循 WXT 框架的最佳实践：
 | `src/utils/autoFill.ts`                     | 自动填充管理工具类         |
 | `src/utils/rowClickToCheck.ts`              | 勾选范围功能管理工具类     |
 | `src/utils/duplicatePostDetection.ts`       | 重复发帖检测管理工具类     |
+| `src/utils/featureManager.ts`               | 功能管理器，提供统一的功能管理模式 |
+| `src/utils/storageHelper.ts`                | 存储操作辅助工具，提供统一的浏览器存储操作接口 |
+| `src/utils/messageHelper.ts`                | 消息通信辅助工具，提供统一的浏览器消息通信接口 |
+| `src/utils/urlMatcher.ts`                   | URL 匹配工具，提供统一的 URL 匹配功能 |
 
 ### Vue 组件
 
@@ -276,43 +287,150 @@ Content Script 采用模块化设计，遵循 WXT 框架的最佳实践：
 
 ## 开发注意事项
 
-### 0. 工具类使用规范
+### 1. 可组合函数式架构
 
-#### 0.1 函数式 API vs 类 API
+项目引入了 Vue 3 的可组合函数式架构，提供统一的功能开关逻辑：
 
-项目中的工具类提供了两种使用方式：
+#### 1.1 useFeatureToggle 可组合函数
 
-1. **推荐方式**：使用 `createXxx()` 函数（函数式编程）
-2. **已弃用方式**：使用 `XxxManager` 类（面向对象编程）
+**文件位置**: `src/composables/useFeatureToggle.ts`
 
-**示例**：
+**作用**: 提供统一的功能开关逻辑，封装了通用的功能开关逻辑，包括初始化、切换和状态管理。
+
+**特点**:
+- 统一的功能开关逻辑
+- 内置防抖机制，防止重复点击
+- 统一的错误处理和用户反馈
+- 简化了组件代码，提高了可维护性
+
+**使用示例**:
 ```typescript
-// ✅ 推荐：使用函数式 API
-import { createFloorHighlighter, type IFloorHighlighter } from '@utils/floorHighlighter'
+import { useFeatureToggle } from '@/composables/useFeatureToggle'
+import config from '@/configs/avatarQuery.json'
 
-const floorHighlighter: IFloorHighlighter = createFloorHighlighter()
-
-// ❌ 已弃用：使用类 API（会显示弃用警告）
-import { FloorHighlighter } from '@utils/floorHighlighter'
-
-const floorHighlighter = new FloorHighlighter()
+const { enabled, toggleFeature, isToggling } = useFeatureToggle(
+  {
+    ...config,
+    messageType: 'TOGGLE_AVATAR_QUERY'
+  },
+  (text, type) => {
+    // 处理用户反馈
+    emit('show-message', text, type)
+  }
+)
 ```
 
-**适用的工具类**：
-- `createFloorHighlighter()` / `FloorHighlighter`
-- `createAvatarQuery()` / `AvatarQueryManager`
-- `createUserLinkQuery()` / `UserLinkQueryManager`
-- `createNativeFloorDisplay()` / `NativeFloorDisplay`
-- `createSelectAll()` / `SelectAllManager`
-- `createTableSelector()` / `TableSelectorManager`
-- `createDefaultTime()` / `DefaultTimeManager`
-- `createDuplicatePostDetection()` / `DuplicatePostDetectionManager`
+#### 1.2 功能管理器模式
 
-**为什么使用函数式 API**：
-- 更符合现代 JavaScript/TypeScript 开发习惯
-- 避免 `this` 绑定问题
-- 更容易进行函数组合和测试
-- 减少内存占用（闭包 vs 类实例）
+**文件位置**: `src/utils/featureManager.ts`
+
+**作用**: 功能管理器基类，提供统一的功能管理模式，封装了功能启用/禁用、状态切换和初始化逻辑。
+
+**特点**:
+- 统一的功能管理模式
+- 支持目标页面匹配和自动初始化
+- 提供一致的 API 接口，便于扩展和维护
+
+**使用示例**:
+```typescript
+import { createFeatureManager, type CreateFeatureManagerOptions } from '@/utils/featureManager'
+import config from '@/configs/avatarQuery.json'
+
+const options: CreateFeatureManagerOptions = {
+  config,
+  onEnable: () => {
+    // 启用功能时的操作
+  },
+  onDisable: () => {
+    // 禁用功能时的操作
+  },
+  onInit: () => {
+    // 初始化时的操作（可选）
+  }
+}
+
+const avatarQueryManager = createFeatureManager(options)
+```
+
+#### 1.3 存储操作规范化
+
+**文件位置**: `src/utils/storageHelper.ts`
+
+**作用**: 存储操作辅助工具，提供统一的浏览器存储操作接口。
+
+**特点**:
+- 支持多种数据类型：布尔值、字符串、数组、对象
+- 内置错误处理和默认值支持
+- 提供批量操作和清空功能
+- 统一了存储操作的方式，减少重复代码
+
+**使用示例**:
+```typescript
+import { storageHelper } from '@/utils/storageHelper'
+
+// 加载配置
+const enabled = await storageHelper.loadBoolean('avatarQueryEnabled', true)
+
+// 保存配置
+await storageHelper.saveBoolean('avatarQueryEnabled', false)
+```
+
+#### 1.4 消息通信规范化
+
+**文件位置**: `src/utils/messageHelper.ts`
+
+**作用**: 消息通信辅助工具，提供统一的浏览器消息通信接口。
+
+**特点**:
+- 封装了消息发送和响应处理
+- 支持功能切换的通用逻辑
+- 内置目标网站检查和错误处理
+- 统一了组件与 Content Script 的通信方式
+
+**使用示例**:
+```typescript
+import { messageHelper } from '@/utils/messageHelper'
+
+// 向当前标签页发送消息
+const response = await messageHelper.sendToCurrentTab('GET_STATUS')
+
+// 切换功能状态
+await messageHelper.toggleFeature({
+  messageType: 'TOGGLE_AVATAR_QUERY',
+  storageKey: 'avatarQueryEnabled',
+  currentValue: enabled,
+  featureName: '头像查询',
+  onSuccess: (newEnabled) => {
+    // 成功处理
+  },
+  onMessage: (text, type) => {
+    // 处理用户反馈
+  }
+})
+```
+
+#### 1.5 URL 匹配工具
+
+**文件位置**: `src/utils/urlMatcher.ts`
+
+**作用**: URL 匹配工具，提供统一的 URL 匹配功能。
+
+**特点**:
+- 支持多种匹配模式：精确匹配、包含匹配、正则匹配、通配符匹配
+- 自动检测匹配模式，简化配置
+- 内置安全检查，防止正则表达式注入
+- 提供简化的目标页面匹配方法
+
+**使用示例**:
+```typescript
+import { urlMatcher } from '@/utils/urlMatcher'
+
+// 检查 URL 是否匹配目标页面
+const isTargetPage = urlMatcher.isTargetPage(
+  window.location.href,
+  ['https://www.52pojie.cn/forum-*.html', 'https://www.52pojie.cn/thread-*.html']
+)
+```
 
 ### 1. Popup 与 Content Script 通信问题
 
@@ -332,81 +450,97 @@ Failed to get quick query status from content script: Error: Could not establish
 1. **SettingsPanel.vue**：优化用户信息获取的错误处理，通信失败时不显示错误信息
 2. **所有 Toggle 组件**：移除 `onMounted` 时从 content script 获取状态的代码，只从 storage 读取配置
 
-### 2. 新增功能开发规范
+### 2. 功能开关组件开发规范
 
-#### 2.1 组件初始化
+#### 2.1 使用 useFeatureToggle 可组合函数
+
+**推荐方式**：使用 `useFeatureToggle` 可组合函数简化功能开关组件的开发。
+
+**完整的功能开关组件结构**：
+```vue
+<template>
+  <div class="toggle-container">
+    <label class="toggle-label" @click.stop="toggleFeature" :title="featureConfig.description">
+      <span>{{ featureConfig.name }}</span>
+      <div class="toggle-switch">
+        <input type="checkbox" :checked="enabled" disabled :aria-label="featureConfig.name" />
+        <span class="slider"></span>
+      </div>
+    </label>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { useFeatureToggle } from '@/composables/useFeatureToggle'
+import featureConfig from '@/configs/feature.json'
+
+const emit = defineEmits(['show-message'])
+
+const { enabled, toggleFeature, isToggling } = useFeatureToggle(
+  {
+    ...featureConfig,
+    messageType: 'TOGGLE_FEATURE'
+  },
+  (text, type) => {
+    emit('show-message', text, type)
+  }
+)
+</script>
+```
+
+**优势**：
+- 代码更加简洁
+- 统一的功能开关逻辑
+- 内置错误处理和用户反馈
+- 简化了组件维护
+
+#### 2.2 功能配置文件规范
+
+**配置文件结构**：
+```json
+{
+  "name": "功能名称",
+  "description": "功能描述",
+  "defaultEnabled": true,
+  "storageKey": "featureKey",
+  "targetPages": ["https://www.52pojie.cn/forum-*.html"]
+}
+```
+
+**存储键命名规范**：
+- 使用驼峰命名法
+- 前缀统一使用功能英文名称
+- 示例：`avatarQueryEnabled`、`quickReplyEnabled`
+
+**新增配置项**：
+- `targetPages`：功能适用的目标页面数组，支持通配符匹配
+
+#### 2.3 组件初始化规范
+
+**正确的初始化方式**：
+```typescript
+import { useFeatureToggle } from '@/composables/useFeatureToggle'
+import featureConfig from '@/configs/feature.json'
+
+const { enabled, toggleFeature, isToggling } = useFeatureToggle(
+  {
+    ...featureConfig,
+    messageType: 'TOGGLE_FEATURE'
+  },
+  (text, type) => {
+    // 处理用户反馈
+  }
+)
+```
+
+**避免的错误做法**：
 ```typescript
 // 错误做法 - 会在非 52pojie.cn 页面报错
 onMounted(async () => {
   const [tab] = await browser.tabs.query({ active: true, currentWindow: true })
   const response = await browser.tabs.sendMessage(tab.id!, { type: 'GET_STATUS' })
-  // ...
-})
-
-// 正确做法 - 优先从 storage 读取
-onMounted(async () => {
-  const storedValue = await loadConfigFromStorage()
-  enabled.value = storedValue
-})
-```
-
-#### 2.2 功能切换
-```typescript
-const toggleFeature = async () => {
-  try {
-    const [tab] = await browser.tabs.query({ active: true, currentWindow: true })
-    if (tab.id && tab.url?.includes('52pojie.cn')) {
-      // 与 content script 通信
-      const response = await browser.tabs.sendMessage(tab.id, { type: 'TOGGLE_FEATURE' })
-      if (response?.success) {
-        enabled.value = response.enabled
-      }
-    } else {
-      // 非 52pojie.cn 页面，直接修改 storage
-      const newEnabled = !enabled.value
-      enabled.value = newEnabled
-      await saveConfigToStorage(newEnabled)
-    }
-  } catch (error) {
-    // 通信失败时，直接修改 storage
-    const newEnabled = !enabled.value
-    enabled.value = newEnabled
-    await saveConfigToStorage(newEnabled)
-  }
-}
-```
-
-#### 2.3 错误处理
-```typescript
-// 错误做法 - 会在控制台显示不必要的错误
-onMounted(async () => {
-  try {
-    const [tab] = await browser.tabs.query({ active: true, currentWindow: true })
-    const response = await browser.tabs.sendMessage(tab.id!, { type: 'GET_STATUS' })
-    if (response?.success) {
-      enabled.value = response.enabled
-    }
-  } catch (error) {
-    console.error('Error:', error) // 会在非 52pojie.cn 页面显示错误
-  }
-})
-
-// 正确做法 - 静默处理通信错误
-onMounted(async () => {
-  const storedValue = await loadConfigFromStorage()
-  enabled.value = storedValue
-
-  // 仅在页面是 52pojie.cn 时尝试同步状态，且不显示错误
-  const [tab] = await browser.tabs.query({ active: true, currentWindow: true })
-  if (tab.id && tab.url?.includes('52pojie.cn')) {
-    try {
-      const response = await browser.tabs.sendMessage(tab.id, { type: 'GET_STATUS' })
-      if (response?.success) {
-        enabled.value = response.enabled
-      }
-    } catch (error) {
-      // 通信失败时，保持 storage 中的值，不显示错误
-    }
+  if (response?.success) {
+    enabled.value = response.enabled
   }
 })
 ```

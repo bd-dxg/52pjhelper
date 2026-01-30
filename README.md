@@ -78,6 +78,8 @@
 │   │   ├── UserLinkQueryToggle.vue      # 管理页面查询功能开关组件
 │   │   ├── RowClickToCheckToggle.vue    # 勾选范围功能开关组件
 │   │   └── DuplicatePostDetectionToggle.vue # 重复发帖检测功能开关组件
+│   ├── composables/            # Vue 3 可组合函数目录
+│   │   └── useFeatureToggle.ts    # 功能切换可组合函数，提供统一的功能开关逻辑
 │   ├── configs/                 # 配置文件目录
 │   │   ├── navigation.json     # 导航菜单配置
 │   │   ├── quickReply.json     # 快捷回复配置
@@ -118,7 +120,12 @@
 │       ├── userLinkQuery.ts     # 管理页面查询管理工具
 │       ├── userViolationFetcher.ts # 用户违规信息获取公共工具
 │       ├── rowClickToCheck.ts   # 勾选范围功能管理工具
-│       └── duplicatePostDetection.ts # 重复发帖检测管理工具
+│       ├── duplicatePostDetection.ts # 重复发帖检测管理工具
+│       ├── featureManager.ts    # 功能管理器，提供统一的功能管理模式
+│       ├── storageHelper.ts     # 存储操作辅助工具，提供统一的浏览器存储操作接口
+│       ├── messageHelper.ts     # 消息通信辅助工具，提供统一的浏览器消息通信接口
+│       ├── urlMatcher.ts        # URL 匹配工具，提供统一的 URL 匹配功能
+│       └── autofills/           # 自动填充规则目录
 ├── public/                     # 静态资源
 │   └── images/                 # 扩展图标
 ├── dist/                       # 编译输出目录
@@ -139,6 +146,47 @@
 - **浏览器支持**: Chrome (Manifest V3)
 
 ## 架构特点
+
+### 1. 可组合函数式架构（新增）
+
+项目引入了 Vue 3 的可组合函数式架构，提供统一的功能开关逻辑：
+
+- **`useFeatureToggle.ts`** - 功能切换可组合函数，封装了通用的功能开关逻辑
+  - 提供统一的初始化、切换和状态管理
+  - 内置防抖机制，防止重复点击
+  - 统一的错误处理和用户反馈
+  - 简化了组件代码，提高了可维护性
+
+### 2. 功能管理器模式（新增）
+
+- **`featureManager.ts`** - 功能管理器基类，提供统一的功能管理模式
+  - 封装了功能启用/禁用、状态切换和初始化逻辑
+  - 支持目标页面匹配和自动初始化
+  - 提供一致的 API 接口，便于扩展和维护
+
+### 3. 存储操作规范化（新增）
+
+- **`storageHelper.ts`** - 存储操作辅助工具，提供统一的浏览器存储操作接口
+  - 支持多种数据类型：布尔值、字符串、数组、对象
+  - 内置错误处理和默认值支持
+  - 提供批量操作和清空功能
+  - 统一了存储操作的方式，减少重复代码
+
+### 4. 消息通信规范化（新增）
+
+- **`messageHelper.ts`** - 消息通信辅助工具，提供统一的浏览器消息通信接口
+  - 封装了消息发送和响应处理
+  - 支持功能切换的通用逻辑
+  - 内置目标网站检查和错误处理
+  - 统一了组件与 Content Script 的通信方式
+
+### 5. URL 匹配工具（新增）
+
+- **`urlMatcher.ts`** - URL 匹配工具，提供统一的 URL 匹配功能
+  - 支持多种匹配模式：精确匹配、包含匹配、正则匹配、通配符匹配
+  - 自动检测匹配模式，简化配置
+  - 内置安全检查，防止正则表达式注入
+  - 提供简化的目标页面匹配方法
 
 ### Content Script 模块化设计
 
