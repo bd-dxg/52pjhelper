@@ -29,7 +29,6 @@ export default defineContentScript({
   main() {
     // 检查是否已经初始化
     if ((window as any)[INIT_FLAG]) {
-      console.log('扩展已初始化，跳过重复初始化')
       return
     }
     ;(window as any)[INIT_FLAG] = true

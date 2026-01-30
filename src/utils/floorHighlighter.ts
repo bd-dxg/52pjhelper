@@ -4,6 +4,7 @@
  */
 
 import floorHighlighterConfig from '@/configs/floorHighlighter.json'
+import { storageHelper } from './storageHelper'
 
 const FLOOR_HIGHLIGHTER_STORAGE_KEY = floorHighlighterConfig.storageKey
 
@@ -29,24 +30,14 @@ export function createFloorHighlighter(): IFloorHighlighter {
    * 从存储加载配置
    */
   const loadConfig = async (): Promise<void> => {
-    try {
-      const result = await browser.storage.local.get(FLOOR_HIGHLIGHTER_STORAGE_KEY)
-      isEnabled = (result[FLOOR_HIGHLIGHTER_STORAGE_KEY] as boolean | undefined) ?? true
-    } catch (error) {
-      console.error('加载楼层高亮配置失败:', error)
-      isEnabled = true // 默认启用
-    }
+    isEnabled = await storageHelper.loadBoolean(FLOOR_HIGHLIGHTER_STORAGE_KEY, true)
   }
 
   /**
    * 保存配置到存储
    */
   const saveConfig = async (): Promise<void> => {
-    try {
-      await browser.storage.local.set({ [FLOOR_HIGHLIGHTER_STORAGE_KEY]: isEnabled })
-    } catch (error) {
-      console.error('保存楼层高亮配置失败:', error)
-    }
+    await storageHelper.saveBoolean(FLOOR_HIGHLIGHTER_STORAGE_KEY, isEnabled)
   }
 
   /**
@@ -140,41 +131,5 @@ export function createFloorHighlighter(): IFloorHighlighter {
     getStatus,
     highlightTargetFloor,
     removeHighlight
-  }
-}
-
-/**
- * 为了保持向后兼容，导出一个类包装器
- * @deprecated 请使用 createFloorHighlighter() 函数
- */
-export class FloorHighlighter {
-  private instance: IFloorHighlighter
-
-  constructor() {
-    this.instance = createFloorHighlighter()
-  }
-
-  async enable(): Promise<void> {
-    return this.instance.enable()
-  }
-
-  async disable(): Promise<void> {
-    return this.instance.disable()
-  }
-
-  async toggle(): Promise<boolean> {
-    return this.instance.toggle()
-  }
-
-  getStatus(): boolean {
-    return this.instance.getStatus()
-  }
-
-  highlightTargetFloor(): void {
-    return this.instance.highlightTargetFloor()
-  }
-
-  removeHighlight(): void {
-    return this.instance.removeHighlight()
   }
 }

@@ -16,7 +16,6 @@
 
     <footer class="actions">
       <button class="btn btn-secondary" @click="resetConfig">重置为默认</button>
-      <span v-if="message" class="message" :class="messageType">{{ message }}</span>
     </footer>
   </div>
 </template>
@@ -27,18 +26,7 @@ import { DEFAULT_NAV_MENUS, loadNavConfig, saveNavConfig, toggleMenu as toggleMe
 
 const navMenus = DEFAULT_NAV_MENUS
 const hiddenMenus = ref<string[]>([])
-const message = ref('')
-const messageType = ref('')
 const emit = defineEmits(['show-message'])
-
-// 显示消息
-const showMessage = (text: string, type: 'success' | 'error' = 'success') => {
-  message.value = text
-  messageType.value = type
-  setTimeout(() => {
-    message.value = ''
-  }, 3000)
-}
 
 // 检查菜单是否被隐藏
 const isMenuHidden = (menuId: string) => {
@@ -50,7 +38,7 @@ const toggleMenu = async (menuId: string) => {
   try {
     const config = await toggleMenuUtil(menuId)
     hiddenMenus.value = config.hiddenMenus
-    showMessage('设置已更新', 'success')
+    emit('show-message', '设置已更新', 'success')
 
     // 发送消息到 content script，通知其更新网页 DOM（仅在 52pojie.cn 页面）
     const [tab] = await browser.tabs.query({ active: true, currentWindow: true })
@@ -61,7 +49,7 @@ const toggleMenu = async (menuId: string) => {
       })
     }
   } catch (error) {
-    showMessage('更新设置失败', 'error')
+    emit('show-message', '更新设置失败', 'error')
   }
 }
 
@@ -71,7 +59,7 @@ const resetConfig = async () => {
     const defaultConfig = { hiddenMenus: [] }
     await saveNavConfig(defaultConfig)
     hiddenMenus.value = []
-    showMessage('配置已重置为默认', 'success')
+    emit('show-message', '配置已重置为默认', 'success')
 
     // 发送消息到 content script，通知其更新网页 DOM（仅在 52pojie.cn 页面）
     const [tab] = await browser.tabs.query({ active: true, currentWindow: true })
@@ -82,7 +70,7 @@ const resetConfig = async () => {
       })
     }
   } catch (error) {
-    showMessage('重置配置失败', 'error')
+    emit('show-message', '重置配置失败', 'error')
   }
 }
 
@@ -93,7 +81,7 @@ onMounted(async () => {
     hiddenMenus.value = config.hiddenMenus
   } catch (error) {
     console.error('Failed to load navigation config:', error)
-    showMessage('加载配置失败', 'error')
+    emit('show-message', '加载配置失败', 'error')
   }
 })
 </script>
@@ -173,29 +161,5 @@ onMounted(async () => {
 
 .btn-secondary:hover {
   background-color: var(--btn-secondary-hover);
-}
-
-.message {
-  padding: 8px 12px;
-  border-radius: 4px;
-  font-size: 14px;
-  white-space: nowrap;
-  height: 32px;
-  line-height: 16px;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-}
-
-.message.success {
-  background-color: var(--success-bg);
-  color: var(--success-color);
-  border: 1px solid var(--success-border);
-}
-
-.message.error {
-  background-color: var(--error-bg);
-  color: var(--error-color);
-  border: 1px solid var(--error-border);
 }
 </style>

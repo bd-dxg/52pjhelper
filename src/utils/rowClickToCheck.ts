@@ -1,4 +1,6 @@
 import rowClickToCheckConfig from '@/configs/rowClickToCheck.json'
+import { urlMatcher } from './urlMatcher'
+import { storageHelper } from './storageHelper'
 
 const STORAGE_KEY = rowClickToCheckConfig.storageKey
 
@@ -11,8 +13,7 @@ let selectionEnd: HTMLTableRowElement | null = null
 // 初始化功能
 export const initializeRowClickToCheck = async () => {
   // 检查功能是否已启用
-  const result = await browser.storage.local.get(STORAGE_KEY)
-  const enabled = (result[STORAGE_KEY] as boolean | undefined) ?? rowClickToCheckConfig.defaultEnabled
+  const enabled = await storageHelper.loadBoolean(STORAGE_KEY, rowClickToCheckConfig.defaultEnabled)
 
   if (enabled) {
     enableRowClickToCheck()
@@ -22,8 +23,7 @@ export const initializeRowClickToCheck = async () => {
 // 启用功能
 export const enableRowClickToCheck = () => {
   // 确保是在目标页面
-  const url = window.location.href
-  const isTargetPage = rowClickToCheckConfig.targetPages.some(page => url.includes(page))
+  const isTargetPage = urlMatcher.isTargetPage(window.location.href, rowClickToCheckConfig.targetPages)
   if (!isTargetPage) {
     return
   }
@@ -134,8 +134,7 @@ const handleRangeSelection = (clickedRow: HTMLTableRowElement) => {
 // 禁用功能
 export const disableRowClickToCheck = () => {
   // 确保是在目标页面
-  const url = window.location.href
-  const isTargetPage = rowClickToCheckConfig.targetPages.some(page => url.includes(page))
+  const isTargetPage = urlMatcher.isTargetPage(window.location.href, rowClickToCheckConfig.targetPages)
   if (!isTargetPage) {
     return
   }
@@ -179,11 +178,10 @@ export const disableRowClickToCheck = () => {
 
 // 切换功能状态
 export const toggleRowClickToCheck = async () => {
-  const result = await browser.storage.local.get(STORAGE_KEY)
-  const currentEnabled = (result[STORAGE_KEY] as boolean | undefined) ?? rowClickToCheckConfig.defaultEnabled
+  const currentEnabled = await storageHelper.loadBoolean(STORAGE_KEY, rowClickToCheckConfig.defaultEnabled)
   const newEnabled = !currentEnabled
 
-  await browser.storage.local.set({ [STORAGE_KEY]: newEnabled })
+  await storageHelper.saveBoolean(STORAGE_KEY, newEnabled)
 
   if (newEnabled) {
     enableRowClickToCheck()
@@ -196,6 +194,5 @@ export const toggleRowClickToCheck = async () => {
 
 // 获取功能状态
 export const getRowClickToCheckStatus = async () => {
-  const result = await browser.storage.local.get(STORAGE_KEY)
-  return (result[STORAGE_KEY] as boolean | undefined) ?? rowClickToCheckConfig.defaultEnabled
+  return await storageHelper.loadBoolean(STORAGE_KEY, rowClickToCheckConfig.defaultEnabled)
 }

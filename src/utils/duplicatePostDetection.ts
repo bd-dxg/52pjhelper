@@ -4,6 +4,8 @@
  */
 
 import duplicatePostDetectionConfig from '@/configs/duplicatePostDetection.json'
+import { urlMatcher } from './urlMatcher'
+import { storageHelper } from './storageHelper'
 
 const STORAGE_KEY = duplicatePostDetectionConfig.storageKey
 
@@ -70,18 +72,7 @@ export function createDuplicatePostDetection(): IDuplicatePostDetection {
    */
   const detectDuplicatePosts = (): void => {
     // 检查是否是目标页面
-    const isTargetPage = duplicatePostDetectionConfig.targetPages.some(page => {
-      // 支持精确匹配和模糊匹配
-      if (page.includes('*')) {
-        // 模糊匹配（简单的通配符支持）
-        const regexPattern = page.replace(/\*/g, '.*').replace(/\?/g, '.')
-        const regex = new RegExp(`^${regexPattern}$`)
-        return regex.test(window.location.href)
-      } else {
-        // 精确匹配
-        return window.location.href === page
-      }
-    })
+    const isTargetPage = urlMatcher.isTargetPage(window.location.href, duplicatePostDetectionConfig.targetPages)
 
     if (!isTargetPage) {
       return
@@ -136,24 +127,14 @@ export function createDuplicatePostDetection(): IDuplicatePostDetection {
    * 从存储加载配置
    */
   const loadConfig = async (): Promise<void> => {
-    try {
-      const result = await browser.storage.local.get(STORAGE_KEY)
-      isEnabled = (result[STORAGE_KEY] as boolean | undefined) ?? duplicatePostDetectionConfig.defaultEnabled
-    } catch (error) {
-      console.error('加载重复发帖检测配置失败:', error)
-      isEnabled = false
-    }
+    isEnabled = await storageHelper.loadBoolean(STORAGE_KEY, duplicatePostDetectionConfig.defaultEnabled)
   }
 
   /**
    * 保存配置到存储
    */
   const saveConfig = async (): Promise<void> => {
-    try {
-      await browser.storage.local.set({ [STORAGE_KEY]: isEnabled })
-    } catch (error) {
-      console.error('保存重复发帖检测配置失败:', error)
-    }
+    await storageHelper.saveBoolean(STORAGE_KEY, isEnabled)
   }
 
   /**
@@ -216,33 +197,5 @@ export function createDuplicatePostDetection(): IDuplicatePostDetection {
     disable,
     toggle,
     getStatus
-  }
-}
-
-/**
- * 为了保持向后兼容，导出一个类包装器
- * @deprecated 请使用 createDuplicatePostDetection() 函数
- */
-export class DuplicatePostDetectionManager {
-  private instance: IDuplicatePostDetection
-
-  constructor() {
-    this.instance = createDuplicatePostDetection()
-  }
-
-  async enable(): Promise<void> {
-    return this.instance.enable()
-  }
-
-  async disable(): Promise<void> {
-    return this.instance.disable()
-  }
-
-  async toggle(): Promise<boolean> {
-    return this.instance.toggle()
-  }
-
-  getStatus(): boolean {
-    return this.instance.getStatus()
   }
 }

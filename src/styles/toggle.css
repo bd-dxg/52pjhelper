@@ -19,6 +19,10 @@
   background-color: var(--bg-hover);
 }
 
+.toggle-label:has(input:disabled):hover {
+  background-color: var(--bg-secondary);
+}
+
 .toggle-label span {
   font-size: 14px;
   color: var(--text-primary);

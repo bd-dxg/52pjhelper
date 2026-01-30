@@ -5,6 +5,7 @@
 
 import avatarQueryConfig from '@/configs/avatarQuery.json'
 import { fetchUserViolation, extractUidFromHref } from './userViolationFetcher'
+import { storageHelper } from './storageHelper'
 
 const STORAGE_KEY = avatarQueryConfig.storageKey
 
@@ -160,24 +161,14 @@ export function createAvatarQuery(): IAvatarQuery {
    * 从存储加载配置
    */
   const loadConfig = async (): Promise<void> => {
-    try {
-      const result = await browser.storage.local.get(STORAGE_KEY)
-      isEnabled = (result[STORAGE_KEY] as boolean | undefined) ?? avatarQueryConfig.defaultEnabled
-    } catch (error) {
-      console.error('加载头像查询配置失败:', error)
-      isEnabled = false
-    }
+    isEnabled = await storageHelper.loadBoolean(STORAGE_KEY, avatarQueryConfig.defaultEnabled)
   }
 
   /**
    * 保存配置到存储
    */
   const saveConfig = async (): Promise<void> => {
-    try {
-      await browser.storage.local.set({ [STORAGE_KEY]: isEnabled })
-    } catch (error) {
-      console.error('保存头像查询配置失败:', error)
-    }
+    await storageHelper.saveBoolean(STORAGE_KEY, isEnabled)
   }
 
   /**
@@ -241,33 +232,5 @@ export function createAvatarQuery(): IAvatarQuery {
     disable,
     toggle,
     getStatus
-  }
-}
-
-/**
- * 为了保持向后兼容，导出一个类包装器
- * @deprecated 请使用 createAvatarQuery() 函数
- */
-export class AvatarQueryManager {
-  private instance: IAvatarQuery
-
-  constructor() {
-    this.instance = createAvatarQuery()
-  }
-
-  async enable(): Promise<void> {
-    return this.instance.enable()
-  }
-
-  async disable(): Promise<void> {
-    return this.instance.disable()
-  }
-
-  async toggle(): Promise<boolean> {
-    return this.instance.toggle()
-  }
-
-  getStatus(): boolean {
-    return this.instance.getStatus()
   }
 }

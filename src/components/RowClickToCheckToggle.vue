@@ -1,9 +1,9 @@
 <template>
   <div class="toggle-container">
-    <label class="toggle-label" @click.stop="toggleFeature" :title="featureConfig.description">
-      <span>{{ featureConfig.name }}</span>
+    <label class="toggle-label" @click.stop="toggleFeature" :title="config.description">
+      <span>{{ config.name }}</span>
       <div class="toggle-switch">
-        <input type="checkbox" :checked="enabled" disabled :aria-label="featureConfig.name" />
+        <input type="checkbox" :checked="enabled" @click.stop :aria-label="config.name" :disabled="isToggling" />
         <span class="slider"></span>
       </div>
     </label>
@@ -11,41 +11,24 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import featureConfig from '@/configs/rowClickToCheck.json'
+import rowClickToCheckConfig from '@/configs/rowClickToCheck.json'
+import { useFeatureToggle } from '@/composables/useFeatureToggle'
 
-const enabled = ref(featureConfig.defaultEnabled)
-const emit = defineEmits(['show-message'])
-const STORAGE_KEY = featureConfig.storageKey
+const emit = defineEmits<{
+  (e: 'show-message', text: string, type: 'success' | 'error'): void
+}>()
 
-onMounted(async () => {
-  const result = await browser.storage.local.get(STORAGE_KEY)
-  enabled.value = (result[STORAGE_KEY] as boolean | undefined) ?? featureConfig.defaultEnabled
-})
-
-const toggleFeature = async () => {
-  try {
-    const [tab] = await browser.tabs.query({ active: true, currentWindow: true })
-    if (tab.id && tab.url?.includes('52pojie.cn')) {
-      const response = await browser.tabs.sendMessage(tab.id, { type: 'TOGGLE_ROW_CLICK_TO_CHECK' })
-      if (response?.success) {
-        enabled.value = response.enabled
-        emit('show-message', enabled.value ? '功能已启用' : '功能已禁用', 'success')
-      } else {
-        emit('show-message', '切换功能失败', 'error')
-      }
-    } else {
-      const newEnabled = !enabled.value
-      enabled.value = newEnabled
-      await browser.storage.local.set({ [STORAGE_KEY]: newEnabled })
-      emit('show-message', enabled.value ? '功能已启用' : '功能已禁用', 'success')
-    }
-  } catch (error) {
-    const newEnabled = !enabled.value
-    enabled.value = newEnabled
-    await browser.storage.local.set({ [STORAGE_KEY]: newEnabled })
-    emit('show-message', enabled.value ? '功能已启用' : '功能已禁用', 'success')
-  }
+const config = {
+  name: rowClickToCheckConfig.name,
+  description: rowClickToCheckConfig.description,
+  storageKey: rowClickToCheckConfig.storageKey,
+  defaultEnabled: rowClickToCheckConfig.defaultEnabled,
+  messageType: 'TOGGLE_ROW_CLICK_TO_CHECK',
 }
+
+const { enabled, toggleFeature, isToggling } = useFeatureToggle(config, (text, type) => {
+  emit('show-message', text, type)
+})
 </script>
+
 <style scoped src="@/styles/toggle.css"></style>

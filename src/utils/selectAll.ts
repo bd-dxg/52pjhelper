@@ -4,34 +4,19 @@
  */
 
 import selectAllConfig from '@/configs/selectAll.json'
-
-const STORAGE_KEY = selectAllConfig.storageKey
+import { createFeatureManager, type IFeatureManager } from './featureManager'
 
 /**
  * 全选功能管理器接口
  */
-export interface ISelectAll {
-  enable(): Promise<void>
-  disable(): Promise<void>
-  toggle(): Promise<boolean>
-  getStatus(): boolean
-}
+export interface ISelectAll extends IFeatureManager {}
 
 /**
  * 创建全选功能管理器实例
  */
 export function createSelectAll(): ISelectAll {
-  let isEnabled = false
   let selectAllBtn: HTMLButtonElement | null = null
   let deleteBtn: HTMLButtonElement | null = null
-
-  /**
-   * 检查是否在目标页面
-   */
-  const isTargetPage = (): boolean => {
-    const url = window.location.href
-    return selectAllConfig.targetPages.some(page => url.includes(page))
-  }
 
   /**
    * 处理全选按钮点击
@@ -83,40 +68,17 @@ export function createSelectAll(): ISelectAll {
   }
 
   /**
-   * 附加事件监听器
-   */
-  const attachEventListeners = (): void => {
-    // 检查是否在目标页面
-    if (!isTargetPage()) return
-
-    // 初始化按钮
-    initButtons()
-  }
-
-  /**
-   * 移除事件监听器
-   */
-  const removeEventListeners = (): void => {
-    if (selectAllBtn) {
-      selectAllBtn.removeEventListener('click', handleSelectAll)
-      selectAllBtn = null
-    }
-    if (deleteBtn) {
-      deleteBtn.removeEventListener('click', handleDelete)
-      deleteBtn = null
-    }
-  }
-
-  /**
    * 清理已注入的内容
    */
   const cleanupInjectedContent = (): void => {
     // 方法1：通过引用移除按钮
     if (selectAllBtn) {
+      selectAllBtn.removeEventListener('click', handleSelectAll)
       selectAllBtn.remove()
       selectAllBtn = null
     }
     if (deleteBtn) {
+      deleteBtn.removeEventListener('click', handleDelete)
       deleteBtn.remove()
       deleteBtn = null
     }
@@ -126,115 +88,18 @@ export function createSelectAll(): ISelectAll {
       .forEach(btn => btn.remove())
   }
 
-  /**
-   * 从存储加载配置
-   */
-  const loadConfig = async (): Promise<void> => {
-    try {
-      const result = await browser.storage.local.get(STORAGE_KEY)
-      isEnabled = (result[STORAGE_KEY] as boolean | undefined) ?? selectAllConfig.defaultEnabled
-    } catch (error) {
-      console.error('加载全选功能配置失败:', error)
-      isEnabled = false
-    }
-  }
-
-  /**
-   * 保存配置到存储
-   */
-  const saveConfig = async (): Promise<void> => {
-    try {
-      await browser.storage.local.set({ [STORAGE_KEY]: isEnabled })
-    } catch (error) {
-      console.error('保存全选功能配置失败:', error)
-    }
-  }
-
-  /**
-   * 启用全选功能
-   */
-  const enable = async (): Promise<void> => {
-    if (isEnabled) return // 如果已经启用，直接返回
-
-    isEnabled = true
-    await saveConfig()
-    attachEventListeners()
-  }
-
-  /**
-   * 禁用全选功能
-   */
-  const disable = async (): Promise<void> => {
-    if (!isEnabled) return // 如果已经禁用，直接返回
-
-    isEnabled = false
-    await saveConfig()
-    removeEventListeners()
-    cleanupInjectedContent()
-  }
-
-  /**
-   * 切换功能状态
-   */
-  const toggle = async (): Promise<boolean> => {
-    if (isEnabled) {
-      await disable()
-    } else {
-      await enable()
-    }
-    return isEnabled
-  }
-
-  /**
-   * 获取当前状态
-   */
-  const getStatus = (): boolean => isEnabled
-
-  /**
-   * 初始化
-   */
-  const init = async (): Promise<void> => {
-    await loadConfig()
-    if (isEnabled) {
-      attachEventListeners()
-    }
-  }
-
-  // 异步初始化，不阻塞构造
-  void init()
-
-  return {
-    enable,
-    disable,
-    toggle,
-    getStatus
-  }
-}
-
-/**
- * 为了保持向后兼容，导出一个类包装器
- * @deprecated 请使用 createSelectAll() 函数
- */
-export class SelectAllManager {
-  private instance: ISelectAll
-
-  constructor() {
-    this.instance = createSelectAll()
-  }
-
-  async enable(): Promise<void> {
-    return this.instance.enable()
-  }
-
-  async disable(): Promise<void> {
-    return this.instance.disable()
-  }
-
-  async toggle(): Promise<boolean> {
-    return this.instance.toggle()
-  }
-
-  getStatus(): boolean {
-    return this.instance.getStatus()
-  }
+  // 使用 featureManager 创建基础功能管理器
+  return createFeatureManager({
+    config: {
+      storageKey: selectAllConfig.storageKey,
+      defaultEnabled: selectAllConfig.defaultEnabled,
+      targetPages: selectAllConfig.targetPages,
+    },
+    onEnable: () => {
+      initButtons()
+    },
+    onDisable: () => {
+      cleanupInjectedContent()
+    },
+  })
 }

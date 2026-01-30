@@ -1,4 +1,6 @@
 {
+  "name": "楼层高亮",
+  "description": "根据URL参数高亮指定楼层",
   "storageKey": "floorHighlighterEnabled",
   "defaultEnabled": true
 }

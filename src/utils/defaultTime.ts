@@ -4,6 +4,8 @@
  */
 
 import defaultTimeConfig from '@/configs/defaultTime.json'
+import { urlMatcher } from './urlMatcher'
+import { storageHelper } from './storageHelper'
 
 const STORAGE_KEY = defaultTimeConfig.storageKey
 const START_TIME_KEY = defaultTimeConfig.startTimeKey
@@ -31,8 +33,7 @@ export function createDefaultTime(): IDefaultTime {
    * 检查是否在目标页面
    */
   const isTargetPage = (): boolean => {
-    const url = window.location.href
-    return defaultTimeConfig.targetPages.some(page => url.includes(page))
+    return urlMatcher.isTargetPage(window.location.href, defaultTimeConfig.targetPages)
   }
 
   /**
@@ -72,29 +73,18 @@ export function createDefaultTime(): IDefaultTime {
    * 从存储加载配置
    */
   const loadConfig = async (): Promise<void> => {
-    try {
-      const result = await browser.storage.local.get([STORAGE_KEY, START_TIME_KEY])
-      isEnabled = (result[STORAGE_KEY] as boolean | undefined) ?? defaultTimeConfig.defaultEnabled
-      startTime = (result[START_TIME_KEY] as string | undefined) ?? defaultTimeConfig.defaultStartTime
-    } catch (error) {
-      console.error('加载默认时间配置失败:', error)
-      isEnabled = false
-      startTime = defaultTimeConfig.defaultStartTime
-    }
+    isEnabled = await storageHelper.loadBoolean(STORAGE_KEY, defaultTimeConfig.defaultEnabled)
+    startTime = await storageHelper.loadString(START_TIME_KEY, defaultTimeConfig.defaultStartTime)
   }
 
   /**
    * 保存配置到存储
    */
   const saveConfig = async (): Promise<void> => {
-    try {
-      await browser.storage.local.set({
-        [STORAGE_KEY]: isEnabled,
-        [START_TIME_KEY]: startTime
-      })
-    } catch (error) {
-      console.error('保存默认时间配置失败:', error)
-    }
+    await storageHelper.saveMultiple({
+      [STORAGE_KEY]: isEnabled,
+      [START_TIME_KEY]: startTime
+    })
   }
 
   /**
@@ -173,41 +163,5 @@ export function createDefaultTime(): IDefaultTime {
     getStatus,
     setStartTime,
     getStartTime
-  }
-}
-
-/**
- * 为了保持向后兼容，导出一个类包装器
- * @deprecated 请使用 createDefaultTime() 函数
- */
-export class DefaultTimeManager {
-  private instance: IDefaultTime
-
-  constructor() {
-    this.instance = createDefaultTime()
-  }
-
-  async enable(): Promise<void> {
-    return this.instance.enable()
-  }
-
-  async disable(): Promise<void> {
-    return this.instance.disable()
-  }
-
-  async toggle(): Promise<boolean> {
-    return this.instance.toggle()
-  }
-
-  getStatus(): boolean {
-    return this.instance.getStatus()
-  }
-
-  async setStartTime(time: string): Promise<void> {
-    return this.instance.setStartTime(time)
-  }
-
-  getStartTime(): string {
-    return this.instance.getStartTime()
   }
 }

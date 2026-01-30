@@ -1,4 +1,6 @@
 {
+  "name": "原生楼层",
+  "description": "显示已结帖的原生楼层，方便管理悬赏贴",
   "storageKey": "nativeFloorDisplayEnabled",
   "defaultEnabled": true
 }

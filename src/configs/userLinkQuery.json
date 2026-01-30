@@ -1,6 +1,6 @@
 {
-  "name": "管理页面查询",
-  "description": "在管理页面鼠标移动到用户名链接时显示用户违规记录",
+  "name": "审核查询",
+  "description": "在后台审核页面鼠标移动到用户名链接时显示用户违规记录",
   "storageKey": "userLinkQueryEnabled",
   "defaultEnabled": true,
   "targetPages": ["https://www.52pojie.cn/forum.php?mod=modcp&action=moderate"]

@@ -5,6 +5,8 @@
 
 import userLinkQueryConfig from '@/configs/userLinkQuery.json'
 import { fetchUserViolation, extractUidFromHref } from './userViolationFetcher'
+import { urlMatcher } from './urlMatcher'
+import { storageHelper } from './storageHelper'
 
 const STORAGE_KEY = userLinkQueryConfig.storageKey
 
@@ -34,8 +36,7 @@ export function createUserLinkQuery(): IUserLinkQuery {
    * 检查是否在目标页面
    */
   const isTargetPage = (): boolean => {
-    const url = window.location.href
-    return userLinkQueryConfig.targetPages.some(page => url.includes(page))
+    return urlMatcher.isTargetPage(window.location.href, userLinkQueryConfig.targetPages)
   }
 
   /**
@@ -246,7 +247,10 @@ export function createUserLinkQuery(): IUserLinkQuery {
     }
 
     // 显示加载状态
-    popupElement!.innerHTML = '<div class="loading">加载中...</div>'
+    const loadingDiv = document.createElement('div')
+    loadingDiv.className = 'loading'
+    loadingDiv.textContent = '加载中...'
+    popupElement!.replaceChildren(loadingDiv)
     popupElement!.classList.add('show')
 
     // 更新悬浮层位置
@@ -255,7 +259,7 @@ export function createUserLinkQuery(): IUserLinkQuery {
     try {
       const info = await fetchUserViolation(uid)
 
-      popupElement!.innerHTML = ''
+      popupElement!.replaceChildren()
       if (info) {
         // 复制违规信息表格
         const clonedInfo = info.cloneNode(true) as HTMLElement
@@ -269,7 +273,10 @@ export function createUserLinkQuery(): IUserLinkQuery {
       }
     } catch (error) {
       console.error('获取用户信息失败:', error)
-      popupElement!.innerHTML = '<div class="error">获取用户信息失败</div>'
+      const errorDiv = document.createElement('div')
+      errorDiv.className = 'error'
+      errorDiv.textContent = '获取用户信息失败'
+      popupElement!.replaceChildren(errorDiv)
     }
   }
 
@@ -404,25 +411,15 @@ export function createUserLinkQuery(): IUserLinkQuery {
    * 从存储加载配置
    */
   const loadConfig = async (): Promise<void> => {
-    try {
-      const result = await browser.storage.local.get(STORAGE_KEY)
-      const storedValue = result[STORAGE_KEY] as boolean | undefined
-      isEnabled = storedValue ?? userLinkQueryConfig.defaultEnabled
-    } catch (error) {
-      console.error('加载用户链接查询配置失败:', error)
-      isEnabled = false
-    }
+    const storedValue = await storageHelper.loadBoolean(STORAGE_KEY, userLinkQueryConfig.defaultEnabled)
+    isEnabled = storedValue
   }
 
   /**
    * 保存配置到存储
    */
   const saveConfig = async (): Promise<void> => {
-    try {
-      await browser.storage.local.set({ [STORAGE_KEY]: isEnabled })
-    } catch (error) {
-      console.error('保存用户链接查询配置失败:', error)
-    }
+    await storageHelper.saveBoolean(STORAGE_KEY, isEnabled)
   }
 
   /**
@@ -532,33 +529,5 @@ export function createUserLinkQuery(): IUserLinkQuery {
     disable,
     toggle,
     getStatus
-  }
-}
-
-/**
- * 为了保持向后兼容，导出一个类包装器
- * @deprecated 请使用 createUserLinkQuery() 函数
- */
-export class UserLinkQueryManager {
-  private instance: IUserLinkQuery
-
-  constructor() {
-    this.instance = createUserLinkQuery()
-  }
-
-  enable(): void {
-    return this.instance.enable()
-  }
-
-  disable(): void {
-    return this.instance.disable()
-  }
-
-  async toggle(): Promise<boolean> {
-    return this.instance.toggle()
-  }
-
-  getStatus(): boolean {
-    return this.instance.getStatus()
   }
 }

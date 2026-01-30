@@ -1,5 +1,5 @@
 {
-  "name": "默认查询时间",
+  "name": "默认时间",
   "description": "将查询开始时间默认设置为2008-03-13",
   "storageKey": "defaultTimeEnabled",
   "defaultEnabled": true,

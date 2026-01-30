@@ -4,6 +4,8 @@
  */
 
 import tableSelectorConfig from '@/configs/tableSelector.json'
+import { urlMatcher } from './urlMatcher'
+import { storageHelper } from './storageHelper'
 
 const STORAGE_KEY = tableSelectorConfig.storageKey
 const HIDDEN_TABLE_INDEXES_KEY = tableSelectorConfig.hiddenTableIndexesKey
@@ -34,8 +36,7 @@ export function createTableSelector(): ITableSelector {
    * 检查是否在管理页面
    */
   const isManagementPage = (): boolean => {
-    const url = window.location.href
-    return tableSelectorConfig.targetPages.some(page => url.includes(page))
+    return urlMatcher.isTargetPage(window.location.href, tableSelectorConfig.targetPages)
   }
 
   /**
@@ -297,30 +298,20 @@ export function createTableSelector(): ITableSelector {
    * 从存储加载配置
    */
   const loadConfig = async (): Promise<void> => {
-    try {
-      const result = await browser.storage.local.get([STORAGE_KEY, HIDDEN_TABLE_INDEXES_KEY])
-      isEnabled = (result[STORAGE_KEY] as boolean | undefined) ?? tableSelectorConfig.defaultEnabled
-      hiddenTableIndexes =
-        (result[HIDDEN_TABLE_INDEXES_KEY] as number[] | undefined) ?? tableSelectorConfig.defaultHiddenTableIndexes
-    } catch (error) {
-      console.error('加载分表选择器配置失败:', error)
-      isEnabled = false
-      hiddenTableIndexes = tableSelectorConfig.defaultHiddenTableIndexes
-    }
+    const result = await storageHelper.loadMultiple([STORAGE_KEY, HIDDEN_TABLE_INDEXES_KEY])
+    isEnabled = (result[STORAGE_KEY] as boolean | undefined) ?? tableSelectorConfig.defaultEnabled
+    hiddenTableIndexes =
+      (result[HIDDEN_TABLE_INDEXES_KEY] as number[] | undefined) ?? tableSelectorConfig.defaultHiddenTableIndexes
   }
 
   /**
    * 保存配置到存储
    */
   const saveConfig = async (): Promise<void> => {
-    try {
-      await browser.storage.local.set({
-        [STORAGE_KEY]: isEnabled,
-        [HIDDEN_TABLE_INDEXES_KEY]: hiddenTableIndexes,
-      })
-    } catch (error) {
-      console.error('保存分表选择器配置失败:', error)
-    }
+    await storageHelper.saveMultiple({
+      [STORAGE_KEY]: isEnabled,
+      [HIDDEN_TABLE_INDEXES_KEY]: hiddenTableIndexes,
+    })
   }
 
   /**
@@ -404,41 +395,5 @@ export function createTableSelector(): ITableSelector {
     getStatus,
     setHiddenTableIndexes,
     getHiddenTableIndexes,
-  }
-}
-
-/**
- * 为了保持向后兼容，导出一个类包装器
- * @deprecated 请使用 createTableSelector() 函数
- */
-export class TableSelectorManager {
-  private instance: ITableSelector
-
-  constructor() {
-    this.instance = createTableSelector()
-  }
-
-  async enable(): Promise<void> {
-    return this.instance.enable()
-  }
-
-  async disable(): Promise<void> {
-    return this.instance.disable()
-  }
-
-  async toggle(): Promise<boolean> {
-    return this.instance.toggle()
-  }
-
-  getStatus(): boolean {
-    return this.instance.getStatus()
-  }
-
-  async setHiddenTableIndexes(indexes: number[]): Promise<void> {
-    return this.instance.setHiddenTableIndexes(indexes)
-  }
-
-  getHiddenTableIndexes(): number[] {
-    return this.instance.getHiddenTableIndexes()
   }
 }

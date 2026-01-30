@@ -3,5 +3,9 @@
   "description": "在论坛列表页面检测当天发布的重复发帖，高亮显示重复发帖的行",
   "defaultEnabled": true,
   "storageKey": "duplicatePostDetectionEnabled",
-  "targetPages": ["https://www.52pojie.cn/forum-15-1.html", "https://www.52pojie.cn/forum.php?mod=forumdisplay&fid=15*"]
+  "targetPages": [
+    "https://www.52pojie.cn/forum-15-1.html",
+    "https://www.52pojie.cn/forum.php?mod=forumdisplay&fid=15*",
+    "https://www.52pojie.cn/forum-23-1.html"
+  ]
 }

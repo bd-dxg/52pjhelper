@@ -21,6 +21,12 @@
           {{ userInfo.level }}
         </div>
       </div>
+      <!-- 消息提示 -->
+      <aside class="message-container" role="status" aria-live="polite">
+        <output v-if="message" class="message" :class="messageType">
+          {{ message }}
+        </output>
+      </aside>
     </header>
 
     <!-- 选项卡导航 -->
@@ -58,13 +64,6 @@
         <AdminFeaturesToggle v-if="isAdmin" @show-message="showMessage" />
       </section>
     </div>
-
-    <!-- 消息提示 -->
-    <aside class="message-container" role="status" aria-live="polite">
-      <output v-if="message" class="message" :class="messageType">
-        {{ message }}
-      </output>
-    </aside>
   </main>
 </template>
 
@@ -202,7 +201,6 @@ const showMessage = (text: string, type: 'success' | 'error' = 'success') => {
   align-items: center;
   padding: 12px 16px; /* 从 16px 20px 减少到 12px 16px */
   background-color: var(--bg-secondary);
-  border-bottom: 1px solid var(--border-color);
   gap: 10px; /* 从 12px 减少到 10px */
 }
 
@@ -215,6 +213,7 @@ const showMessage = (text: string, type: 'success' | 'error' = 'success') => {
   border-radius: 50%;
   overflow: hidden;
   background-color: var(--bg-secondary);
+  flex-shrink: 0;
 }
 
 .user-avatar img {
@@ -257,6 +256,15 @@ const showMessage = (text: string, type: 'success' | 'error' = 'success') => {
   background-color: var(--error-bg);
 }
 
+.message-container {
+  min-height: 40px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
 /* 选项卡头部 */
 .tabs-header {
   display: flex;
@@ -293,7 +301,7 @@ const showMessage = (text: string, type: 'success' | 'error' = 'success') => {
 
 /* 选项卡内容 */
 .tabs-content {
-  max-height: calc(100% - 180px); /* 为消息提示和其他区域预留空间 */
+  max-height: calc(100% - 20px); /* 为其他区域预留空间 */
   overflow-y: auto;
   padding: 16px; /* 从 20px 减少到 16px */
 }
@@ -316,7 +324,8 @@ const showMessage = (text: string, type: 'success' | 'error' = 'success') => {
 
 .message-container {
   min-height: 40px; /* 从 45px 减少到 40px */
-  padding: 0 16px 12px; /* 从 0 20px 15px 减少到 0 16px 12px */
+  padding: 8px 16px; /* 调整内边距 */
+  background-color: var(--bg-secondary);
 }
 
 .message {
@@ -329,11 +338,11 @@ const showMessage = (text: string, type: 'success' | 'error' = 'success') => {
 @keyframes slideIn {
   from {
     opacity: 0;
-    transform: translateY(-5px);
+    transform: translateX(100px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0);
   }
 }
 

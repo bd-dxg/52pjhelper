@@ -1,4 +1,6 @@
 {
+  "name": "头像查询",
+  "description": "鼠标移入头像显示用户违规记录",
   "storageKey": "avatarQueryEnabled",
   "defaultEnabled": true
 }

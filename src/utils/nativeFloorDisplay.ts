@@ -4,6 +4,7 @@
  */
 
 import nativeFloorDisplayConfig from '@/configs/nativeFloorDisplay.json'
+import { storageHelper } from './storageHelper'
 
 const STORAGE_KEY = nativeFloorDisplayConfig.storageKey
 
@@ -56,14 +57,14 @@ export function createNativeFloorDisplay(): INativeFloorDisplay {
     if (!textAnswer) return
 
     const createAnswerDom = document.createElement('span')
-    createAnswerDom.innerHTML = `原楼层: ${index} 楼 `
+    createAnswerDom.textContent = `原楼层: ${index} 楼 `
     if (index === 10) {
       const ansText = dom.querySelector('.plc a span')?.textContent ?? null
       if (ansText === '最佳答案') {
-        createAnswerDom.innerHTML += `也可能在第一页以后 `
+        createAnswerDom.textContent += `也可能在第一页以后 `
       }
     } else if (index > 10) {
-      createAnswerDom.innerHTML = `原楼层大于10楼,不在第一页`
+      createAnswerDom.textContent = `原楼层大于10楼,不在第一页`
     }
     createAnswerDom.style.color = 'green'
     createAnswerDom.style.fontWeight = 'bold'
@@ -100,24 +101,14 @@ export function createNativeFloorDisplay(): INativeFloorDisplay {
    * 从存储加载配置
    */
   const loadConfig = async (): Promise<void> => {
-    try {
-      const result = await browser.storage.local.get(STORAGE_KEY)
-      enabled = Boolean(result[STORAGE_KEY] ?? nativeFloorDisplayConfig.defaultEnabled)
-    } catch (error) {
-      console.error('Failed to initialize native floor display:', error)
-      enabled = nativeFloorDisplayConfig.defaultEnabled
-    }
+    enabled = await storageHelper.loadBoolean(STORAGE_KEY, nativeFloorDisplayConfig.defaultEnabled)
   }
 
   /**
    * 保存配置到存储
    */
   const saveConfig = async (): Promise<void> => {
-    try {
-      await browser.storage.local.set({ [STORAGE_KEY]: enabled })
-    } catch (error) {
-      console.error('Failed to save native floor display config:', error)
-    }
+    await storageHelper.saveBoolean(STORAGE_KEY, enabled)
   }
 
   /**
@@ -175,33 +166,5 @@ export function createNativeFloorDisplay(): INativeFloorDisplay {
     disable,
     toggle,
     getStatus
-  }
-}
-
-/**
- * 为了保持向后兼容，导出一个类包装器
- * @deprecated 请使用 createNativeFloorDisplay() 函数
- */
-export class NativeFloorDisplay {
-  private instance: INativeFloorDisplay
-
-  constructor() {
-    this.instance = createNativeFloorDisplay()
-  }
-
-  async enable(): Promise<void> {
-    return this.instance.enable()
-  }
-
-  async disable(): Promise<void> {
-    return this.instance.disable()
-  }
-
-  async toggle(): Promise<boolean> {
-    return this.instance.toggle()
-  }
-
-  getStatus(): boolean {
-    return this.instance.getStatus()
   }
 }

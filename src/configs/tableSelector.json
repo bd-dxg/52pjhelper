@@ -1,12 +1,9 @@
 {
-  "name": "分表选择器",
+  "name": "分表选择",
   "description": "将分表选择器替换为按钮式界面，支持隐藏特定分表",
   "storageKey": "tableSelectorEnabled",
   "defaultEnabled": true,
   "hiddenTableIndexesKey": "hiddenTableIndexes",
   "defaultHiddenTableIndexes": [3, 4, 5, 6],
-  "targetPages": [
-    "forum.php?mod=modcp&action=thread&op=post",
-    "forum.php?mod=modcp&action=recyclebinpost"
-  ]
+  "targetPages": ["forum.php?mod=modcp&action=thread&op=post", "forum.php?mod=modcp&action=recyclebinpost"]
 }

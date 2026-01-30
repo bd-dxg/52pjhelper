@@ -1,4 +1,6 @@
 import quickReplyConfig from '@/configs/quickReply.json'
+import { urlMatcher } from './urlMatcher'
+import { storageHelper } from './storageHelper'
 
 interface ReplyOption {
   value: string
@@ -12,13 +14,12 @@ const QUICK_REPLY_STORAGE_KEY = quickReplyConfig.storageKey
 
 // 加载快捷回复配置
 export async function loadQuickReplyConfig(): Promise<boolean> {
-  const result = await browser.storage.local.get(QUICK_REPLY_STORAGE_KEY)
-  return (result[QUICK_REPLY_STORAGE_KEY] as boolean) ?? quickReplyConfig.defaultEnabled
+  return await storageHelper.loadBoolean(QUICK_REPLY_STORAGE_KEY, quickReplyConfig.defaultEnabled)
 }
 
 // 保存快捷回复配置
 export async function saveQuickReplyConfig(enabled: boolean): Promise<void> {
-  await browser.storage.local.set({ [QUICK_REPLY_STORAGE_KEY]: enabled })
+  await storageHelper.saveBoolean(QUICK_REPLY_STORAGE_KEY, enabled)
 }
 
 // 创建下拉框HTML
@@ -31,8 +32,7 @@ function createSelectHtml(): string {
 
 // 初始化快捷回复功能
 export function initQuickReply(): void {
-  const url = window.location.href
-  const isTargetPage = quickReplyConfig.targetPages.some(page => url.includes(page))
+  const isTargetPage = urlMatcher.isTargetPage(window.location.href, quickReplyConfig.targetPages)
   if (!isTargetPage) return
 
   // 添加样式
