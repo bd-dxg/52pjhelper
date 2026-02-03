@@ -25,5 +25,5 @@
       "@pages/*": ["src/pages/*"]
     }
   },
-  "exclude": ["packages", "templates", "node_modules"]
+  "exclude": ["packages", "templates", "node_modules", "tests"]
 }
