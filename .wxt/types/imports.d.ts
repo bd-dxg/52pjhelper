@@ -13,6 +13,7 @@ declare global {
   const computed: typeof import('vue').computed
   const createApp: typeof import('vue').createApp
   const createAvatarQuery: typeof import('D:/code/front-end/52pjhelper/src/utils/avatarQuery').createAvatarQuery
+  const createContentFilter: typeof import('D:/code/front-end/52pjhelper/src/utils/contentFilter').createContentFilter
   const createDefaultTime: typeof import('D:/code/front-end/52pjhelper/src/utils/defaultTime').createDefaultTime
   const createDuplicatePostDetection: typeof import('D:/code/front-end/52pjhelper/src/utils/duplicatePostDetection').createDuplicatePostDetection
   const createFeatureManager: typeof import('D:/code/front-end/52pjhelper/src/utils/featureManager').createFeatureManager
@@ -35,12 +36,15 @@ declare global {
   const defineContentScript: typeof import('wxt/utils/define-content-script').defineContentScript
   const defineUnlistedScript: typeof import('wxt/utils/define-unlisted-script').defineUnlistedScript
   const defineWxtPlugin: typeof import('wxt/utils/define-wxt-plugin').defineWxtPlugin
+  const disableContentFilter: typeof import('D:/code/front-end/52pjhelper/src/utils/contentFilter').disableContentFilter
   const disableRowClickToCheck: typeof import('D:/code/front-end/52pjhelper/src/utils/rowClickToCheck').disableRowClickToCheck
   const effectScope: typeof import('vue').effectScope
+  const enableContentFilter: typeof import('D:/code/front-end/52pjhelper/src/utils/contentFilter').enableContentFilter
   const enableRowClickToCheck: typeof import('D:/code/front-end/52pjhelper/src/utils/rowClickToCheck').enableRowClickToCheck
   const extractUidFromHref: typeof import('D:/code/front-end/52pjhelper/src/utils/userViolationFetcher').extractUidFromHref
   const fakeBrowser: typeof import('wxt/testing').fakeBrowser
   const fetchUserViolation: typeof import('D:/code/front-end/52pjhelper/src/utils/userViolationFetcher').fetchUserViolation
+  const getContentFilterStatus: typeof import('D:/code/front-end/52pjhelper/src/utils/contentFilter').getContentFilterStatus
   const getCurrentInstance: typeof import('vue').getCurrentInstance
   const getCurrentScope: typeof import('vue').getCurrentScope
   const getCurrentTheme: typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager').getCurrentTheme
@@ -52,6 +56,7 @@ declare global {
   const hideMenu: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').hideMenu
   const initQuickReply: typeof import('D:/code/front-end/52pjhelper/src/utils/quickReply').initQuickReply
   const initTheme: typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager').initTheme
+  const initializeContentFilter: typeof import('D:/code/front-end/52pjhelper/src/utils/contentFilter').initializeContentFilter
   const initializeNavigationHider: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').initializeNavigationHider
   const initializeRowClickToCheck: typeof import('D:/code/front-end/52pjhelper/src/utils/rowClickToCheck').initializeRowClickToCheck
   const inject: typeof import('vue').inject
@@ -98,6 +103,7 @@ declare global {
   const toRef: typeof import('vue').toRef
   const toRefs: typeof import('vue').toRefs
   const toValue: typeof import('vue').toValue
+  const toggleContentFilter: typeof import('D:/code/front-end/52pjhelper/src/utils/contentFilter').toggleContentFilter
   const toggleMenu: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').toggleMenu
   const toggleRowClickToCheck: typeof import('D:/code/front-end/52pjhelper/src/utils/rowClickToCheck').toggleRowClickToCheck
   const triggerRef: typeof import('vue').triggerRef
@@ -158,6 +164,9 @@ declare global {
   export type { IAvatarQuery } from 'D:/code/front-end/52pjhelper/src/utils/avatarQuery'
   import('D:/code/front-end/52pjhelper/src/utils/avatarQuery')
   // @ts-ignore
+  export type { FilterRule, IContentFilter } from 'D:/code/front-end/52pjhelper/src/utils/contentFilter'
+  import('D:/code/front-end/52pjhelper/src/utils/contentFilter')
+  // @ts-ignore
   export type { IDefaultTime } from 'D:/code/front-end/52pjhelper/src/utils/defaultTime'
   import('D:/code/front-end/52pjhelper/src/utils/defaultTime')
   // @ts-ignore
@@ -216,6 +225,7 @@ declare module 'vue' {
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
     readonly createApp: UnwrapRef<typeof import('vue')['createApp']>
     readonly createAvatarQuery: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/avatarQuery')['createAvatarQuery']>
+    readonly createContentFilter: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/contentFilter')['createContentFilter']>
     readonly createDefaultTime: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/defaultTime')['createDefaultTime']>
     readonly createDuplicatePostDetection: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/duplicatePostDetection')['createDuplicatePostDetection']>
     readonly createFeatureManager: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/featureManager')['createFeatureManager']>
@@ -238,12 +248,15 @@ declare module 'vue' {
     readonly defineContentScript: UnwrapRef<typeof import('wxt/utils/define-content-script')['defineContentScript']>
     readonly defineUnlistedScript: UnwrapRef<typeof import('wxt/utils/define-unlisted-script')['defineUnlistedScript']>
     readonly defineWxtPlugin: UnwrapRef<typeof import('wxt/utils/define-wxt-plugin')['defineWxtPlugin']>
+    readonly disableContentFilter: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/contentFilter')['disableContentFilter']>
     readonly disableRowClickToCheck: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/rowClickToCheck')['disableRowClickToCheck']>
     readonly effectScope: UnwrapRef<typeof import('vue')['effectScope']>
+    readonly enableContentFilter: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/contentFilter')['enableContentFilter']>
     readonly enableRowClickToCheck: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/rowClickToCheck')['enableRowClickToCheck']>
     readonly extractUidFromHref: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userViolationFetcher')['extractUidFromHref']>
     readonly fakeBrowser: UnwrapRef<typeof import('wxt/testing')['fakeBrowser']>
     readonly fetchUserViolation: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userViolationFetcher')['fetchUserViolation']>
+    readonly getContentFilterStatus: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/contentFilter')['getContentFilterStatus']>
     readonly getCurrentInstance: UnwrapRef<typeof import('vue')['getCurrentInstance']>
     readonly getCurrentScope: UnwrapRef<typeof import('vue')['getCurrentScope']>
     readonly getCurrentTheme: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager')['getCurrentTheme']>
@@ -255,6 +268,7 @@ declare module 'vue' {
     readonly hideMenu: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['hideMenu']>
     readonly initQuickReply: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/quickReply')['initQuickReply']>
     readonly initTheme: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager')['initTheme']>
+    readonly initializeContentFilter: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/contentFilter')['initializeContentFilter']>
     readonly initializeNavigationHider: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['initializeNavigationHider']>
     readonly initializeRowClickToCheck: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/rowClickToCheck')['initializeRowClickToCheck']>
     readonly inject: UnwrapRef<typeof import('vue')['inject']>
@@ -301,6 +315,7 @@ declare module 'vue' {
     readonly toRef: UnwrapRef<typeof import('vue')['toRef']>
     readonly toRefs: UnwrapRef<typeof import('vue')['toRefs']>
     readonly toValue: UnwrapRef<typeof import('vue')['toValue']>
+    readonly toggleContentFilter: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/contentFilter')['toggleContentFilter']>
     readonly toggleMenu: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['toggleMenu']>
     readonly toggleRowClickToCheck: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/rowClickToCheck')['toggleRowClickToCheck']>
     readonly triggerRef: UnwrapRef<typeof import('vue')['triggerRef']>

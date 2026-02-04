@@ -14,6 +14,7 @@ import { createTableSelector } from '@utils/tableSelector'
 import { createDefaultTime } from '@utils/defaultTime'
 import { createDuplicatePostDetection } from '@utils/duplicatePostDetection'
 import { initializeRowClickToCheck } from '@utils/rowClickToCheck'
+import { createContentFilter } from '@utils/contentFilter'
 import * as autoFill from '@utils/autofills'
 import type { ManagerInstances } from './messageHandler'
 
@@ -65,4 +66,7 @@ export async function initializeManagers(managers: ManagerInstances): Promise<vo
 
   // 初始化重复发帖检测功能
   managers.duplicatePostDetectionManager = createDuplicatePostDetection()
+
+  // 初始化内容过滤功能
+  managers.contentFilterManager = createContentFilter()
 }

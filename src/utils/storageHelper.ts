@@ -36,6 +36,20 @@ export interface IStorageHelper {
   saveString(key: string, value: string): Promise<void>
 
   /**
+   * 加载数字类型配置
+   * @param key 存储键
+   * @param defaultValue 默认值
+   */
+  loadNumber(key: string, defaultValue: number): Promise<number>
+
+  /**
+   * 保存数字类型配置
+   * @param key 存储键
+   * @param value 值
+   */
+  saveNumber(key: string, value: number): Promise<void>
+
+  /**
    * 加载数组类型配置
    * @param key 存储键
    * @param defaultValue 默认值
@@ -139,6 +153,32 @@ export function createStorageHelper(): IStorageHelper {
    * 保存字符串类型配置
    */
   const saveString = async (key: string, value: string): Promise<void> => {
+    try {
+      await browser.storage.local.set({ [key]: value })
+    } catch (error) {
+      console.error(`保存配置失败 [${key}]:`, error)
+      throw error
+    }
+  }
+
+  /**
+   * 加载数字类型配置
+   */
+  const loadNumber = async (key: string, defaultValue: number): Promise<number> => {
+    try {
+      const result = await browser.storage.local.get(key)
+      const value = result[key]
+      return typeof value === 'number' ? value : defaultValue
+    } catch (error) {
+      console.error(`加载配置失败 [${key}]:`, error)
+      return defaultValue
+    }
+  }
+
+  /**
+   * 保存数字类型配置
+   */
+  const saveNumber = async (key: string, value: number): Promise<void> => {
     try {
       await browser.storage.local.set({ [key]: value })
     } catch (error) {
@@ -272,6 +312,8 @@ export function createStorageHelper(): IStorageHelper {
     saveBoolean,
     loadString,
     saveString,
+    loadNumber,
+    saveNumber,
     loadArray,
     saveArray,
     loadObject,

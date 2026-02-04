@@ -10,6 +10,7 @@
       <DefaultTimeToggle @show-message="handleShowMessage" />
       <UserLinkQueryToggle @show-message="handleShowMessage" />
       <RowClickToCheckToggle @show-message="handleShowMessage" />
+      <ContentFilterToggle @show-message="handleShowMessage" />
     </div>
   </div>
 </template>
@@ -23,6 +24,7 @@ import TableSelectorToggle from '@com/TableSelectorToggle.vue'
 import DefaultTimeToggle from '@com/DefaultTimeToggle.vue'
 import UserLinkQueryToggle from '@com/UserLinkQueryToggle.vue'
 import RowClickToCheckToggle from '@com/RowClickToCheckToggle.vue'
+import ContentFilterToggle from '@com/ContentFilterToggle.vue'
 
 defineOptions({
   name: 'AdminFeaturesToggle',

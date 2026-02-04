@@ -21,7 +21,8 @@ const managers: ManagerInstances = {
   selectAllManager: null,
   tableSelectorManager: null,
   defaultTimeManager: null,
-  duplicatePostDetectionManager: null
+  duplicatePostDetectionManager: null,
+  contentFilterManager: null,
 }
 
 export default defineContentScript({

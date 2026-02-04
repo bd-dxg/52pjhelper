@@ -11,6 +11,7 @@ import type { ISelectAll } from '@utils/selectAll'
 import type { ITableSelector } from '@utils/tableSelector'
 import type { IDefaultTime } from '@utils/defaultTime'
 import type { IDuplicatePostDetection } from '@utils/duplicatePostDetection'
+import type { IContentFilter } from '@utils/contentFilter'
 import { applyNavConfig } from '@utils/navigationHider'
 import { saveQuickReplyConfig, initQuickReply, cleanupQuickReply } from '@utils/quickReply'
 import { getUserInfo, saveUserInfoToCache } from '@utils/userInfo'
@@ -30,6 +31,7 @@ export interface ManagerInstances {
   tableSelectorManager: ITableSelector | null
   defaultTimeManager: IDefaultTime | null
   duplicatePostDetectionManager: IDuplicatePostDetection | null
+  contentFilterManager: IContentFilter | null
 }
 
 /**
@@ -368,6 +370,44 @@ export function registerMessageListener(managers: ManagerInstances): void {
       const enabled = autoFill.isEnabled()
       sendResponse({ success: true, enabled })
       return false
+    }
+
+    // 内容过滤功能切换
+    if (message.type === 'TOGGLE_CONTENT_FILTER') {
+      if (managers.contentFilterManager) {
+        managers.contentFilterManager
+          .toggle()
+          .then((enabled: boolean) => {
+            sendResponse({ success: true, enabled })
+          })
+          .catch((error: unknown) => {
+            console.error('Toggle content filter failed:', error)
+            sendResponse({ success: false, message: 'Toggle failed' })
+          })
+        return true
+      } else {
+        sendResponse({ success: false, message: 'ContentFilterManager not initialized' })
+        return false
+      }
+    }
+
+    // 获取内容过滤状态
+    if (message.type === 'GET_CONTENT_FILTER_STATUS') {
+      if (managers.contentFilterManager) {
+        managers.contentFilterManager
+          .getStatus()
+          .then((enabled: boolean) => {
+            sendResponse({ success: true, enabled })
+          })
+          .catch((error: unknown) => {
+            console.error('Get content filter status failed:', error)
+            sendResponse({ success: false, message: 'Get status failed' })
+          })
+        return true
+      } else {
+        sendResponse({ success: false, message: 'ContentFilterManager not initialized' })
+        return false
+      }
     }
 
     return false
