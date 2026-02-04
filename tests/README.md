@@ -25,7 +25,8 @@ tests/
 │   ├── selectAll.spec.ts
 │   ├── tableSelector.spec.ts
 │   ├── userLinkQuery.spec.ts
-│   └── rowClickToCheck.spec.ts
+│   ├── rowClickToCheck.spec.ts
+│   └── contentFilter.spec.ts
 ├── components/         # Vue 组件测试
 │   ├── AvatarQueryToggle.spec.ts
 │   ├── QuickReplyToggle.spec.ts
@@ -38,6 +39,7 @@ tests/
 │   ├── DefaultTimeToggle.spec.ts
 │   ├── RowClickToCheckToggle.spec.ts
 │   ├── TableSelectorToggle.spec.ts
+│   ├── ContentFilterToggle.spec.ts
 │   ├── AdminFeaturesToggle.spec.ts
 │   ├── GeneralFeaturesToggle.spec.ts
 │   ├── NavigationSettings.spec.ts
@@ -120,7 +122,7 @@ describe('yourFunction', () => {
 - ✅ **userInfo.ts**: 100% 🎉（30 个测试用例）
 - ✅ **themeManager.ts**: 100% 🎉（24 个测试用例）
 
-### 功能工具类（11/11 完成）
+### 功能工具类（12/12 完成）
 - ✅ **avatarQuery.ts**: 100% 🎉（28 个测试用例）
 - ✅ **quickReply.ts**: 100% 🎉（18 个测试用例）
 - ✅ **floorHighlighter.ts**: 100% 🎉（21 个测试用例）
@@ -132,13 +134,14 @@ describe('yourFunction', () => {
 - ✅ **tableSelector.ts**: 100% 🎉（18 个测试用例）
 - ✅ **userLinkQuery.ts**: 100% 🎉（25 个测试用例）
 - ✅ **rowClickToCheck.ts**: 100% 🎉（15 个测试用例）
+- ✅ **contentFilter.ts**: 待验证（28 个测试用例）
 
-### Vue 组件（15 个）
-- ✅ 所有功能开关组件: 100% 🎉（132 个测试用例）
+### Vue 组件（16 个）
+- ✅ 所有功能开关组件: 100% 🎉（144 个测试用例）
 - ✅ 组合组件: 100% 🎉（30 个测试用例）
 - ✅ 主容器组件: 100% 🎉（47 个测试用例）
 
-**总计**：32 个测试文件，608 个测试用例全部通过 ✅
+**总计**：34 个测试文件，648 个测试用例
 
 目标：所有核心工具类达到 80% 以上的测试覆盖率。
 
