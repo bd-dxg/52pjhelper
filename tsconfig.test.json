@@ -3,5 +3,11 @@
   "compilerOptions": {
     "types": ["vitest/globals"]
   },
-  "include": ["tests/**/*.ts", "tests/**/*.spec.ts", "src/**/*.ts", "src/**/*.vue"]
+  "include": [
+    "tests/**/*.ts",
+    "tests/**/*.spec.ts",
+    "src/**/*.ts",
+    "src/**/*.vue",
+    ".wxt/**/*.d.ts"
+  ]
 }
