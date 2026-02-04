@@ -154,7 +154,7 @@ Content Script 采用模块化设计，遵循 WXT 框架的最佳实践：
 
 - 将功能开关按用途分为两组：通用功能组和后台管理功能组
 - 通用功能组（`GeneralFeaturesToggle.vue`）：楼层高亮、原生楼层、重贴检测
-- 后台管理功能组（`AdminFeaturesToggle.vue`）：头像查询、快捷回复、自动填充、全选、分表选择、默认时间、审核查询、勾选范围
+- 后台管理功能组（`AdminFeaturesToggle.vue`）：头像查询、快捷回复、自动填充、全选、分表选择、默认时间、审核查询、勾选范围、灌水筛选
 - 提高代码可维护性，减少主组件代码量（从 536 行减少到 349 行）
 
 ### 10. 全选功能
@@ -214,12 +214,27 @@ Content Script 采用模块化设计，遵循 WXT 框架的最佳实践：
 - 高亮显示重复发帖的行，使用黄色背景
 - 支持启用/禁用功能切换
 
+### 16. 勾选范围
+
 - 在管理页面上点击表格行（tr）来勾选对应的复选框，提高操作效率
 - 排除有 class 属性的 tr 元素（如表头、空行等）
 - 防止点击行内超链接或按钮时触发复选框勾选
 - 使用 WeakSet 防止重复绑定，避免内存泄漏
 - 支持启用/禁用功能切换
 - 配置通过浏览器 storage 本地存储
+
+### 17. 灌水筛选
+
+- 在管理页面（forum.php?mod=modcp&action=thread&op=post）创建可拖动的过滤卡片
+- 支持两种匹配模式：正则表达式和简单文本匹配
+- 一行一个条件，满足任意条件即可高亮
+- 匹配目标：`#moderate tbody .xg1` 元素的文本内容
+- 文本长度限制：超过 12 个汉字的文本不进行匹配
+- 触发时机：失去卡片焦点时开始匹配
+- 匹配成功后高亮对应的表格行（`#moderate > table > tbody > tr`）
+- 支持动态添加/删除过滤条件
+- 卡片位置和过滤规则自动保存到浏览器存储
+- 支持启用/禁用功能切换
 
 ## 主要文件
 
@@ -246,6 +261,7 @@ Content Script 采用模块化设计，遵循 WXT 框架的最佳实践：
 | `src/configs/autoFill.json`               | 自动填充配置         |
 | `src/configs/rowClickToCheck.json`        | 勾选范围功能配置     |
 | `src/configs/duplicatePostDetection.json` | 重复发帖检测功能配置 |
+| `src/configs/contentFilter.json`          | 灌水筛选功能配置     |
 
 ### 工具类
 
@@ -266,6 +282,7 @@ Content Script 采用模块化设计，遵循 WXT 框架的最佳实践：
 | `src/utils/autoFill.ts`               | 自动填充管理工具类                             |
 | `src/utils/rowClickToCheck.ts`        | 勾选范围功能管理工具类                         |
 | `src/utils/duplicatePostDetection.ts` | 重复发帖检测管理工具类                         |
+| `src/utils/contentFilter.ts`          | 灌水筛选管理工具类                             |
 | `src/utils/featureManager.ts`         | 功能管理器，提供统一的功能管理模式             |
 | `src/utils/storageHelper.ts`          | 存储操作辅助工具，提供统一的浏览器存储操作接口 |
 | `src/utils/messageHelper.ts`          | 消息通信辅助工具，提供统一的浏览器消息通信接口 |
@@ -290,6 +307,7 @@ Content Script 采用模块化设计，遵循 WXT 框架的最佳实践：
 | `src/components/AutoFillToggle.vue`               | 自动填充功能开关组件                                   |
 | `src/components/RowClickToCheckToggle.vue`        | 勾选范围功能开关组件                                   |
 | `src/components/DuplicatePostDetectionToggle.vue` | 重复发帖检测功能开关组件                               |
+| `src/components/ContentFilterToggle.vue`          | 灌水筛选功能开关组件                                   |
 
 ### 样式文件
 
