@@ -28,19 +28,16 @@ export const enableRowClickToCheck = () => {
     return
   }
 
-  // 找到表单和表格
+  // 找到表单
   const form = document.getElementById('moderate') as HTMLFormElement
   if (!form) {
     return
   }
 
-  const tbody = form.querySelector('tbody')
-  if (!tbody) {
-    return
-  }
-
-  // 获取所有符合条件的表格行
-  const rows = tbody.querySelectorAll('tr:not([class])')
+  // 获取所有符合条件的表格行（兼容两种页面结构）
+  // 帖子管理页面：一个 tbody 包含多个 tr
+  // 回收站页面：多个 tbody，每个 tbody 包含一个 tr
+  const rows = form.querySelectorAll('tr:not([class])')
 
   rows.forEach(row => {
     const tr = row as HTMLTableRowElement
@@ -49,8 +46,8 @@ export const enableRowClickToCheck = () => {
       return
     }
 
-    // 查找行内的复选框
-    const checkbox = tr.querySelector('input[type="checkbox"][name="delete[]"].pc') as HTMLInputElement
+    // 查找行内的复选框（支持 delete[] 和 moderate[] 两种 name）
+    const checkbox = tr.querySelector('input[type="checkbox"].pc[name="delete[]"], input[type="checkbox"].pc[name="moderate[]"]') as HTMLInputElement
     if (!checkbox) {
       return
     }
@@ -85,19 +82,14 @@ export const enableRowClickToCheck = () => {
 
 // 处理范围选择
 const handleRangeSelection = (clickedRow: HTMLTableRowElement) => {
-  // 找到表单和表格
+  // 找到表单
   const form = document.getElementById('moderate') as HTMLFormElement
   if (!form) {
     return
   }
 
-  const tbody = form.querySelector('tbody')
-  if (!tbody) {
-    return
-  }
-
   // 获取所有符合条件的表格行
-  const rows = Array.from(tbody.querySelectorAll('tr:not([class])'))
+  const rows = Array.from(form.querySelectorAll('tr:not([class])'))
 
   // 找到点击行在数组中的索引
   const clickedIndex = rows.indexOf(clickedRow)
@@ -108,7 +100,7 @@ const handleRangeSelection = (clickedRow: HTMLTableRowElement) => {
     selectionEnd = clickedRow
 
     // 勾选点击的行
-    const checkbox = clickedRow.querySelector('input[type="checkbox"][name="delete[]"].pc') as HTMLInputElement
+    const checkbox = clickedRow.querySelector('input[type="checkbox"].pc[name="delete[]"], input[type="checkbox"].pc[name="moderate[]"]') as HTMLInputElement
     if (checkbox) {
       checkbox.checked = true
     }
@@ -123,7 +115,7 @@ const handleRangeSelection = (clickedRow: HTMLTableRowElement) => {
     // 勾选范围内的所有行
     for (let i = startIndex; i <= endIndex; i++) {
       const row = rows[i] as HTMLTableRowElement
-      const checkbox = row.querySelector('input[type="checkbox"][name="delete[]"].pc') as HTMLInputElement
+      const checkbox = row.querySelector('input[type="checkbox"].pc[name="delete[]"], input[type="checkbox"].pc[name="moderate[]"]') as HTMLInputElement
       if (checkbox) {
         checkbox.checked = true
       }
@@ -139,14 +131,9 @@ export const disableRowClickToCheck = () => {
     return
   }
 
-  // 找到表单和表格
+  // 找到表单
   const form = document.getElementById('moderate') as HTMLFormElement
   if (!form) {
-    return
-  }
-
-  const tbody = form.querySelector('tbody')
-  if (!tbody) {
     return
   }
 
@@ -155,12 +142,12 @@ export const disableRowClickToCheck = () => {
   selectionEnd = null
 
   // 获取所有符合条件的表格行
-  const rows = tbody.querySelectorAll('tr:not([class])')
+  const rows = form.querySelectorAll('tr:not([class])')
 
   rows.forEach(row => {
     const tr = row as HTMLTableRowElement
-    // 查找行内的复选框
-    const checkbox = tr.querySelector('input[type="checkbox"][name="delete[]"].pc') as HTMLInputElement
+    // 查找行内的复选框（支持 delete[] 和 moderate[] 两种 name）
+    const checkbox = tr.querySelector('input[type="checkbox"].pc[name="delete[]"], input[type="checkbox"].pc[name="moderate[]"]') as HTMLInputElement
     if (!checkbox) {
       return
     }

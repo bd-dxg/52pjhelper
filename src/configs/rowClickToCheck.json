@@ -3,5 +3,5 @@
   "description": "在管理页面上点击表格行（tr）来勾选对应的复选框，提高操作效率",
   "defaultEnabled": true,
   "storageKey": "rowClickToCheckEnabled",
-  "targetPages": ["forum.php?mod=modcp&action=thread&op=post"]
+  "targetPages": ["forum.php?mod=modcp&action=thread&op=post", "forum.php?mod=modcp&action=recyclebinpost&op=search"]
 }
