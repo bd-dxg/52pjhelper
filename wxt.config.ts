@@ -16,13 +16,14 @@ export default defineConfig({
         '@utils': fileURLToPath(new URL('./src/utils', import.meta.url)),
         '@ent': fileURLToPath(new URL('./src/entries', import.meta.url)),
         '@pages': fileURLToPath(new URL('./src/pages', import.meta.url)),
+        '@conf': fileURLToPath(new URL('./src/configs', import.meta.url)),
       },
     },
   }),
   manifest: {
     name: '吾爱管理效率助手',
     description: '提升论坛管理效率',
-    version: '2.7.5',
+    version: '2.7.6',
     action: {
       default_icon: 'images/icon-128.png',
     },

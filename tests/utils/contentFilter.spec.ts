@@ -9,6 +9,7 @@ import {
   createContentFilter,
   type FilterRule,
 } from '@/utils/contentFilter'
+import contentFilterConfig from '@conf/contentFilter.json'
 
 // Mock urlMatcher
 vi.mock('@/utils/urlMatcher', () => ({
@@ -402,15 +403,11 @@ describe('contentFilter', () => {
     })
 
     it('应该能添加新的过滤条件', async () => {
-      const addBtn = document.querySelector('button') as HTMLButtonElement
       // 找到"+ 添加条件"按钮
       const buttons = document.querySelectorAll('button')
-      let addButton: HTMLButtonElement | null = null
-      buttons.forEach(btn => {
-        if (btn.textContent?.includes('添加条件')) {
-          addButton = btn
-        }
-      })
+      const addButton = Array.from(buttons).find(btn => btn.textContent?.includes('添加条件')) as
+        | HTMLButtonElement
+        | undefined
 
       expect(addButton).toBeTruthy()
 
@@ -698,23 +695,18 @@ describe('contentFilter', () => {
 
       // 找到预设按钮（常见灌水）
       const buttons = document.querySelectorAll('button')
-      let presetButton: HTMLButtonElement | null = null
-      buttons.forEach(btn => {
-        if (btn.textContent === '常见灌水') {
-          presetButton = btn
-        }
-      })
+      const presetButton = Array.from(buttons).find(btn => btn.textContent === '常见灌水') as
+        | HTMLButtonElement
+        | undefined
 
-      if (presetButton) {
-        presetButton.click()
-        await new Promise(resolve => setTimeout(resolve, 50))
+      expect(presetButton).toBeTruthy()
+      presetButton?.click()
+      await new Promise(resolve => setTimeout(resolve, 50))
 
-        // 验证输入框被填充
-        const input = document.querySelector(
-          '.content-filter-input-row input[type="text"]',
-        ) as HTMLInputElement
-        expect(input?.value).toBe('感谢|谢谢|收藏|学习|不错|备用')
-      }
+      // 验证输入框被填充
+      const input = document.querySelector('.content-filter-input-row input[type="text"]') as HTMLInputElement
+      const expectedPattern = contentFilterConfig.presets.find(p => p.name === '常见灌水')?.pattern
+      expect(input?.value).toBe(expectedPattern)
     })
   })
 

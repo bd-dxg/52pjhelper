@@ -83,6 +83,7 @@ pnpm test -- --watch
 import { describe, it, expect, beforeEach } from 'vitest'
 import { fakeBrowser } from 'wxt/testing'
 import { yourFunction } from '@/utils/yourModule'
+import yourConfig from '@conf/yourConfig.json'
 
 describe('yourFunction', () => {
   beforeEach(() => {
@@ -102,6 +103,15 @@ describe('yourFunction', () => {
   })
 })
 ```
+
+### 路径别名
+
+测试文件中可以使用以下路径别名：
+
+- `@/*` → `src/*`
+- `@conf/*` → `src/configs/*`
+- `@utils/*` → `src/utils/*`
+- `@com/*` → `src/components/*`
 
 ### 测试组织原则
 

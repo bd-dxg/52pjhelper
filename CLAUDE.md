@@ -331,6 +331,7 @@ Content Script 采用模块化设计，遵循 WXT 框架的最佳实践：
 - `@utils` → `src/utils/`
 - `@ent` → `src/entries/`
 - `@pages` → `src/pages/`
+- `@conf` → `src/configs/`
 
 ## 开发注意事项
 

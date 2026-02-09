@@ -139,6 +139,17 @@
 └── package.json                # 项目依赖
 ```
 
+## 路径别名
+
+项目配置了以下路径别名以简化导入：
+
+- `@` → `src/`
+- `@com` → `src/components/`
+- `@utils` → `src/utils/`
+- `@ent` → `src/entries/`
+- `@pages` → `src/pages/`
+- `@conf` → `src/configs/`
+
 ## 技术栈
 
 - **框架**: WXT ^0.20.13（现代化浏览器扩展开发框架）

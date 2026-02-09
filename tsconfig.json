@@ -22,8 +22,9 @@
       "@com/*": ["src/components/*"],
       "@utils/*": ["src/utils/*"],
       "@ent/*": ["src/entries/*"],
-      "@pages/*": ["src/pages/*"]
+      "@pages/*": ["src/pages/*"],
+      "@conf/*": ["src/configs/*"]
     }
   },
-  "exclude": ["packages", "templates", "node_modules", "tests"]
+  "exclude": ["packages", "templates", "node_modules"]
 }
