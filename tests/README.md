@@ -15,6 +15,7 @@ tests/
 │   ├── featureManager.spec.ts
 │   ├── userInfo.spec.ts
 │   ├── themeManager.spec.ts
+│   ├── userViolationFetcher.spec.ts
 │   ├── avatarQuery.spec.ts
 │   ├── quickReply.spec.ts
 │   ├── floorHighlighter.spec.ts
@@ -124,13 +125,14 @@ describe('yourFunction', () => {
 
 当前测试覆盖率：
 
-### 基础工具类（6 个）
+### 基础工具类（7 个）
 - ✅ **storageHelper.ts**: 67.12%（34 个测试用例）
 - ✅ **urlMatcher.ts**: 100% 🎉（36 个测试用例）
 - ✅ **messageHelper.ts**: 83.33%（9 个测试用例）
 - ✅ **featureManager.ts**: 100% 🎉（29 个测试用例）
 - ✅ **userInfo.ts**: 100% 🎉（30 个测试用例）
 - ✅ **themeManager.ts**: 100% 🎉（24 个测试用例）
+- ✅ **userViolationFetcher.ts**: 93.54% 🎉（18 个测试用例）
 
 ### 功能工具类（12/12 完成）
 - ✅ **avatarQuery.ts**: 100% 🎉（28 个测试用例）
@@ -151,7 +153,7 @@ describe('yourFunction', () => {
 - ✅ 组合组件: 100% 🎉（30 个测试用例）
 - ✅ 主容器组件: 100% 🎉（47 个测试用例）
 
-**总计**：34 个测试文件，648 个测试用例
+**总计**：35 个测试文件，666 个测试用例
 
 目标：所有核心工具类达到 80% 以上的测试覆盖率。
 
