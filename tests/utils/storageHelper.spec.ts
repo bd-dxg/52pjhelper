@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { fakeBrowser } from 'wxt/testing'
 import { createStorageHelper } from '@/utils/storageHelper'
 
@@ -33,6 +33,49 @@ describe('storageHelper', () => {
     it('当键不存在时应该返回默认值 false', async () => {
       const result = await storageHelper.loadBoolean('nonExistentKey', false)
       expect(result).toBe(false)
+    })
+  })
+
+  describe('数字类型操作', () => {
+    it('应该保存并加载正整数', async () => {
+      await storageHelper.saveNumber('testKey', 42)
+      const result = await storageHelper.loadNumber('testKey', 0)
+      expect(result).toBe(42)
+    })
+
+    it('应该保存并加载负数', async () => {
+      await storageHelper.saveNumber('testKey', -100)
+      const result = await storageHelper.loadNumber('testKey', 0)
+      expect(result).toBe(-100)
+    })
+
+    it('应该保存并加载浮点数', async () => {
+      await storageHelper.saveNumber('testKey', 3.14159)
+      const result = await storageHelper.loadNumber('testKey', 0)
+      expect(result).toBe(3.14159)
+    })
+
+    it('应该保存并加载零', async () => {
+      await storageHelper.saveNumber('testKey', 0)
+      const result = await storageHelper.loadNumber('testKey', 999)
+      expect(result).toBe(0)
+    })
+
+    it('当键不存在时应该返回默认值', async () => {
+      const result = await storageHelper.loadNumber('nonExistentKey', 42)
+      expect(result).toBe(42)
+    })
+
+    it('当存储的值不是数字时应该返回默认值', async () => {
+      await browser.storage.local.set({ testKey: 'not a number' })
+      const result = await storageHelper.loadNumber('testKey', 99)
+      expect(result).toBe(99)
+    })
+
+    it('当存储的值是布尔值时应该返回默认值', async () => {
+      await browser.storage.local.set({ testKey: true })
+      const result = await storageHelper.loadNumber('testKey', 99)
+      expect(result).toBe(99)
     })
   })
 
@@ -305,6 +348,157 @@ describe('storageHelper', () => {
       const results = await Promise.all(promises)
 
       expect(results).toEqual(['value1', 'value2', 'value3'])
+    })
+  })
+
+  describe('错误处理', () => {
+    it('loadBoolean 出错时应该返回默认值', async () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      vi.spyOn(browser.storage.local, 'get').mockRejectedValueOnce(new Error('Storage error'))
+
+      const result = await storageHelper.loadBoolean('testKey', true)
+
+      expect(result).toBe(true)
+      expect(consoleSpy).toHaveBeenCalledWith('加载配置失败 [testKey]:', expect.any(Error))
+      consoleSpy.mockRestore()
+    })
+
+    it('saveBoolean 出错时应该抛出错误', async () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      vi.spyOn(browser.storage.local, 'set').mockRejectedValueOnce(new Error('Storage error'))
+
+      await expect(storageHelper.saveBoolean('testKey', true)).rejects.toThrow('Storage error')
+      expect(consoleSpy).toHaveBeenCalledWith('保存配置失败 [testKey]:', expect.any(Error))
+      consoleSpy.mockRestore()
+    })
+
+    it('loadString 出错时应该返回默认值', async () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      vi.spyOn(browser.storage.local, 'get').mockRejectedValueOnce(new Error('Storage error'))
+
+      const result = await storageHelper.loadString('testKey', 'default')
+
+      expect(result).toBe('default')
+      expect(consoleSpy).toHaveBeenCalledWith('加载配置失败 [testKey]:', expect.any(Error))
+      consoleSpy.mockRestore()
+    })
+
+    it('saveString 出错时应该抛出错误', async () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      vi.spyOn(browser.storage.local, 'set').mockRejectedValueOnce(new Error('Storage error'))
+
+      await expect(storageHelper.saveString('testKey', 'value')).rejects.toThrow('Storage error')
+      expect(consoleSpy).toHaveBeenCalledWith('保存配置失败 [testKey]:', expect.any(Error))
+      consoleSpy.mockRestore()
+    })
+
+    it('loadNumber 出错时应该返回默认值', async () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      vi.spyOn(browser.storage.local, 'get').mockRejectedValueOnce(new Error('Storage error'))
+
+      const result = await storageHelper.loadNumber('testKey', 42)
+
+      expect(result).toBe(42)
+      expect(consoleSpy).toHaveBeenCalledWith('加载配置失败 [testKey]:', expect.any(Error))
+      consoleSpy.mockRestore()
+    })
+
+    it('saveNumber 出错时应该抛出错误', async () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      vi.spyOn(browser.storage.local, 'set').mockRejectedValueOnce(new Error('Storage error'))
+
+      await expect(storageHelper.saveNumber('testKey', 42)).rejects.toThrow('Storage error')
+      expect(consoleSpy).toHaveBeenCalledWith('保存配置失败 [testKey]:', expect.any(Error))
+      consoleSpy.mockRestore()
+    })
+
+    it('loadArray 出错时应该返回默认值', async () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      vi.spyOn(browser.storage.local, 'get').mockRejectedValueOnce(new Error('Storage error'))
+
+      const result = await storageHelper.loadArray('testKey', [1, 2, 3])
+
+      expect(result).toEqual([1, 2, 3])
+      expect(consoleSpy).toHaveBeenCalledWith('加载配置失败 [testKey]:', expect.any(Error))
+      consoleSpy.mockRestore()
+    })
+
+    it('saveArray 出错时应该抛出错误', async () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      vi.spyOn(browser.storage.local, 'set').mockRejectedValueOnce(new Error('Storage error'))
+
+      await expect(storageHelper.saveArray('testKey', [1, 2, 3])).rejects.toThrow('Storage error')
+      expect(consoleSpy).toHaveBeenCalledWith('保存配置失败 [testKey]:', expect.any(Error))
+      consoleSpy.mockRestore()
+    })
+
+    it('loadObject 出错时应该返回默认值', async () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      vi.spyOn(browser.storage.local, 'get').mockRejectedValueOnce(new Error('Storage error'))
+
+      const result = await storageHelper.loadObject('testKey', { default: 'value' })
+
+      expect(result).toEqual({ default: 'value' })
+      expect(consoleSpy).toHaveBeenCalledWith('加载配置失败 [testKey]:', expect.any(Error))
+      consoleSpy.mockRestore()
+    })
+
+    it('saveObject 出错时应该抛出错误', async () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      vi.spyOn(browser.storage.local, 'set').mockRejectedValueOnce(new Error('Storage error'))
+
+      await expect(storageHelper.saveObject('testKey', { key: 'value' })).rejects.toThrow(
+        'Storage error',
+      )
+      expect(consoleSpy).toHaveBeenCalledWith('保存配置失败 [testKey]:', expect.any(Error))
+      consoleSpy.mockRestore()
+    })
+
+    it('loadMultiple 出错时应该返回空对象', async () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      vi.spyOn(browser.storage.local, 'get').mockRejectedValueOnce(new Error('Storage error'))
+
+      const result = await storageHelper.loadMultiple(['key1', 'key2'])
+
+      expect(result).toEqual({})
+      expect(consoleSpy).toHaveBeenCalledWith('批量加载配置失败:', expect.any(Error))
+      consoleSpy.mockRestore()
+    })
+
+    it('saveMultiple 出错时应该抛出错误', async () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      vi.spyOn(browser.storage.local, 'set').mockRejectedValueOnce(new Error('Storage error'))
+
+      await expect(storageHelper.saveMultiple({ key1: 'value1' })).rejects.toThrow('Storage error')
+      expect(consoleSpy).toHaveBeenCalledWith('批量保存配置失败:', expect.any(Error))
+      consoleSpy.mockRestore()
+    })
+
+    it('remove 出错时应该抛出错误', async () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      vi.spyOn(browser.storage.local, 'remove').mockRejectedValueOnce(new Error('Storage error'))
+
+      await expect(storageHelper.remove('testKey')).rejects.toThrow('Storage error')
+      expect(consoleSpy).toHaveBeenCalledWith('删除配置失败 [testKey]:', expect.any(Error))
+      consoleSpy.mockRestore()
+    })
+
+    it('removeMultiple 出错时应该抛出错误', async () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      vi.spyOn(browser.storage.local, 'remove').mockRejectedValueOnce(new Error('Storage error'))
+
+      await expect(storageHelper.removeMultiple(['key1', 'key2'])).rejects.toThrow('Storage error')
+      expect(consoleSpy).toHaveBeenCalledWith('批量删除配置失败:', expect.any(Error))
+      consoleSpy.mockRestore()
+    })
+
+    it('clear 出错时应该抛出错误', async () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      vi.spyOn(browser.storage.local, 'clear').mockRejectedValueOnce(new Error('Storage error'))
+
+      await expect(storageHelper.clear()).rejects.toThrow('Storage error')
+      expect(consoleSpy).toHaveBeenCalledWith('清空配置失败:', expect.any(Error))
+      consoleSpy.mockRestore()
     })
   })
 })
