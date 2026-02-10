@@ -242,6 +242,15 @@ Content Script 采用模块化设计，遵循 WXT 框架的最佳实践：
   - 标点数字灌水：匹配连续数字、感叹号、波浪号等
 - 支持启用/禁用功能切换
 
+### 18. 版本更新检查
+
+- 通过浏览器定时器（alarms API）定期检查新版本（默认 24 小时）
+- 通过浏览器通知（notifications API）提醒用户更新
+- 在设置页面显示 UpdateBanner 横幅提示
+- 支持忽略特定版本的更新提示
+- 扩展安装/更新时自动执行检查
+- 提供立即检查更新功能
+
 ## 主要文件
 
 ### Content Script 入口（模块化架构）
@@ -252,6 +261,7 @@ Content Script 采用模块化设计，遵循 WXT 框架的最佳实践：
 | `src/entries/contents/initialization.ts`  | 功能初始化模块                    |
 | `src/entries/contents/messageHandler.ts`  | 消息处理器模块                    |
 | `src/entries/contents/storageListener.ts` | 存储监听器模块                    |
+| `src/entries/background/index.ts`        | Background Script，版本检查       |
 
 ### 配置文件
 
@@ -268,6 +278,7 @@ Content Script 采用模块化设计，遵循 WXT 框架的最佳实践：
 | `src/configs/rowClickToCheck.json`        | 勾选范围功能配置     |
 | `src/configs/duplicatePostDetection.json` | 重复发帖检测功能配置 |
 | `src/configs/contentFilter.json`          | 灌水筛选功能配置     |
+| `src/configs/versionCheck.json`           | 版本更新检查配置     |
 
 ### 工具类
 
@@ -293,6 +304,7 @@ Content Script 采用模块化设计，遵循 WXT 框架的最佳实践：
 | `src/utils/storageHelper.ts`          | 存储操作辅助工具，提供统一的浏览器存储操作接口 |
 | `src/utils/messageHelper.ts`          | 消息通信辅助工具，提供统一的浏览器消息通信接口 |
 | `src/utils/urlMatcher.ts`             | URL 匹配工具，提供统一的 URL 匹配功能          |
+| `src/utils/versionChecker.ts`          | 版本更新检查工具                              |
 
 ### Vue 组件
 
@@ -300,6 +312,7 @@ Content Script 采用模块化设计，遵循 WXT 框架的最佳实践：
 | ------------------------------------------------- | ------------------------------------------------------ |
 | `src/pages/SettingsPanel.vue`                     | 设置面板组件（主容器）                                 |
 | `src/components/NavigationSettings.vue`           | 导航菜单设置组件                                       |
+| `src/components/UpdateBanner.vue`                  | 版本更新提示横幅组件                                   |
 | `src/components/GeneralFeaturesToggle.vue`        | 通用功能组（头像查询、楼层高亮、原生楼层、重贴检测）   |
 | `src/components/AdminFeaturesToggle.vue`          | 后台管理功能组（快捷回复、自动填充、全选、分表选择等） |
 | `src/components/AvatarQueryToggle.vue`            | 头像查询功能开关组件                                   |

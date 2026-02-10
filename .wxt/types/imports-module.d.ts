@@ -38,4 +38,5 @@ declare module '#imports' {
   export { saveUserInfoToCache, getUserInfoFromCache, getUserInfo, watchUserInfo, UserInfo } from '../src/utils/userInfo';
   export { createUserLinkQuery, IUserLinkQuery } from '../src/utils/userLinkQuery';
   export { fetchUserViolation, extractUidFromHref } from '../src/utils/userViolationFetcher';
+  export { versionChecker } from '../src/utils/versionChecker';
 }

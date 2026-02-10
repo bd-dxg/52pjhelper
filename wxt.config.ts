@@ -23,7 +23,7 @@ export default defineConfig({
   manifest: {
     name: '吾爱管理效率助手',
     description: '提升论坛管理效率',
-    version: '2.7.8',
+    version: '2.8.1',
     action: {
       default_icon: 'images/icon-128.png',
     },
@@ -32,7 +32,7 @@ export default defineConfig({
       '48': 'images/icon-48.png',
       '128': 'images/icon-128.png',
     },
-    permissions: ['storage'],
+    permissions: ['storage', 'alarms', 'notifications'],
     host_permissions: ['https://*.52pojie.cn/*'],
     content_scripts: [
       {

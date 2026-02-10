@@ -21,6 +21,7 @@
 - **勾选范围**: 在管理页面上点击表格行（tr）来勾选对应的复选框，提高操作效率
 - **重复发帖检测**: 在论坛列表页面检测当天发布的重复发帖，高亮显示重复发帖的行
 - **灌水筛选**: 在管理页面创建可拖动的过滤卡片，支持正则和简单匹配，高亮符合条件的行
+- **版本更新检查**: 定期检查新版本，通过通知和设置页面横幅提醒用户更新
 - **实时预览**: 点击按钮实时切换菜单显示/隐藏状态
 - **用户信息缓存**: 在非 52pojie.cn 页面显示缓存的用户信息，避免显示"未登录 游客"字样
 - **一键重置**: 支持恢复默认导航菜单配置
@@ -66,6 +67,7 @@
 ├── src/
 │   ├── components/              # Vue 3 组件目录
 │   │   ├── NavigationSettings.vue     # 导航菜单设置组件
+│   │   ├── UpdateBanner.vue          # 版本更新提示横幅组件
 │   │   ├── GeneralFeaturesToggle.vue  # 通用功能组（头像查询、楼层高亮、原生楼层、重贴检测）
 │   │   ├── AdminFeaturesToggle.vue    # 后台管理功能组（快捷回复、自动填充、全选、分表选择等）
 │   │   ├── AvatarQueryToggle.vue      # 头像查询功能开关组件
@@ -93,13 +95,16 @@
 │   │   ├── userLinkQuery.json  # 管理页面查询配置
 │   │   ├── rowClickToCheck.json # 勾选范围功能配置
 │   │   ├── duplicatePostDetection.json # 重复发帖检测功能配置
-│   │   └── contentFilter.json   # 灌水筛选功能配置
+│   │   ├── contentFilter.json   # 灌水筛选功能配置
+│   │   └── versionCheck.json   # 版本更新检查配置
 │   ├── entries/                 # 入口文件目录
 │   │   ├── contents/            # Content Script 模块化入口
 │   │   │   ├── index.ts         # 主入口文件
 │   │   │   ├── initialization.ts # 功能初始化模块
 │   │   │   ├── messageHandler.ts # 消息处理器模块
 │   │   │   └── storageListener.ts # 存储监听器模块
+│   │   ├── background/          # Background Script 入口
+│   │   │   └── index.ts        # 后台脚本，负责版本检查
 │   │   └── popup/              # Popup 页面入口
 │   │       ├── App.vue         # 根组件
 │   │       ├── main.ts         # 入口文件
@@ -129,6 +134,7 @@
 │       ├── storageHelper.ts     # 存储操作辅助工具，提供统一的浏览器存储操作接口
 │       ├── messageHelper.ts     # 消息通信辅助工具，提供统一的浏览器消息通信接口
 │       ├── urlMatcher.ts        # URL 匹配工具，提供统一的 URL 匹配功能
+│       ├── versionChecker.ts    # 版本更新检查工具
 │       └── autofills/           # 自动填充规则目录
 ├── public/                     # 静态资源
 │   └── images/                 # 扩展图标
@@ -361,6 +367,15 @@
 
 - 扩展会自动检测并适配系统主题
 - 当系统切换深色/浅色模式时，扩展界面会自动跟随变化
+
+### 版本更新检查
+
+1. 扩展会在后台定期检查是否有新版本发布（默认每 24 小时）
+2. 发现新版本时，会通过浏览器通知提醒用户
+3. 在设置页面顶部也会显示更新提示横幅
+4. 点击"立即更新"按钮可打开更新帖子
+5. 点击"忽略"按钮可关闭当前版本的提示
+6. 检查间隔和目标帖子可在 `src/configs/versionCheck.json` 中配置
 
 ## 许可证
 

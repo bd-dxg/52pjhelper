@@ -21,6 +21,7 @@
           {{ userInfo.level }}
         </div>
       </div>
+
       <!-- 消息提示 -->
       <aside class="message-container" role="status" aria-live="polite">
         <output v-if="message" class="message" :class="messageType">
@@ -28,7 +29,8 @@
         </output>
       </aside>
     </header>
-
+    <!-- 版本更新提示横幅 -->
+    <UpdateBanner />
     <!-- 选项卡导航 -->
     <nav class="tabs-header" role="tablist">
       <button
@@ -71,6 +73,7 @@
 import NavigationSettings from '@com/NavigationSettings.vue'
 import GeneralFeaturesToggle from '@com/GeneralFeaturesToggle.vue'
 import AdminFeaturesToggle from '@com/AdminFeaturesToggle.vue'
+import UpdateBanner from '@com/UpdateBanner.vue'
 import { getUserInfoFromCache, type UserInfo } from '@utils/userInfo'
 
 defineOptions({

@@ -1,0 +1,13 @@
+{
+  "name": "版本更新检查",
+  "description": "定期检查是否有新版本发布",
+  "defaultEnabled": true,
+  "storageKey": "versionCheckEnabled",
+  "checkInterval": 86400000,
+  "threadUrl": "https://www.52pojie.cn/thread-1830279-1-1.html",
+  "threadTitle": "【管理插件】吾爱管理效率助手",
+  "versionPattern": "V(\\d+\\.\\d+\\.\\d+)",
+  "lastCheckKey": "lastVersionCheckTime",
+  "latestVersionKey": "latestVersion",
+  "updateDismissedKey": "updateDismissed"
+}
