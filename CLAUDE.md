@@ -922,6 +922,188 @@ const toggleFeature = async () => {
 - 权限配置在 `wxt.config.ts` 的 `permissions` 数组中
 - 只请求必要的权限，遵循最小权限原则
 
+## 代码风格规范
+
+### 1. 语言风格要求
+
+**必须使用 ES6+ 或最新风格，禁止使用 class 风格**：
+
+#### 1.1 函数式编程优先
+
+```typescript
+// ✅ 推荐：函数式风格
+export const createFeatureManager = (options: CreateFeatureManagerOptions) => {
+  const { config, onEnable, onDisable, onInit } = options
+
+  const enable = () => {
+    if (onEnable) onEnable()
+  }
+
+  const disable = () => {
+    if (onDisable) onDisable()
+  }
+
+  const init = () => {
+    if (onInit) onInit()
+  }
+
+  return {
+    enable,
+    disable,
+    init,
+    config
+  }
+}
+
+// ❌ 禁止：class 风格
+export class FeatureManager {
+  private config: FeatureConfig
+
+  constructor(config: FeatureConfig) {
+    this.config = config
+  }
+
+  enable() {
+    // 启用逻辑
+  }
+
+  disable() {
+    // 禁用逻辑
+  }
+}
+```
+
+#### 1.2 箭头函数使用
+
+```typescript
+// ✅ 推荐：箭头函数
+const add = (a: number, b: number) => a + b
+
+// ✅ 推荐：函数表达式
+const multiply = function(a: number, b: number) {
+  return a * b
+}
+
+// ❌ 禁止：class 方法
+class Calculator {
+  add(a: number, b: number) {
+    return a + b
+  }
+}
+```
+
+#### 1.3 模块化导出
+
+```typescript
+// ✅ 推荐：ES 模块导出
+export const utils = {
+  formatDate,
+  validateEmail,
+  sanitizeInput
+}
+
+export { default as StorageHelper } from './storageHelper'
+
+// ❌ 禁止：CommonJS 风格
+module.exports = {
+  formatDate,
+  validateEmail
+}
+```
+
+### 2. Vue 组件开发规范
+
+**使用 `<script setup>` 语法，禁止 class 组件**：
+
+```vue
+<!-- ✅ 推荐：Composition API + script setup -->
+<template>
+  <div>{{ message }}</div>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+
+const message = ref('Hello World')
+
+onMounted(() => {
+  console.log('Component mounted')
+})
+</script>
+
+<!-- ❌ 禁止：Options API -->
+<template>
+  <div>{{ message }}</div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  data() {
+    return {
+      message: 'Hello World'
+    }
+  },
+  mounted() {
+    console.log('Component mounted')
+  }
+})
+</script>
+```
+
+### 3. 工具类和辅助函数
+
+**使用函数式编程风格，避免 class 包装**：
+
+```typescript
+// ✅ 推荐：函数式工具类
+export const storageHelper = {
+  loadBoolean: (key: string, defaultValue: boolean = false): Promise<boolean> => {
+    return browser.storage.local.get(key).then(result =>
+      (result[key] as boolean | undefined) ?? defaultValue
+    )
+  },
+
+  saveBoolean: (key: string, value: boolean): Promise<void> => {
+    return browser.storage.local.set({ [key]: value })
+  }
+}
+
+// ❌ 禁止：class 风格工具类
+export class StorageHelper {
+  static async loadBoolean(key: string, defaultValue: boolean = false): Promise<boolean> {
+    const result = await browser.storage.local.get(key)
+    return (result[key] as boolean | undefined) ?? defaultValue
+  }
+
+  static async saveBoolean(key: string, value: boolean): Promise<void> {
+    await browser.storage.local.set({ [key]: value })
+  }
+}
+```
+
+### 4. 代码质量检查清单
+
+**在提交代码前检查**：
+
+- [ ] 代码使用 ES6+ 函数式风格
+- [ ] 没有使用 class 关键字
+- [ ] 使用箭头函数和函数表达式
+- [ ] 使用 ES 模块导入导出
+- [ ] Vue 组件使用 script setup 语法
+- [ ] 工具类采用对象字面量形式
+
+### 5. 构建和测试
+
+**确保代码符合规范**：
+
+```bash
+npx tsc --noEmit        # TypeScript 类型检查
+pnpm test               # 运行单元测试
+pnpm test:coverage      # 检查测试覆盖率
+```
+
 ## 许可证
 
 项目采用 AGPL-3.0-only 许可证。

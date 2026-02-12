@@ -30,7 +30,7 @@
       </aside>
     </header>
     <!-- 版本更新提示横幅 -->
-    <UpdateBanner />
+    <VersionCheck />
     <!-- 选项卡导航 -->
     <nav class="tabs-header" role="tablist">
       <button
@@ -73,7 +73,7 @@
 import NavigationSettings from '@com/NavigationSettings.vue'
 import GeneralFeaturesToggle from '@com/GeneralFeaturesToggle.vue'
 import AdminFeaturesToggle from '@com/AdminFeaturesToggle.vue'
-import UpdateBanner from '@com/UpdateBanner.vue'
+import VersionCheck from '@com/VersionCheck.vue'
 import { getUserInfoFromCache, type UserInfo } from '@utils/userInfo'
 
 defineOptions({
