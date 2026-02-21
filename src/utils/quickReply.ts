@@ -88,7 +88,7 @@ export function initQuickReply(): void {
     if (!input) return
 
     if (selectedOption.textContent === '去举报区') {
-      const reportUrl = tr?.querySelector('td a')?.getAttribute('href') || ''
+      const reportUrl = 'https://www.52pojie.cn/' + tr?.querySelector('td a')?.getAttribute('href') || ''
       input.value = `举报地址: ${reportUrl} ${selectedOption.title}`
     } else {
       input.value = selectedOption.title
