@@ -1,0 +1,24 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "printWidth": 120,
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": false,
+  "singleQuote": true,
+  "quoteProps": "as-needed",
+  "bracketSpacing": true,
+  "arrowParens": "avoid",
+  "htmlWhitespaceSensitivity": "ignore",
+  "bracketSameLine": true,
+  "sortPackageJson": false,
+  "ignorePatterns": [
+    ".output",
+    "coverage",
+    "dist",
+    ".wxt",
+    "docs/.vitepress/cache",
+    "pnpm-lock.yaml",
+    "CHANGELOG.md",
+    "packages/browser/src/gen"
+  ]
+}
