@@ -44,6 +44,7 @@ declare global {
   const extractUidFromHref: typeof import('D:/code/front-end/52pjhelper/src/utils/userViolationFetcher').extractUidFromHref
   const fakeBrowser: typeof import('wxt/testing').fakeBrowser
   const fetchUserViolation: typeof import('D:/code/front-end/52pjhelper/src/utils/userViolationFetcher').fetchUserViolation
+  const getAppConfig: typeof import('wxt/utils/app-config').getAppConfig
   const getContentFilterStatus: typeof import('D:/code/front-end/52pjhelper/src/utils/contentFilter').getContentFilterStatus
   const getCurrentInstance: typeof import('vue').getCurrentInstance
   const getCurrentScope: typeof import('vue').getCurrentScope
@@ -257,6 +258,7 @@ declare module 'vue' {
     readonly extractUidFromHref: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userViolationFetcher')['extractUidFromHref']>
     readonly fakeBrowser: UnwrapRef<typeof import('wxt/testing')['fakeBrowser']>
     readonly fetchUserViolation: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userViolationFetcher')['fetchUserViolation']>
+    readonly getAppConfig: UnwrapRef<typeof import('wxt/utils/app-config')['getAppConfig']>
     readonly getContentFilterStatus: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/contentFilter')['getContentFilterStatus']>
     readonly getCurrentInstance: UnwrapRef<typeof import('vue')['getCurrentInstance']>
     readonly getCurrentScope: UnwrapRef<typeof import('vue')['getCurrentScope']>
