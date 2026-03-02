@@ -37,18 +37,23 @@ export function createAvatarQuery(): IAvatarQuery {
 
     styleElement = document.createElement('style')
     styleElement.textContent = `
+      .p_pop.blk.bui {
+        width: 620px !important;
+      }
       .avatar-query-popup {
         position: fixed !important;
-        width: 620px !important;
+        width: 632px !important;
         height: auto !important;
+        margin: 6px 0 0 -1px;
+        padding: 5px 0 10px 5px;
         max-height: 600px !important;
         overflow-y: auto !important;
-        background-color: #fdfdfd !important;
+        background-color: #fdfdfde5 !important;
+        backdrop-filter: blur(8px);
         border: 1px solid #ccc !important;
-        border-radius: 4px !important;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
-        z-index: 2147483647 !important;
-        padding: 10px !important;
+        border-radius: 0 0 5px 5px !important;
+        box-shadow: 0 0 10px #0000000a,0 3px 10px #0000002b;
+        z-index: 9999 !important;
         display: none !important;
       }
       .avatar-query-popup.show {
@@ -180,12 +185,12 @@ export function createAvatarQuery(): IAvatarQuery {
     // 查找所有系统卡片
     const systemCards = document.querySelectorAll('.p_pop.blk.bui')
 
-    systemCards.forEach((card) => {
+    systemCards.forEach(card => {
       const cardElement = card as HTMLElement
 
       // 创建 MutationObserver 监听 style 属性变化
-      const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
+      const observer = new MutationObserver(mutations => {
+        mutations.forEach(mutation => {
           if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
             const display = cardElement.style.display
 
@@ -199,11 +204,13 @@ export function createAvatarQuery(): IAvatarQuery {
                 if (parentLink?.href) {
                   const uid = extractUidFromHref(parentLink.href)
                   if (uid) {
-                    fetchUserViolation(uid).then((violationInfo) => {
-                      showInfo(img, violationInfo)
-                    }).catch((error) => {
-                      console.error('获取用户信息失败:', error)
-                    })
+                    fetchUserViolation(uid)
+                      .then(violationInfo => {
+                        showInfo(img, violationInfo)
+                      })
+                      .catch(error => {
+                        console.error('获取用户信息失败:', error)
+                      })
                   }
                 }
               }
@@ -220,7 +227,7 @@ export function createAvatarQuery(): IAvatarQuery {
       // 监听 style 属性变化
       observer.observe(cardElement, {
         attributes: true,
-        attributeFilter: ['style']
+        attributeFilter: ['style'],
       })
 
       observers.push(observer)
@@ -232,7 +239,7 @@ export function createAvatarQuery(): IAvatarQuery {
    */
   const removeEventListeners = (): void => {
     // 断开所有 MutationObserver
-    observers.forEach((observer) => {
+    observers.forEach(observer => {
       observer.disconnect()
     })
     observers = []
@@ -323,6 +330,6 @@ export function createAvatarQuery(): IAvatarQuery {
     enable,
     disable,
     toggle,
-    getStatus
+    getStatus,
   }
 }
