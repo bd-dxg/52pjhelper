@@ -11,6 +11,10 @@
       <button class="btn-dismiss" @click="dismissUpdate">忽略</button>
     </div>
   </div>
+  <!-- 已是最新版本提示 -->
+  <div v-else-if="showUpToDateMessage" class="up-to-date-message">
+    <span>✓ 已是最新版本，无需更新</span>
+  </div>
   <!-- 调试按钮：手动检查更新 -->
   <div v-else class="check-update-container">
     <button class="btn-check" @click="checkUpdateNow" :disabled="isChecking">
@@ -26,6 +30,7 @@ const showBanner = ref(false)
 const latestVersion = ref('')
 const currentVersion = ref('')
 const isChecking = ref(false)
+const showUpToDateMessage = ref(false)
 
 const loadUpdateInfo = async () => {
   try {
@@ -65,6 +70,7 @@ const checkUpdateNow = async () => {
   if (isChecking.value) return
 
   isChecking.value = true
+  showUpToDateMessage.value = false
   try {
     // 清除忽略标记（用户主动检查更新，应该显示所有可用更新）
     await browser.runtime.sendMessage({ type: 'CLEAR_DISMISSED' })
@@ -74,7 +80,23 @@ const checkUpdateNow = async () => {
 
     // 等待 2 秒后重新加载更新信息
     setTimeout(async () => {
-      await loadUpdateInfo()
+      const response = await browser.runtime.sendMessage({ type: 'GET_UPDATE_INFO' })
+
+      if (response?.success) {
+        if (response.hasUpdate && !response.isDismissed) {
+          // 有新版本
+          showBanner.value = true
+          latestVersion.value = response.latestVersion
+          currentVersion.value = response.currentVersion
+        } else if (!response.hasUpdate) {
+          // 已是最新版本
+          showUpToDateMessage.value = true
+          setTimeout(() => {
+            showUpToDateMessage.value = false
+          }, 3000)
+        }
+      }
+
       isChecking.value = false
     }, 2000)
   } catch (error) {
@@ -236,5 +258,26 @@ const checkUpdateNow = async () => {
   opacity: 0.6;
   cursor: not-allowed;
   background: linear-gradient(135deg, #999 0%, #777 100%);
+}
+
+/* 已是最新版本提示 */
+.up-to-date-message {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+  color: white;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  animation: slideDown 0.3s ease-out;
+}
+
+.up-to-date-message span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 </style>
