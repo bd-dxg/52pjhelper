@@ -11,6 +11,12 @@
       <button class="btn-dismiss" @click="dismissUpdate">忽略</button>
     </div>
   </div>
+  <!-- 调试按钮：手动检查更新 -->
+  <div v-else class="check-update-container">
+    <button class="btn-check" @click="checkUpdateNow" :disabled="isChecking">
+      {{ isChecking ? '检查中...' : '检查更新' }}
+    </button>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -19,10 +25,10 @@ import config from '@conf/versionCheck.json'
 const showBanner = ref(false)
 const latestVersion = ref('')
 const currentVersion = ref('')
+const isChecking = ref(false)
 
-onMounted(async () => {
+const loadUpdateInfo = async () => {
   try {
-    // 获取更新信息
     const response = await browser.runtime.sendMessage({ type: 'GET_UPDATE_INFO' })
 
     if (response?.success && response.hasUpdate && !response.isDismissed) {
@@ -32,9 +38,11 @@ onMounted(async () => {
     }
   } catch (error) {
     // 静默处理错误，background script 可能还未加载
-    // console.error('获取更新信息失败:', error)
+    console.error('获取更新信息失败:', error)
   }
-})
+}
+
+onMounted(loadUpdateInfo)
 
 const openUpdatePage = () => {
   browser.tabs.create({ url: config.threadUrl })
@@ -50,6 +58,28 @@ const dismissUpdate = async () => {
     showBanner.value = false
   } catch (error) {
     console.error('忽略更新失败:', error)
+  }
+}
+
+const checkUpdateNow = async () => {
+  if (isChecking.value) return
+
+  isChecking.value = true
+  try {
+    // 清除忽略标记（用户主动检查更新，应该显示所有可用更新）
+    await browser.runtime.sendMessage({ type: 'CLEAR_DISMISSED' })
+
+    // 发送立即检查更新的消息
+    await browser.runtime.sendMessage({ type: 'CHECK_UPDATE_NOW' })
+
+    // 等待 2 秒后重新加载更新信息
+    setTimeout(async () => {
+      await loadUpdateInfo()
+      isChecking.value = false
+    }, 2000)
+  } catch (error) {
+    console.error('检查更新失败:', error)
+    isChecking.value = false
   }
 }
 </script>
@@ -153,5 +183,58 @@ const dismissUpdate = async () => {
 .btn-update:active,
 .btn-dismiss:active {
   transform: translateY(0);
+}
+
+/* 检查更新按钮容器 */
+.check-update-container {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.btn-check {
+  padding: 8px 16px;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-check::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn-check:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-check:hover:not(:disabled)::before {
+  left: 100%;
+}
+
+.btn-check:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-check:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: linear-gradient(135deg, #999 0%, #777 100%);
 }
 </style>

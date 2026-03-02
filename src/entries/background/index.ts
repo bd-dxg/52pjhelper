@@ -29,11 +29,12 @@ export default defineBackground(() => {
 
   /**
    * 执行版本检查
+   * @param force 是否强制检查（忽略时间限制）
    */
-  async function performVersionCheck(): Promise<void> {
+  async function performVersionCheck(force: boolean = false): Promise<void> {
     try {
-      // 检查是否需要执行检查
-      if (!(await versionChecker.shouldCheck())) {
+      // 检查是否需要执行检查（除非强制检查）
+      if (!force && !(await versionChecker.shouldCheck())) {
         console.log('版本检查：未到检查时间')
         return
       }
@@ -126,8 +127,8 @@ export default defineBackground(() => {
    */
   browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.type === 'CHECK_UPDATE_NOW') {
-      // 立即检查更新
-      performVersionCheck().then(() => {
+      // 立即检查更新（强制执行）
+      performVersionCheck(true).then(() => {
         sendResponse({ success: true })
       })
       return true // 保持消息通道开启
@@ -137,6 +138,14 @@ export default defineBackground(() => {
       // 忽略当前版本更新
       const version = message.version as string
       versionChecker.dismissUpdate(version).then(() => {
+        sendResponse({ success: true })
+      })
+      return true
+    }
+
+    if (message.type === 'CLEAR_DISMISSED') {
+      // 清除忽略标记
+      versionChecker.clearDismissed().then(() => {
         sendResponse({ success: true })
       })
       return true
