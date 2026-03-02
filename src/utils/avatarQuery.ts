@@ -25,6 +25,9 @@ export interface IAvatarQuery {
 export function createAvatarQuery(): IAvatarQuery {
   let isEnabled = false
   let styleElement: HTMLStyleElement | null = null
+  let currentPopup: HTMLDivElement | null = null
+  let observers: MutationObserver[] = []
+  let isPopupHovered = false
 
   /**
    * 注入样式
@@ -34,11 +37,36 @@ export function createAvatarQuery(): IAvatarQuery {
 
     styleElement = document.createElement('style')
     styleElement.textContent = `
-      .p_pop.blk.bui {
+      .avatar-query-popup {
+        position: fixed !important;
         width: 620px !important;
-        height: unset !important;
-        background-color: #fdfdfd8f !important;
-        z-index: 99999 !important;
+        height: auto !important;
+        max-height: 600px !important;
+        overflow-y: auto !important;
+        background-color: #fdfdfd !important;
+        border: 1px solid #ccc !important;
+        border-radius: 4px !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+        z-index: 2147483647 !important;
+        padding: 10px !important;
+        display: none !important;
+      }
+      .avatar-query-popup.show {
+        display: block !important;
+      }
+      .avatar-query-popup table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+      }
+      .avatar-query-popup table th,
+      .avatar-query-popup table td {
+        padding: 5px !important;
+        border: 1px solid #e0e0e0 !important;
+        text-align: left !important;
+      }
+      .avatar-query-popup table th {
+        background-color: #f5f5f5 !important;
+        font-weight: bold !important;
       }
     `
     document.head.appendChild(styleElement)
@@ -55,66 +83,93 @@ export function createAvatarQuery(): IAvatarQuery {
   }
 
   /**
-   * 显示违规信息
+   * 创建或获取弹窗元素
    */
-  const showInfo = (dom: HTMLImageElement, info: Element | null): void => {
-    const card = dom.closest('.pls.cl.favatar')?.querySelector('.p_pop.blk.bui')
-    if (!card) {
-      console.error('未找到卡片容器')
-      return
+  const getOrCreatePopup = (): HTMLDivElement => {
+    if (!currentPopup) {
+      currentPopup = document.createElement('div')
+      currentPopup.className = 'avatar-query-popup'
+      document.body.appendChild(currentPopup)
+
+      // 鼠标进入弹窗时设置标志
+      currentPopup.addEventListener('mouseenter', () => {
+        isPopupHovered = true
+      })
+
+      // 鼠标离开弹窗时清除标志并隐藏
+      currentPopup.addEventListener('mouseleave', () => {
+        isPopupHovered = false
+        hidePopup()
+      })
     }
-
-    const existingTable = card.querySelector('table')
-    const existingDiv = card.querySelector('div[data-avatar-query]')
-
-    if (info) {
-      // 有违规记录
-      if (existingTable) {
-        existingTable.replaceWith(info)
-      } else if (existingDiv) {
-        existingDiv.replaceWith(info)
-      } else {
-        card.appendChild(info)
-      }
-    } else {
-      // 没有违规记录
-      const div = document.createElement('div')
-      div.setAttribute('data-avatar-query', 'true')
-      div.innerText = '没有违规记录'
-
-      if (existingTable) {
-        existingTable.replaceWith(div)
-      } else if (existingDiv) {
-        existingDiv.replaceWith(div)
-      } else {
-        card.appendChild(div)
-      }
-    }
+    return currentPopup
   }
 
   /**
-   * 鼠标移入事件处理
+   * 显示违规信息
    */
-  const handleMouseEnter = async (e: Event): Promise<void> => {
-    const target = e.target as HTMLImageElement
-    const parentLink = target.parentNode as HTMLAnchorElement
+  const showInfo = (dom: HTMLImageElement, info: Element | null): void => {
+    const popup = getOrCreatePopup()
 
-    if (!parentLink?.href) {
-      console.error('未找到父级链接')
-      return
+    // 清空现有内容
+    popup.innerHTML = ''
+
+    if (info) {
+      // 有违规记录
+      popup.appendChild(info)
+    } else {
+      // 没有违规记录
+      const div = document.createElement('div')
+      div.innerText = '没有违规记录'
+      popup.appendChild(div)
     }
 
-    const uid = extractUidFromHref(parentLink.href)
-    if (!uid) {
-      console.error('未匹配到uid')
-      return
+    // 计算弹窗位置
+    const rect = dom.getBoundingClientRect()
+
+    // 尝试找到左侧容器(.pls)来对齐
+    const avatarContainer = dom.closest('.pls.cl.favatar')
+    const leftContainer = avatarContainer?.closest('.pls') as HTMLElement
+    const containerRect = leftContainer?.getBoundingClientRect()
+
+    const popupWidth = 620
+    const popupHeight = popup.offsetHeight || 400
+
+    // 默认显示在头像下方,左对齐到左侧容器
+    let left = containerRect ? containerRect.left : rect.left
+    let top = rect.bottom + 10
+
+    // 如果右侧空间不足,向左调整
+    if (left + popupWidth > window.innerWidth) {
+      left = window.innerWidth - popupWidth - 10
     }
 
-    try {
-      const violationInfo = await fetchUserViolation(uid)
-      showInfo(target, violationInfo)
-    } catch (error) {
-      console.error('获取用户信息失败:', error)
+    // 确保不超出视口左侧
+    if (left < 0) {
+      left = 10
+    }
+
+    // 如果下方空间不足,显示在头像上方
+    if (top + popupHeight > window.innerHeight) {
+      top = rect.top - popupHeight - 10
+    }
+
+    // 如果上方也不够,固定在视口底部
+    if (top < 0) {
+      top = window.innerHeight - popupHeight - 10
+    }
+
+    popup.style.left = `${left}px`
+    popup.style.top = `${top}px`
+    popup.classList.add('show')
+  }
+
+  /**
+   * 隐藏弹窗
+   */
+  const hidePopup = (): void => {
+    if (currentPopup) {
+      currentPopup.classList.remove('show')
     }
   }
 
@@ -122,10 +177,53 @@ export function createAvatarQuery(): IAvatarQuery {
    * 附加事件监听器
    */
   const attachEventListeners = (): void => {
-    // 处理头像链接
-    const imgs = document.querySelectorAll('.avatar>a>img')
-    imgs?.forEach((img) => {
-      img.addEventListener('mouseenter', handleMouseEnter)
+    // 查找所有系统卡片
+    const systemCards = document.querySelectorAll('.p_pop.blk.bui')
+
+    systemCards.forEach((card) => {
+      const cardElement = card as HTMLElement
+
+      // 创建 MutationObserver 监听 style 属性变化
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+            const display = cardElement.style.display
+
+            if (display !== 'none') {
+              // 系统卡片显示,显示违规记录弹窗
+              const avatarContainer = cardElement.closest('.pls.cl.favatar')
+              const img = avatarContainer?.querySelector('.avatar img') as HTMLImageElement
+
+              if (img) {
+                const parentLink = img.parentNode as HTMLAnchorElement
+                if (parentLink?.href) {
+                  const uid = extractUidFromHref(parentLink.href)
+                  if (uid) {
+                    fetchUserViolation(uid).then((violationInfo) => {
+                      showInfo(img, violationInfo)
+                    }).catch((error) => {
+                      console.error('获取用户信息失败:', error)
+                    })
+                  }
+                }
+              }
+            } else {
+              // 系统卡片隐藏,只有在鼠标不在弹窗上时才隐藏
+              if (!isPopupHovered) {
+                hidePopup()
+              }
+            }
+          }
+        })
+      })
+
+      // 监听 style 属性变化
+      observer.observe(cardElement, {
+        attributes: true,
+        attributeFilter: ['style']
+      })
+
+      observers.push(observer)
     })
   }
 
@@ -133,28 +231,22 @@ export function createAvatarQuery(): IAvatarQuery {
    * 移除事件监听器
    */
   const removeEventListeners = (): void => {
-    // 移除头像链接事件监听器
-    const imgs = document.querySelectorAll('.avatar>a>img')
-    imgs?.forEach((img) => {
-      img.removeEventListener('mouseenter', handleMouseEnter)
+    // 断开所有 MutationObserver
+    observers.forEach((observer) => {
+      observer.disconnect()
     })
+    observers = []
   }
 
   /**
    * 清理已注入的内容
    */
   const cleanupInjectedContent = (): void => {
-    // 查找所有用户卡片
-    const cards = document.querySelectorAll('.p_pop.blk.bui')
-    cards.forEach((card) => {
-      // 移除我们添加的违规信息表格
-      const injectedTable = card.querySelector('table')
-      injectedTable?.remove()
-
-      // 移除我们添加的"没有违规记录"提示
-      const injectedDiv = card.querySelector('div[data-avatar-query]')
-      injectedDiv?.remove()
-    })
+    // 移除弹窗元素
+    if (currentPopup) {
+      currentPopup.remove()
+      currentPopup = null
+    }
   }
 
   /**
