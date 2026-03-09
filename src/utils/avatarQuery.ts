@@ -111,6 +111,28 @@ export function createAvatarQuery(): IAvatarQuery {
   }
 
   /**
+   * 获取弹窗实际尺寸
+   */
+  const getPopupRect = (popup: HTMLDivElement): DOMRect => {
+    const previousVisibility = popup.style.visibility
+    const wasShown = popup.classList.contains('show')
+
+    popup.style.visibility = 'hidden'
+    if (!wasShown) {
+      popup.classList.add('show')
+    }
+
+    const popupRect = popup.getBoundingClientRect()
+
+    if (!wasShown) {
+      popup.classList.remove('show')
+    }
+    popup.style.visibility = previousVisibility
+
+    return popupRect
+  }
+
+  /**
    * 显示违规信息
    */
   const showInfo = (dom: HTMLImageElement, info: Element | null): void => {
@@ -136,32 +158,42 @@ export function createAvatarQuery(): IAvatarQuery {
     const avatarContainer = dom.closest('.pls.cl.favatar')
     const leftContainer = avatarContainer?.closest('.pls') as HTMLElement
     const containerRect = leftContainer?.getBoundingClientRect()
-
-    const popupWidth = 620
-    const popupHeight = popup.offsetHeight || 400
+    const popupRect = getPopupRect(popup)
+    const popupWidth = popupRect.width || 632
+    const popupHeight = popupRect.height || 0
+    const viewportWidth = document.documentElement.clientWidth
+    const viewportHeight = document.documentElement.clientHeight
+    const gap = 10
 
     // 默认显示在头像下方,左对齐到左侧容器
     let left = containerRect ? containerRect.left : rect.left
-    let top = rect.bottom + 10
+    let top = rect.bottom + gap
 
     // 如果右侧空间不足,向左调整
-    if (left + popupWidth > window.innerWidth) {
-      left = window.innerWidth - popupWidth - 10
+    if (left + popupWidth > viewportWidth - 10) {
+      left = viewportWidth - popupWidth - 10
     }
 
     // 确保不超出视口左侧
-    if (left < 0) {
+    if (left < 10) {
       left = 10
     }
 
-    // 如果下方空间不足,显示在头像上方
-    if (top + popupHeight > window.innerHeight) {
-      top = rect.top - popupHeight - 10
+    const spaceBelow = viewportHeight - rect.bottom - gap
+    const spaceAbove = rect.top - gap
+
+    // 仅在下方确实放不下且上方空间更多时,才显示在头像上方
+    if (popupHeight > 0 && spaceBelow < popupHeight && spaceAbove > spaceBelow) {
+      top = rect.top - popupHeight - gap
     }
 
-    // 如果上方也不够,固定在视口底部
-    if (top < 0) {
-      top = window.innerHeight - popupHeight - 10
+    // 保证弹窗始终在视口范围内
+    if (popupHeight > 0 && top + popupHeight > viewportHeight - 10) {
+      top = viewportHeight - popupHeight - 10
+    }
+
+    if (top < 10) {
+      top = 10
     }
 
     popup.style.left = `${left}px`
