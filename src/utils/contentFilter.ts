@@ -11,6 +11,7 @@ const STORAGE_KEY = contentFilterConfig.storageKey
 const FILTERS_STORAGE_KEY = contentFilterConfig.filtersStorageKey
 const MAX_TEXT_LENGTH_STORAGE_KEY = 'contentFilterMaxTextLength'
 const DEFAULT_MAX_TEXT_LENGTH = contentFilterConfig.maxTextLength
+const REGEX_PATTERN_MAX_LENGTH = 100
 
 // 预设规则接口
 interface PresetRule {
@@ -20,7 +21,7 @@ interface PresetRule {
 }
 
 // 获取预设规则
-const presets: PresetRule[] = (contentFilterConfig as { presets?: PresetRule[] }).presets || []
+const presets: PresetRule[] = (contentFilterConfig as { presets?: PresetRule[] }).presets ?? []
 
 // 过滤规则接口
 export interface FilterRule {
@@ -29,20 +30,21 @@ export interface FilterRule {
   isRegex: boolean
 }
 
-// 卡片状态
-interface CardState {
-  isVisible: boolean
-  position: { x: number; y: number }
-}
-
-// 存储卡片元素引用
+// 存储卡片与状态
 let cardElement: HTMLElement | null = null
 let filterRules: FilterRule[] = []
-let isEnabled = false
 let maxTextLength = DEFAULT_MAX_TEXT_LENGTH
+
+// 存储拖拽事件处理函数引用
+let dragMouseMoveHandler: ((event: MouseEvent) => void) | null = null
+let dragMouseUpHandler: (() => void) | null = null
 
 // 生成唯一 ID
 const generateId = (): string => {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return `filter-${crypto.randomUUID()}`
+  }
+
   return `filter-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`
 }
 
@@ -62,17 +64,22 @@ const getTextLength = (text: string): number => {
 
 // 检查文本是否匹配规则
 const matchesRule = (text: string, rule: FilterRule): boolean => {
-  if (!rule.pattern.trim()) {
+  const trimmedPattern = rule.pattern.trim()
+  if (!trimmedPattern) {
     return false
   }
 
   try {
     if (rule.isRegex) {
-      const regex = new RegExp(rule.pattern, 'i')
+      if (trimmedPattern.length > REGEX_PATTERN_MAX_LENGTH) {
+        return false
+      }
+
+      const regex = new RegExp(trimmedPattern, 'i')
       return regex.test(text)
-    } else {
-      return text.toLowerCase().includes(rule.pattern.toLowerCase())
     }
+
+    return text.toLowerCase().includes(trimmedPattern.toLowerCase())
   } catch {
     // 正则表达式无效时返回 false
     return false
@@ -81,6 +88,13 @@ const matchesRule = (text: string, rule: FilterRule): boolean => {
 
 // 执行过滤匹配
 const performFiltering = (): void => {
+  clearHighlights()
+
+  const validRules = filterRules.filter(rule => rule.pattern.trim())
+  if (validRules.length === 0) {
+    return
+  }
+
   // 获取所有目标元素
   const elements = document.querySelectorAll('#moderate tbody .xg1')
 
@@ -92,26 +106,22 @@ const performFiltering = (): void => {
       return
     }
 
-    // 检查是否匹配任意规则
-    const hasValidRules = filterRules.some(rule => rule.pattern.trim())
-    if (!hasValidRules) {
+    const isMatched = validRules.some(rule => matchesRule(text, rule))
+
+    // 找到对应的行元素
+    const row = element.closest('#moderate > table > tbody > tr')
+    if (!(row instanceof HTMLElement)) {
       return
     }
 
-    const isMatched = filterRules.some(rule => matchesRule(text, rule))
+    if (isMatched) {
+      row.style.backgroundColor = '#fffacd' // 浅黄色高亮
+      row.dataset.contentFilterHighlight = 'true'
 
-    // 找到对应的行元素
-    const row = element.closest('#moderate > table > tbody > tr') as HTMLElement
-    if (row) {
-      if (isMatched) {
-        row.style.backgroundColor = '#fffacd' // 浅黄色高亮
-        row.dataset.contentFilterHighlight = 'true'
-
-        // 选中对应的复选框
-        const checkbox = row.querySelector('.pc') as HTMLInputElement
-        if (checkbox && checkbox.type === 'checkbox') {
-          checkbox.checked = true
-        }
+      // 选中对应的复选框
+      const checkbox = row.querySelector('.pc')
+      if (checkbox instanceof HTMLInputElement && checkbox.type === 'checkbox') {
+        checkbox.checked = true
       }
     }
   })
@@ -121,12 +131,16 @@ const performFiltering = (): void => {
 const clearHighlights = (): void => {
   const highlightedRows = document.querySelectorAll('[data-content-filter-highlight="true"]')
   highlightedRows.forEach(row => {
-    ;(row as HTMLElement).style.backgroundColor = ''
-    delete (row as HTMLElement).dataset.contentFilterHighlight
+    if (!(row instanceof HTMLElement)) {
+      return
+    }
+
+    row.style.backgroundColor = ''
+    delete row.dataset.contentFilterHighlight
 
     // 取消选中对应的复选框
-    const checkbox = row.querySelector('.pc') as HTMLInputElement
-    if (checkbox && checkbox.type === 'checkbox') {
+    const checkbox = row.querySelector('.pc')
+    if (checkbox instanceof HTMLInputElement && checkbox.type === 'checkbox') {
       checkbox.checked = false
     }
   })
@@ -155,7 +169,7 @@ const saveCardPosition = async (x: number, y: number): Promise<void> => {
 
 // 加载卡片位置
 const loadCardPosition = async (): Promise<{ x: number; y: number }> => {
-  return await storageHelper.loadObject('contentFilterCardPosition', { x: 20, y: 100 })
+  return storageHelper.loadObject('contentFilterCardPosition', { x: 20, y: 100 })
 }
 
 // 保存最大文本长度
@@ -165,7 +179,7 @@ const saveMaxTextLength = async (length: number): Promise<void> => {
 
 // 加载最大文本长度
 const loadMaxTextLength = async (): Promise<number> => {
-  return await storageHelper.loadNumber(MAX_TEXT_LENGTH_STORAGE_KEY, DEFAULT_MAX_TEXT_LENGTH)
+  return storageHelper.loadNumber(MAX_TEXT_LENGTH_STORAGE_KEY, DEFAULT_MAX_TEXT_LENGTH)
 }
 
 // 创建输入行元素
@@ -573,7 +587,7 @@ const createFilterCard = async (): Promise<void> => {
     e.preventDefault()
   })
 
-  document.addEventListener('mousemove', (e: MouseEvent) => {
+  dragMouseMoveHandler = (e: MouseEvent) => {
     if (!isDragging) return
 
     const deltaX = e.clientX - dragStartX
@@ -584,22 +598,23 @@ const createFilterCard = async (): Promise<void> => {
 
     card.style.left = `${newX}px`
     card.style.top = `${newY}px`
-  })
+  }
 
-  document.addEventListener('mouseup', () => {
+  dragMouseUpHandler = () => {
     if (isDragging) {
       isDragging = false
-      // 保存位置
       void saveCardPosition(card.offsetLeft, card.offsetTop)
     }
-  })
+  }
+
+  document.addEventListener('mousemove', dragMouseMoveHandler)
+  document.addEventListener('mouseup', dragMouseUpHandler)
 
   // 失去焦点时执行过滤
   card.addEventListener('focusout', (e: FocusEvent) => {
     // 检查焦点是否移出卡片
     const relatedTarget = e.relatedTarget as HTMLElement
     if (!card.contains(relatedTarget)) {
-      clearHighlights()
       performFiltering()
     }
   })
@@ -611,10 +626,21 @@ const createFilterCard = async (): Promise<void> => {
 
 // 移除过滤卡片
 const removeFilterCard = (): void => {
+  if (dragMouseMoveHandler) {
+    document.removeEventListener('mousemove', dragMouseMoveHandler)
+    dragMouseMoveHandler = null
+  }
+
+  if (dragMouseUpHandler) {
+    document.removeEventListener('mouseup', dragMouseUpHandler)
+    dragMouseUpHandler = null
+  }
+
   if (cardElement) {
     cardElement.remove()
     cardElement = null
   }
+
   clearHighlights()
 }
 
@@ -634,7 +660,6 @@ export const enableContentFilter = async (): Promise<void> => {
     return
   }
 
-  isEnabled = true
   maxTextLength = await loadMaxTextLength()
   await loadFilterRules()
   await createFilterCard()
@@ -648,7 +673,6 @@ export const enableContentFilter = async (): Promise<void> => {
 
 // 禁用功能
 export const disableContentFilter = (): void => {
-  isEnabled = false
   removeFilterCard()
 }
 
@@ -670,7 +694,7 @@ export const toggleContentFilter = async (): Promise<boolean> => {
 
 // 获取功能状态
 export const getContentFilterStatus = async (): Promise<boolean> => {
-  return await storageHelper.loadBoolean(STORAGE_KEY, contentFilterConfig.defaultEnabled)
+  return storageHelper.loadBoolean(STORAGE_KEY, contentFilterConfig.defaultEnabled)
 }
 
 // 导出接口类型
