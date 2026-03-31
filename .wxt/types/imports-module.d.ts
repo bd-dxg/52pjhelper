@@ -20,7 +20,6 @@ declare module '#imports' {
   export { fakeBrowser } from 'wxt/testing';
   export { useFeatureToggle, VueFeatureConfig, UseFeatureToggleReturn } from '../src/composables/useFeatureToggle';
   export { createAvatarQuery, IAvatarQuery } from '../src/utils/avatarQuery';
-  export { initializeContentFilter, enableContentFilter, disableContentFilter, toggleContentFilter, getContentFilterStatus, createContentFilter, FilterRule, IContentFilter } from '../src/utils/contentFilter';
   export { createDefaultTime, IDefaultTime } from '../src/utils/defaultTime';
   export { createDuplicatePostDetection, IDuplicatePostDetection } from '../src/utils/duplicatePostDetection';
   export { createFeatureManager, FeatureConfig, IFeatureManager, CreateFeatureManagerOptions } from '../src/utils/featureManager';
