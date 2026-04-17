@@ -12,6 +12,8 @@ import type { ITableSelector } from '@utils/tableSelector'
 import type { IDefaultTime } from '@utils/defaultTime'
 import type { IDuplicatePostDetection } from '@utils/duplicatePostDetection'
 import type { IContentFilter } from '@utils/contentFilter'
+import type { ITableDataExtractor } from '@utils/tableDataExtractor'
+import type { IUserBlacklist } from '@utils/userBlacklist'
 import { applyNavConfig } from '@utils/navigationHider'
 import { saveQuickReplyConfig, initQuickReply, cleanupQuickReply } from '@utils/quickReply'
 import { getUserInfo, saveUserInfoToCache } from '@utils/userInfo'
@@ -32,6 +34,8 @@ export interface ManagerInstances {
   defaultTimeManager: IDefaultTime | null
   duplicatePostDetectionManager: IDuplicatePostDetection | null
   contentFilterManager: IContentFilter | null
+  tableDataExtractorManager: ITableDataExtractor | null
+  userBlacklistManager: IUserBlacklist | null
 }
 
 /**
@@ -408,6 +412,66 @@ export function registerMessageListener(managers: ManagerInstances): void {
         sendResponse({ success: false, message: 'ContentFilterManager not initialized' })
         return false
       }
+    }
+
+    // 表格数据提取功能切换
+    if (message.type === 'TOGGLE_TABLE_DATA_EXTRACTOR') {
+      if (managers.tableDataExtractorManager) {
+        managers.tableDataExtractorManager
+          .toggle()
+          .then((enabled: boolean) => {
+            sendResponse({ success: true, enabled })
+          })
+          .catch((error: unknown) => {
+            console.error('Toggle table data extractor failed:', error)
+            sendResponse({ success: false, message: 'Toggle failed' })
+          })
+        return true
+      } else {
+        sendResponse({ success: false, message: 'TableDataExtractorManager not initialized' })
+        return false
+      }
+    }
+
+    // 获取表格数据提取状态
+    if (message.type === 'GET_TABLE_DATA_EXTRACTOR_STATUS') {
+      if (managers.tableDataExtractorManager) {
+        const enabled = managers.tableDataExtractorManager.getStatus()
+        sendResponse({ success: true, enabled })
+      } else {
+        sendResponse({ success: false, message: 'TableDataExtractorManager not initialized' })
+      }
+      return false
+    }
+
+    // 用户黑名单功能切换
+    if (message.type === 'TOGGLE_USER_BLACKLIST') {
+      if (managers.userBlacklistManager) {
+        managers.userBlacklistManager
+          .toggle()
+          .then((enabled: boolean) => {
+            sendResponse({ success: true, enabled })
+          })
+          .catch((error: unknown) => {
+            console.error('Toggle user blacklist failed:', error)
+            sendResponse({ success: false, message: 'Toggle failed' })
+          })
+        return true
+      } else {
+        sendResponse({ success: false, message: 'UserBlacklistManager not initialized' })
+        return false
+      }
+    }
+
+    // 获取用户黑名单状态
+    if (message.type === 'GET_USER_BLACKLIST_STATUS') {
+      if (managers.userBlacklistManager) {
+        const enabled = managers.userBlacklistManager.getStatus()
+        sendResponse({ success: true, enabled })
+      } else {
+        sendResponse({ success: false, message: 'UserBlacklistManager not initialized' })
+      }
+      return false
     }
 
     return false

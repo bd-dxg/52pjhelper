@@ -23,6 +23,8 @@ const managers: ManagerInstances = {
   defaultTimeManager: null,
   duplicatePostDetectionManager: null,
   contentFilterManager: null,
+  tableDataExtractorManager: null,
+  userBlacklistManager: null,
 }
 
 export default defineContentScript({

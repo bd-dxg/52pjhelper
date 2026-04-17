@@ -15,6 +15,8 @@ import { createDefaultTime } from '@utils/defaultTime'
 import { createDuplicatePostDetection } from '@utils/duplicatePostDetection'
 import { initializeRowClickToCheck } from '@utils/rowClickToCheck'
 import { createContentFilter } from '@utils/contentFilter'
+import { createTableDataExtractor } from '@utils/tableDataExtractor'
+import { createUserBlacklist } from '@utils/userBlacklist'
 import * as autoFill from '@utils/autofills'
 import type { ManagerInstances } from './messageHandler'
 
@@ -69,4 +71,10 @@ export async function initializeManagers(managers: ManagerInstances): Promise<vo
 
   // 初始化内容过滤功能
   managers.contentFilterManager = createContentFilter()
+
+  // 初始化表格数据提取功能
+  managers.tableDataExtractorManager = createTableDataExtractor()
+
+  // 初始化用户黑名单功能
+  managers.userBlacklistManager = createUserBlacklist()
 }

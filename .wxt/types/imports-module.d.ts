@@ -31,9 +31,11 @@ declare module '#imports' {
   export { initializeRowClickToCheck, enableRowClickToCheck, disableRowClickToCheck, toggleRowClickToCheck, getRowClickToCheckStatus } from '../src/utils/rowClickToCheck';
   export { createSelectAll, ISelectAll } from '../src/utils/selectAll';
   export { createStorageHelper, storageHelper, IStorageHelper } from '../src/utils/storageHelper';
+  export { createTableDataExtractor, ITableDataExtractor, TableData, TableRow, TableCell } from '../src/utils/tableDataExtractor';
   export { createTableSelector, ITableSelector } from '../src/utils/tableSelector';
   export { getCurrentTheme, applyTheme, watchThemeChange, initTheme, Theme } from '../src/utils/themeManager';
   export { createUrlMatcher, urlMatcher, UrlMatchMode, UrlMatchRule, IUrlMatcher } from '../src/utils/urlMatcher';
+  export { createUserBlacklist, IUserBlacklist } from '../src/utils/userBlacklist';
   export { saveUserInfoToCache, getUserInfoFromCache, getUserInfo, watchUserInfo, UserInfo } from '../src/utils/userInfo';
   export { createUserLinkQuery, IUserLinkQuery } from '../src/utils/userLinkQuery';
   export { fetchUserViolation, extractUidFromHref } from '../src/utils/userViolationFetcher';

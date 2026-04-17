@@ -1,0 +1,7 @@
+{
+  "name": "表格数据提取",
+  "description": "在特定页面提取表格数据",
+  "storageKey": "tableDataExtractorEnabled",
+  "defaultEnabled": true,
+  "targetPages": ["thread-2094795-1-1.html"]
+}

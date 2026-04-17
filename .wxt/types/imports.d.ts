@@ -24,8 +24,10 @@ declare global {
   const createSelectAll: typeof import('D:/code/front-end/52pjhelper/src/utils/selectAll').createSelectAll
   const createShadowRootUi: typeof import('wxt/utils/content-script-ui/shadow-root').createShadowRootUi
   const createStorageHelper: typeof import('D:/code/front-end/52pjhelper/src/utils/storageHelper').createStorageHelper
+  const createTableDataExtractor: typeof import('D:/code/front-end/52pjhelper/src/utils/tableDataExtractor').createTableDataExtractor
   const createTableSelector: typeof import('D:/code/front-end/52pjhelper/src/utils/tableSelector').createTableSelector
   const createUrlMatcher: typeof import('D:/code/front-end/52pjhelper/src/utils/urlMatcher').createUrlMatcher
+  const createUserBlacklist: typeof import('D:/code/front-end/52pjhelper/src/utils/userBlacklist').createUserBlacklist
   const createUserLinkQuery: typeof import('D:/code/front-end/52pjhelper/src/utils/userLinkQuery').createUserLinkQuery
   const customRef: typeof import('vue').customRef
   const defineAppConfig: typeof import('wxt/utils/define-app-config').defineAppConfig
@@ -187,6 +189,9 @@ declare global {
   export type { IStorageHelper } from 'D:/code/front-end/52pjhelper/src/utils/storageHelper'
   import('D:/code/front-end/52pjhelper/src/utils/storageHelper')
   // @ts-ignore
+  export type { ITableDataExtractor, TableData, TableRow, TableCell } from 'D:/code/front-end/52pjhelper/src/utils/tableDataExtractor'
+  import('D:/code/front-end/52pjhelper/src/utils/tableDataExtractor')
+  // @ts-ignore
   export type { ITableSelector } from 'D:/code/front-end/52pjhelper/src/utils/tableSelector'
   import('D:/code/front-end/52pjhelper/src/utils/tableSelector')
   // @ts-ignore
@@ -195,6 +200,9 @@ declare global {
   // @ts-ignore
   export type { UrlMatchMode, UrlMatchRule, IUrlMatcher } from 'D:/code/front-end/52pjhelper/src/utils/urlMatcher'
   import('D:/code/front-end/52pjhelper/src/utils/urlMatcher')
+  // @ts-ignore
+  export type { IUserBlacklist } from 'D:/code/front-end/52pjhelper/src/utils/userBlacklist'
+  import('D:/code/front-end/52pjhelper/src/utils/userBlacklist')
   // @ts-ignore
   export type { UserInfo } from 'D:/code/front-end/52pjhelper/src/utils/userInfo'
   import('D:/code/front-end/52pjhelper/src/utils/userInfo')
@@ -229,8 +237,10 @@ declare module 'vue' {
     readonly createSelectAll: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/selectAll')['createSelectAll']>
     readonly createShadowRootUi: UnwrapRef<typeof import('wxt/utils/content-script-ui/shadow-root')['createShadowRootUi']>
     readonly createStorageHelper: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/storageHelper')['createStorageHelper']>
+    readonly createTableDataExtractor: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/tableDataExtractor')['createTableDataExtractor']>
     readonly createTableSelector: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/tableSelector')['createTableSelector']>
     readonly createUrlMatcher: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/urlMatcher')['createUrlMatcher']>
+    readonly createUserBlacklist: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userBlacklist')['createUserBlacklist']>
     readonly createUserLinkQuery: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userLinkQuery')['createUserLinkQuery']>
     readonly customRef: UnwrapRef<typeof import('vue')['customRef']>
     readonly defineAppConfig: UnwrapRef<typeof import('wxt/utils/define-app-config')['defineAppConfig']>

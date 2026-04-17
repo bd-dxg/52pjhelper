@@ -1,0 +1,10 @@
+{
+  "name": "用户黑名单",
+  "description": "高亮显示黑名单用户，鼠标悬停显示网盘信息",
+  "storageKey": "userBlacklistEnabled",
+  "defaultEnabled": true,
+  "dataStorageKey": "userBlacklist_data",
+  "lastUpdateKey": "userBlacklist_lastUpdate",
+  "autoUpdateInterval": 86400000,
+  "usernameSelector": ".pls .pi .authi a"
+}
