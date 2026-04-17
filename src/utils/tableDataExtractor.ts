@@ -9,7 +9,10 @@ import { createFeatureManager, type IFeatureManager } from './featureManager'
 /**
  * 表格数据提取管理器接口
  */
-export interface ITableDataExtractor extends IFeatureManager {}
+export interface ITableDataExtractor extends IFeatureManager {
+  /** 强制提取表格数据 */
+  forceExtract(): Promise<void>
+}
 
 /**
  * 提取的表格数据接口
@@ -209,8 +212,25 @@ export function createTableDataExtractor(): ITableDataExtractor {
     hasExtracted = false
   }
 
+  /**
+   * 强制提取表格数据
+   */
+  const forceExtract = async (): Promise<void> => {
+    // 重置提取状态，允许重新提取
+    hasExtracted = false
+
+    // 如果已有观察者，先断开
+    if (observer) {
+      observer.disconnect()
+      observer = null
+    }
+
+    // 直接提取数据
+    await extractData()
+  }
+
   // 使用 featureManager 创建基础功能管理器
-  return createFeatureManager({
+  const baseManager = createFeatureManager({
     config: {
       storageKey: tableDataExtractorConfig.storageKey,
       defaultEnabled: tableDataExtractorConfig.defaultEnabled,
@@ -223,4 +243,10 @@ export function createTableDataExtractor(): ITableDataExtractor {
       cleanup()
     },
   })
+
+  // 返回扩展的管理器
+  return {
+    ...baseManager,
+    forceExtract,
+  }
 }

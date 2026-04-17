@@ -37,6 +37,30 @@ interface UserBlacklistItem {
  */
 type UserBlacklistData = UserBlacklistItem[]
 
+/**
+ * 表格数据提取器数据结构
+ */
+interface TableExtractionData {
+  targetTable?: {
+    rows?: Array<{
+      cells: Array<{
+        content: string
+      }>
+    }>
+  }
+  subTables?: Array<{
+    data: {
+      rows?: Array<{
+        cells: Array<{
+          content: string
+        }>
+      }>
+    }
+  }>
+  url: string
+  extractedAt: string
+}
+
 // 存储键常量
 const STORAGE_KEY = userBlacklistConfig.storageKey
 const DATA_STORAGE_KEY = userBlacklistConfig.dataStorageKey
@@ -89,6 +113,8 @@ export interface IUserBlacklist {
   getData(): Promise<UserBlacklistData>
   /** 检查是否需要自动更新 */
   shouldAutoUpdate(): Promise<boolean>
+  /** 重新加载数据并重新扫描 */
+  reloadData(): Promise<void>
 }
 
 /**
@@ -106,15 +132,104 @@ export function createUserBlacklist(): IUserBlacklist {
   const SCAN_DEBOUNCE_DELAY = 300 // 防抖延迟时间（毫秒）
 
   /**
+   * 从表格数据提取器加载黑名单数据
+   */
+  const loadBlacklistDataFromTableExtractor = async (): Promise<UserBlacklistData> => {
+    try {
+      console.log('[用户黑名单] 尝试从表格数据提取器加载数据')
+      const result = await browser.storage.local.get('tableDataExtractor_lastExtraction')
+      const extractionData = result.tableDataExtractor_lastExtraction
+
+      if (!extractionData) {
+        console.log('[用户黑名单] 未找到表格数据提取器数据，使用默认数据')
+        return DEFAULT_BLACKLIST_DATA
+      }
+
+      console.log('[用户黑名单] 找到表格数据提取器数据，结构:', Object.keys(extractionData))
+
+      const extractionDataTyped = extractionData as TableExtractionData
+
+      // 打印目标表格数据以便调试
+      if (extractionDataTyped.targetTable && extractionDataTyped.targetTable.rows) {
+        console.log('[用户黑名单] 目标表格行数:', extractionDataTyped.targetTable.rows.length)
+
+        // 打印前几行数据
+        const sampleRows = extractionDataTyped.targetTable.rows.slice(0, 3)
+        sampleRows.forEach((row, index: number) => {
+          console.log(`[用户黑名单] 行 ${index} 单元格:`, row.cells.map((cell) => cell.content))
+        })
+      }
+
+      // 这里需要根据实际的表格结构解析数据
+      // 根据常见的论坛黑名单表格结构，假设表格有这些列：
+      // 序号 | 论坛ID | 网盘厂商 | 网盘ID | 帖子链接 | 记录者 | 备注
+
+      const blacklistItems: UserBlacklistItem[] = []
+
+      if (extractionDataTyped.targetTable && extractionDataTyped.targetTable.rows) {
+        extractionDataTyped.targetTable.rows.forEach((row) => {
+          const cells = row.cells
+          if (cells.length >= 6) { // 至少需要6列数据
+            const forumId = cells[1]?.content?.trim() // 第2列：论坛ID
+            const provider = cells[2]?.content?.trim() // 第3列：网盘厂商
+            const cloudId = cells[3]?.content?.trim() // 第4列：网盘ID
+            const postLink = cells[4]?.content?.trim() // 第5列：帖子链接
+            const recorder = cells[5]?.content?.trim() // 第6列：记录者
+            const note = cells[6]?.content?.trim() // 第7列：备注（可选）
+
+            if (forumId) {
+              // 查找是否已存在该用户的记录
+              let existingItem = blacklistItems.find(item => item.forumId === forumId)
+
+              if (!existingItem) {
+                existingItem = {
+                  forumId,
+                  cloudStorages: [],
+                  note
+                }
+                blacklistItems.push(existingItem)
+              }
+
+              // 添加网盘记录
+              existingItem.cloudStorages.push({
+                provider: provider || '未知',
+                id: cloudId || '',
+                postLink: postLink || '',
+                recorder: recorder || ''
+              })
+            }
+          }
+        })
+      }
+
+      console.log(`[用户黑名单] 从表格解析出 ${blacklistItems.length} 个用户`)
+      return blacklistItems.length > 0 ? blacklistItems : DEFAULT_BLACKLIST_DATA
+    } catch (error) {
+      console.error('[用户黑名单] 从表格数据提取器加载数据失败:', error)
+      return DEFAULT_BLACKLIST_DATA
+    }
+  }
+
+  /**
    * 加载黑名单数据
    */
   const loadBlacklistData = async (): Promise<void> => {
-    blacklistData = await storageHelper.loadArray<UserBlacklistItem>(
+    // 首先尝试从表格数据提取器加载
+    const extractedData = await loadBlacklistDataFromTableExtractor()
+
+    // 然后从本地存储加载用户自定义数据
+    const storedData = await storageHelper.loadArray<UserBlacklistItem>(
       DATA_STORAGE_KEY,
-      DEFAULT_BLACKLIST_DATA
+      []
     )
+
+    // 合并数据：提取的数据 + 存储的数据
+    blacklistData = [...extractedData, ...storedData]
+
     // 更新快速查找Set
     blacklistIds = new Set(blacklistData.map(item => item.forumId.toLowerCase()))
+
+    console.log(`[用户黑名单] 加载完成，共 ${blacklistData.length} 个用户，ID列表:`, Array.from(blacklistIds))
   }
 
   /**
@@ -295,13 +410,13 @@ export function createUserBlacklist(): IUserBlacklist {
       })
       table.appendChild(tbody)
 
-      // 备注信息
-      if (userData.note) {
+      // 备注信息 - 只有当备注有实际内容时才显示
+      if (userData.note && userData.note.trim() && userData.note.trim() !== '-') {
         const noteDiv = document.createElement('div')
         noteDiv.style.marginTop = '10px'
         noteDiv.style.fontSize = '11px'
         noteDiv.style.color = '#666'
-        noteDiv.textContent = `备注: ${userData.note}`
+        noteDiv.textContent = `备注: ${userData.note.trim()}`
         popup.appendChild(noteDiv)
       }
 
@@ -366,8 +481,11 @@ export function createUserBlacklist(): IUserBlacklist {
     const username = element.textContent?.trim()
     if (!username) return
 
+    console.log(`[用户黑名单] 处理用户名: "${username}"`)
+
     // 检查是否在黑名单中
     if (blacklistIds.has(username.toLowerCase())) {
+      console.log(`[用户黑名单] 用户名 "${username}" 在黑名单中，添加高亮样式`)
       // 添加高亮样式
       element.classList.add('user-blacklist-highlight')
 
@@ -391,7 +509,9 @@ export function createUserBlacklist(): IUserBlacklist {
    * 扫描并处理所有用户名元素
    */
   const scanAndProcessUsernames = (): void => {
+    console.log('[用户黑名单] 开始扫描用户名元素，选择器:', USERNAME_SELECTOR)
     const usernameElements = document.querySelectorAll<HTMLAnchorElement>(USERNAME_SELECTOR)
+    console.log(`[用户黑名单] 找到 ${usernameElements.length} 个用户名元素`)
     usernameElements.forEach(processUsernameElement)
   }
 
@@ -412,8 +532,10 @@ export function createUserBlacklist(): IUserBlacklist {
    * 附加事件监听器
    */
   const attachEventListeners = (): void => {
-    // 初始扫描
-    scanAndProcessUsernames()
+    // 初始扫描 - 使用setTimeout确保DOM完全加载
+    setTimeout(() => {
+      scanAndProcessUsernames()
+    }, 100)
 
     // 创建 MutationObserver 监听DOM变化
     const observer = new MutationObserver(mutations => {
@@ -563,6 +685,20 @@ export function createUserBlacklist(): IUserBlacklist {
   }
 
   /**
+   * 重新加载数据并重新扫描
+   */
+  const reloadData = async (): Promise<void> => {
+    console.log('[用户黑名单] 重新加载数据')
+    await loadBlacklistData()
+
+    // 如果功能已启用，重新处理用户名元素
+    if (isEnabled) {
+      removeEventListeners()
+      attachEventListeners()
+    }
+  }
+
+  /**
    * 初始化
    */
   const init = async (): Promise<void> => {
@@ -584,5 +720,6 @@ export function createUserBlacklist(): IUserBlacklist {
     updateData,
     getData,
     shouldAutoUpdate,
+    reloadData,
   }
 }

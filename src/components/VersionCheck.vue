@@ -108,9 +108,6 @@ const checkUpdateNow = async () => {
 
 <style scoped>
 .update-banner {
-  position: absolute;
-  top: 0px;
-  right: 0px;
   height: 80px;
   padding: 0 10px;
   gap: 10px;
@@ -176,42 +173,49 @@ const checkUpdateNow = async () => {
 
 .btn-update,
 .btn-dismiss {
-  color: var(--text-primary);
-  padding: 6px 12px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+  color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
-}
-.btn-update {
-  background: rgba(255, 255, 255, 0.2);
-}
-.btn-update:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap; /* 防止文字换行 */
+  min-width: 80px; /* 确保按钮有足够宽度 */
 }
 
-.btn-dismiss {
-  background: rgba(255, 255, 255, 0.2);
+.btn-update::before,
+.btn-dismiss::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
 }
 
+.btn-update:hover,
 .btn-dismiss:hover {
-  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-update:hover::before,
+.btn-dismiss:hover::before {
+  left: 100%;
 }
 
 .btn-update:active,
 .btn-dismiss:active {
   transform: translateY(0);
-}
-
-/* 检查更新按钮容器 */
-.check-update-container {
-  position: absolute;
-  top: 10px;
-  right: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .btn-check {
@@ -227,6 +231,8 @@ const checkUpdateNow = async () => {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
+  white-space: nowrap; /* 防止文字换行 */
+  min-width: 100px; /* 确保按钮有足够宽度 */
 }
 
 .btn-check::before {
@@ -262,9 +268,6 @@ const checkUpdateNow = async () => {
 
 /* 已是最新版本提示 */
 .up-to-date-message {
-  position: absolute;
-  top: 10px;
-  right: 10px;
   padding: 8px 16px;
   background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
   color: white;

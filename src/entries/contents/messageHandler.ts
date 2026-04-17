@@ -474,6 +474,67 @@ export function registerMessageListener(managers: ManagerInstances): void {
       return false
     }
 
+    // 重新加载用户黑名单数据
+    if (message.type === 'RELOAD_USER_BLACKLIST_DATA') {
+      if (managers.userBlacklistManager) {
+        // 重新加载数据并重新扫描
+        const userBlacklistManager = managers.userBlacklistManager as any
+        if (userBlacklistManager.reloadData) {
+          userBlacklistManager.reloadData()
+            .then(() => {
+              sendResponse({ success: true, message: '数据已重新加载' })
+            })
+            .catch((error: unknown) => {
+              console.error('重新加载用户黑名单数据失败:', error)
+              sendResponse({ success: false, message: '重新加载失败' })
+            })
+          return true
+        } else {
+          sendResponse({ success: false, message: 'reloadData方法不存在' })
+          return false
+        }
+      } else {
+        sendResponse({ success: false, message: 'UserBlacklistManager not initialized' })
+        return false
+      }
+    }
+
+    // 提取表格数据
+    if (message.type === 'EXTRACT_TABLE_DATA') {
+      if (managers.tableDataExtractorManager) {
+        // 强制提取表格数据
+        const tableDataExtractorManager = managers.tableDataExtractorManager as any
+        if (tableDataExtractorManager.forceExtract) {
+          tableDataExtractorManager.forceExtract()
+            .then(async () => {
+              // 提取成功后，立即重新加载用户黑名单数据
+              if (managers.userBlacklistManager) {
+                const userBlacklistManager = managers.userBlacklistManager as any
+                if (userBlacklistManager.reloadData) {
+                  await userBlacklistManager.reloadData()
+                  sendResponse({ success: true, message: '表格数据已提取并重新加载黑名单' })
+                } else {
+                  sendResponse({ success: true, message: '表格数据已提取（reloadData方法不存在）' })
+                }
+              } else {
+                sendResponse({ success: true, message: '表格数据已提取（UserBlacklistManager未初始化）' })
+              }
+            })
+            .catch((error: unknown) => {
+              console.error('提取表格数据失败:', error)
+              sendResponse({ success: false, message: '提取失败' })
+            })
+          return true
+        } else {
+          sendResponse({ success: false, message: 'forceExtract方法不存在' })
+          return false
+        }
+      } else {
+        sendResponse({ success: false, message: 'TableDataExtractorManager not initialized' })
+        return false
+      }
+    }
+
     return false
   })
 }

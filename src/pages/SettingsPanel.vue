@@ -21,7 +21,11 @@
           {{ userInfo.level }}
         </div>
       </div>
-
+      <!-- 右上角按钮容器 -->
+      <div class="header-buttons-container">
+        <VersionCheck />
+        <BlacklistUpdateButton @update="handleBlacklistUpdate" />
+      </div>
       <!-- 消息提示 -->
       <aside class="message-container" role="status" aria-live="polite">
         <output v-if="message" class="message" :class="messageType">
@@ -29,8 +33,7 @@
         </output>
       </aside>
     </header>
-    <!-- 版本更新提示横幅 -->
-    <VersionCheck />
+
     <!-- 选项卡导航 -->
     <nav class="tabs-header" role="tablist">
       <button
@@ -74,6 +77,7 @@ import NavigationSettings from '@com/NavigationSettings.vue'
 import GeneralFeaturesToggle from '@com/GeneralFeaturesToggle.vue'
 import AdminFeaturesToggle from '@com/AdminFeaturesToggle.vue'
 import VersionCheck from '@com/VersionCheck.vue'
+import BlacklistUpdateButton from '@com/BlacklistUpdateButton.vue'
 import { getUserInfoFromCache, type UserInfo } from '@utils/userInfo'
 
 defineOptions({
@@ -119,6 +123,12 @@ const loadActiveTab = async () => {
 // 保存选项卡状态到 storage
 const saveActiveTab = async (tab: 'navigation' | 'quickQuery') => {
   await browser.storage.local.set({ [ACTIVE_TAB_STORAGE_KEY]: tab })
+}
+
+// 处理黑名单更新事件
+const handleBlacklistUpdate = () => {
+  // 可以在这里添加一些全局处理逻辑，比如刷新页面数据等
+  console.log('黑名单数据已更新')
 }
 
 // 切换选项卡
@@ -197,6 +207,17 @@ const showMessage = (text: string, type: 'success' | 'error' = 'success') => {
   flex-direction: column;
 }
 
+/* 右上角按钮容器 */
+.header-buttons-container {
+  position: absolute;
+  top: 12px;
+  right: 5px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 10;
+}
+
 /* 用户信息头部 */
 .user-info-header {
   display: flex;
@@ -204,6 +225,7 @@ const showMessage = (text: string, type: 'success' | 'error' = 'success') => {
   padding: 12px 16px; /* 从 16px 20px 减少到 12px 16px */
   background-color: var(--bg-secondary);
   gap: 10px; /* 从 12px 减少到 10px */
+  position: relative; /* 为绝对定位的子元素提供参考 */
 }
 
 .user-avatar {
