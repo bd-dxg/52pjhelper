@@ -1,6 +1,6 @@
 import { storageHelper } from '../storageHelper'
 import type { TableExtractionData, UserBlacklistData, UserBlacklistItem } from './types'
-import { DATA_STORAGE_KEY, DEFAULT_BLACKLIST_DATA, LAST_UPDATE_KEY } from './config'
+import { DATA_STORAGE_KEY, DEFAULT_BLACKLIST_DATA, LAST_UPDATE_KEY, AUTO_UPDATE_INTERVAL } from './config'
 
 /**
  * 从表格数据提取器加载黑名单数据
@@ -111,17 +111,28 @@ export const loadBlacklistDataFromTableExtractor = async (): Promise<UserBlackli
  * 加载黑名单数据
  */
 export const loadBlacklistData = async (): Promise<UserBlacklistData> => {
-  // 首先尝试从表格数据提取器加载
-  const extractedData = await loadBlacklistDataFromTableExtractor()
-
-  // 然后从本地存储加载用户自定义数据
+  // 从本地存储加载数据
   const storedData = await storageHelper.loadArray<UserBlacklistItem>(
     DATA_STORAGE_KEY,
     []
   )
 
-  // 合并数据：提取的数据 + 存储的数据
-  return [...extractedData, ...storedData]
+  // 如果本地存储有数据，使用存储的数据
+  if (storedData.length > 0) {
+    console.log(`[用户黑名单] 从本地存储加载 ${storedData.length} 条数据`)
+    return storedData
+  }
+
+  // 如果本地存储没有数据，从表格数据提取器加载作为初始数据
+  console.log('[用户黑名单] 本地存储无数据，从表格数据提取器加载初始数据')
+  const extractedData = await loadBlacklistDataFromTableExtractor()
+
+  // 保存到本地存储供后续使用
+  if (extractedData.length > 0) {
+    await saveBlacklistData(extractedData)
+  }
+
+  return extractedData
 }
 
 /**
@@ -140,6 +151,6 @@ export const saveBlacklistData = async (data: UserBlacklistData): Promise<void> 
 export const shouldAutoUpdate = async (): Promise<boolean> => {
   const lastUpdate = await storageHelper.loadNumber(LAST_UPDATE_KEY, 0)
   const now = Date.now()
-  const AUTO_UPDATE_INTERVAL = 7 * 24 * 60 * 60 * 1000 // 7天
-  return now - lastUpdate > AUTO_UPDATE_INTERVAL
+  // 使用配置文件中的自动更新间隔
+  return !lastUpdate || (now - lastUpdate) >= AUTO_UPDATE_INTERVAL
 }

@@ -17,7 +17,7 @@ src/utils/
 │   ├── index.ts         # 统一导出
 │   ├── types.ts         # 类型定义
 │   ├── config.ts        # 配置常量
-│   ├── data.ts          # 数据加载和保存
+│   ├── data.ts          # 数据加载、保存和自动更新检查
 │   ├── ui.ts            # 样式和弹窗UI
 │   ├── processing.ts    # 用户名处理和扫描
 │   ├── events.ts        # 事件监听
@@ -1109,6 +1109,17 @@ src/utils/userBlacklist/
 └── factory.ts       # 工厂函数，创建管理器实例
 ```
 
+**各模块职责**：
+- **data.ts**：数据管理模块，负责从表格数据提取器加载数据、本地存储操作、自动更新检查
+- **types.ts**：类型定义，包括用户黑名单条目、网盘记录、表格提取数据结构
+- **config.ts**：配置常量，包括存储键、默认数据、自动更新间隔等
+- **ui.ts**：用户界面模块，负责样式注入和弹窗显示
+- **processing.ts**：数据处理模块，负责用户名提取和扫描逻辑
+- **events.ts**：事件管理模块，负责DOM变化监听
+- **manager.ts**：核心业务逻辑，封装所有功能方法
+- **factory.ts**：工厂函数，创建管理器实例
+- **index.ts**：统一导出，提供简洁的公共API
+
 ### 主要接口
 
 #### `IUserBlacklist` 接口
@@ -1163,6 +1174,22 @@ interface CloudStorageRecord {
 }
 ```
 
+#### `TableExtractionData`
+
+表格数据提取器数据结构：
+
+```typescript
+interface TableExtractionData {
+  targetTable?: {
+    rows: Array<{
+      cells: Array<{
+        content?: string
+      }>
+    }>
+  }
+}
+```
+
 ### 主要函数
 
 #### `createUserBlacklist()`
@@ -1185,6 +1212,56 @@ const isEnabled = userBlacklist.getStatus()
 const newState = await userBlacklist.toggle()
 ```
 
+#### `loadBlacklistDataFromTableExtractor()`
+
+从表格数据提取器加载黑名单数据：
+
+```typescript
+import { loadBlacklistDataFromTableExtractor } from '@/utils/userBlacklist'
+
+// 从表格数据提取器加载数据
+const blacklistData = await loadBlacklistDataFromTableExtractor()
+console.log(`从表格解析出 ${blacklistData.length} 个用户`)
+```
+
+#### `loadBlacklistData()`
+
+加载黑名单数据（优先从本地存储加载，无数据时从表格提取器加载）：
+
+```typescript
+import { loadBlacklistData } from '@/utils/userBlacklist'
+
+// 加载黑名单数据
+const blacklistData = await loadBlacklistData()
+console.log(`加载了 ${blacklistData.length} 条黑名单数据`)
+```
+
+#### `saveBlacklistData()`
+
+保存黑名单数据到本地存储：
+
+```typescript
+import { saveBlacklistData } from '@/utils/userBlacklist'
+
+// 保存黑名单数据
+await saveBlacklistData(blacklistData)
+console.log('黑名单数据已保存')
+```
+
+#### `shouldAutoUpdate()`
+
+检查是否需要自动更新黑名单数据：
+
+```typescript
+import { shouldAutoUpdate } from '@/utils/userBlacklist'
+
+// 检查是否需要自动更新
+const needsUpdate = await shouldAutoUpdate()
+if (needsUpdate) {
+  console.log('需要更新黑名单数据')
+}
+```
+
 ### 配置常量
 
 ```typescript
@@ -1192,8 +1269,11 @@ const newState = await userBlacklist.toggle()
 export const STORAGE_KEY = 'userBlacklist_enabled'
 export const DATA_STORAGE_KEY = 'userBlacklist_data'
 export const LAST_UPDATE_KEY = 'userBlacklist_lastUpdate'
-export const AUTO_UPDATE_INTERVAL = 7 * 24 * 60 * 60 * 1000 // 7天
+export const AUTO_UPDATE_INTERVAL = 24 * 60 * 60 * 1000 // 1天
 export const USERNAME_SELECTOR = 'a[href*="home.php?mod=space&uid="]'
+
+// 默认黑名单数据（空数组）
+export const DEFAULT_BLACKLIST_DATA: UserBlacklistData = []
 ```
 
 ### 使用示例
@@ -1272,7 +1352,7 @@ await blacklistManager.reloadData()
 1. **模块化设计**：代码按功能职责分离，便于维护和测试
 2. **向后兼容**：保持原有接口不变，现有代码无需修改
 3. **性能优化**：使用防抖扫描和快速查找 Set 提高性能
-4. **自动更新**：支持检查数据是否需要自动更新
+4. **自动更新**：支持检查数据是否需要自动更新（默认1天）
 5. **响应式 UI**：鼠标悬停显示详细信息弹窗
 6. **DOM 监听**：自动监听页面变化，处理动态加载的内容
 
@@ -1286,6 +1366,14 @@ await blacklistManager.reloadData()
 // 自动从表格数据提取器加载黑名单数据
 const extractedData = await loadBlacklistDataFromTableExtractor()
 ```
+
+**表格结构解析规则**：
+- 表格结构：序号 | 论坛ID | 网盘厂商 | 网盘ID | 帖子链接 | 记录者 | 备注
+- 每个用户的第一行有"序号"和"论坛ID"
+- 同一用户的其他网盘记录行中，"序号"和"论坛ID"都是"-"
+- 自动跟踪当前用户，将同一用户的所有网盘记录合并
+- 支持多种网盘厂商：百度、夸克、迅雷等
+- 自动处理帖子链接：如果是"-"则保持为空
 
 #### 与存储助手集成
 
@@ -1328,6 +1416,6 @@ try {
 
 ---
 
-_文档版本：1.1.0_  
+_文档版本：1.2.0_  
 _最后更新：2026-04-18_  
-_更新内容：添加用户黑名单模块化重构文档_
+_更新内容：添加用户黑名单数据模块详细文档，包括表格数据提取器集成、数据加载函数和配置常量_

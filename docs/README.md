@@ -95,7 +95,7 @@ npx vue-tsc --noEmit
 
 #### 后台管理功能
 
-- [后台管理功能组](features/admin-features.md) - 头像查询、快捷回复、自动填充等
+- [后台管理功能组](features/admin-features.md) - 头像查询、快捷回复、自动填充、用户黑名单等
 - [头像查询](features/avatar-query.md) - 鼠标悬停显示用户违规记录
 - [快捷回复](features/quick-reply.md) - 举报处理页面快捷回复
 - [自动填充](features/auto-fill.md) - 智能表单自动填充
@@ -105,6 +105,7 @@ npx vue-tsc --noEmit
 - [勾选范围](features/row-click-to-check.md) - 点击表格行勾选复选框
 - [灌水筛选](features/content-filter.md) - 可拖动的过滤卡片
 - [重复发帖检测](features/duplicate-post-detection.md) - 高亮显示重复发帖
+- [用户黑名单](features/admin-features.md#10-用户黑名单) - 高亮显示黑名单用户并显示网盘信息
 
 ### 开发文档
 
@@ -185,5 +186,5 @@ npx vue-tsc --noEmit
 
 ---
 
-_最后更新：2026-04-17_  
-_文档版本：1.0.0_
+_最后更新：2026-04-18_  
+_文档版本：1.0.1（更新用户黑名单模块化重构）_
