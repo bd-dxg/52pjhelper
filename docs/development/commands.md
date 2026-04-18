@@ -34,6 +34,7 @@ npx vue-tsc --noEmit
 ```
 
 **重要提示**：
+
 - 每次修改代码后都应运行类型检查，确保类型安全
 - 类型检查不会生成实际文件，仅验证类型正确性
 - 建议在提交代码前运行类型检查
@@ -61,6 +62,7 @@ npx oxlint --fix
 ## 构建和运行命令
 
 **重要安全提示**：
+
 - **禁止在 Claude Code 中运行** `pnpm dev` 和 `pnpm build` 命令
 - 这些命令会启动开发服务器或构建项目，可能导致不必要的资源占用
 - 如需构建或运行项目，请由用户手动执行
@@ -202,16 +204,18 @@ DEBUG=true
 ### 1. 开发工作流
 
 1. **开始开发前**：
+
    ```bash
    pnpm install
    ```
 
 2. **编写代码时**：
+
    ```bash
    # 定期运行类型检查
    npx tsc --noEmit
    npx vue-tsc --noEmit
-   
+
    # 定期格式化代码
    npx oxfmt
    ```
@@ -244,6 +248,7 @@ DEBUG=true
 #### 常见问题
 
 1. **依赖安装失败**：
+
    ```bash
    # 清理缓存并重试
    pnpm store prune
@@ -251,10 +256,11 @@ DEBUG=true
    ```
 
 2. **类型检查错误**：
+
    ```bash
    # 检查 TypeScript 配置
    npx tsc --showConfig
-   
+
    # 检查特定文件的类型
    npx tsc --noEmit src/path/to/file.ts
    ```
@@ -272,5 +278,5 @@ DEBUG=true
 
 ---
 
-*文档版本：1.0.0*  
-*最后更新：2026-04-17*
+_文档版本：1.0.0_  
+_最后更新：2026-04-17_

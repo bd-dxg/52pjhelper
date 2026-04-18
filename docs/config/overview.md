@@ -91,7 +91,7 @@ import adminFeatures from '@/configs/features/admin.json'
 // 合并配置
 const allFeatures = {
   ...generalFeatures.features,
-  ...adminFeatures.features
+  ...adminFeatures.features,
 }
 ```
 
@@ -133,15 +133,18 @@ const validateConfig = (config: BaseConfig, expectedVersion: string): boolean =>
 ```typescript
 // 合并功能配置
 const mergeFeatureConfigs = (configs: FeatureConfig[]): FeatureConfig => {
-  return configs.reduce((merged, config) => {
-    return {
-      ...merged,
-      features: {
-        ...merged.features,
-        ...config.features
+  return configs.reduce(
+    (merged, config) => {
+      return {
+        ...merged,
+        features: {
+          ...merged.features,
+          ...config.features,
+        },
       }
-    }
-  }, { version: '1.0.0', features: {} })
+    },
+    { version: '1.0.0', features: {} },
+  )
 }
 ```
 
@@ -154,7 +157,7 @@ const mergeFeatureConfigs = (configs: FeatureConfig[]): FeatureConfig => {
 const updateConfig = async (configPath: string, updates: any) => {
   const currentConfig = await loadConfig(configPath)
   const newConfig = { ...currentConfig, ...updates }
-  
+
   // 验证新配置
   if (validateConfig(newConfig)) {
     await saveConfig(configPath, newConfig)
@@ -178,17 +181,17 @@ const getFeatureConfig = (featureId: string) => {
 // 使用配置初始化功能
 const initializeFeature = (featureId: string) => {
   const config = getFeatureConfig(featureId)
-  
+
   if (!config) {
     throw new Error(`未找到功能配置: ${featureId}`)
   }
-  
+
   return {
     id: featureId,
     name: config.name,
     description: config.description,
     defaultEnabled: config.defaultEnabled,
-    storageKey: config.storageKey
+    storageKey: config.storageKey,
   }
 }
 ```
@@ -199,7 +202,7 @@ const initializeFeature = (featureId: string) => {
 // 从配置生成导航菜单
 const generateNavigationMenu = () => {
   const config = navigationConfig
-  
+
   return config.menus.map(menu => ({
     id: menu.id,
     title: menu.title,
@@ -207,8 +210,8 @@ const generateNavigationMenu = () => {
       id: item.id,
       title: item.title,
       description: item.description,
-      enabled: getFeatureState(item.id)
-    }))
+      enabled: getFeatureState(item.id),
+    })),
   }))
 }
 ```
@@ -221,7 +224,7 @@ import storageKeys from '@/configs/storage-keys.json'
 
 const saveUserSettings = async (settings: UserSettings) => {
   await browser.storage.local.set({
-    [storageKeys.keys.user_settings]: settings
+    [storageKeys.keys.user_settings]: settings,
   })
 }
 
@@ -278,15 +281,15 @@ const validateAllConfigs = () => {
   const configs = [
     { name: 'navigation', config: navigationConfig, version: '1.0.0' },
     { name: 'features-general', config: generalFeatures, version: '1.0.0' },
-    { name: 'storage-keys', config: storageKeys, version: '1.0.0' }
+    { name: 'storage-keys', config: storageKeys, version: '1.0.0' },
   ]
-  
+
   const results = configs.map(({ name, config, version }) => ({
     name,
     valid: validateConfig(config, version),
-    version: config.version
+    version: config.version,
   }))
-  
+
   console.log('配置验证结果:', results)
   return results.every(result => result.valid)
 }
@@ -300,13 +303,13 @@ const exportConfigs = () => {
   const configs = {
     navigation: navigationConfig,
     features: loadAllFeatureConfigs(),
-    storageKeys: storageKeys
+    storageKeys: storageKeys,
   }
-  
+
   const blob = new Blob([JSON.stringify(configs, null, 2)], {
-    type: 'application/json'
+    type: 'application/json',
   })
-  
+
   return URL.createObjectURL(blob)
 }
 ```
@@ -319,5 +322,5 @@ const exportConfigs = () => {
 
 ---
 
-*文档版本：1.0.0*  
-*最后更新：2026-04-17*
+_文档版本：1.0.0_  
+_最后更新：2026-04-17_

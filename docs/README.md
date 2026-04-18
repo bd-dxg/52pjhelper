@@ -14,12 +14,14 @@
 52pjhelper 是一个现代化的浏览器扩展，为吾爱破解论坛的管理员和版主提供高效的管理工具。项目采用最新的前端技术栈，注重代码质量和开发体验。
 
 ### 核心价值
+
 - **提高管理效率**：自动化重复性管理任务
 - **优化用户体验**：提供便捷的功能开关和配置
 - **代码质量优先**：采用现代化的开发实践和架构
 - **易于扩展**：模块化设计，便于添加新功能
 
 ### 技术特色
+
 - 🚀 基于 WXT 框架的现代浏览器扩展
 - 💪 TypeScript 类型安全
 - 🎯 Vue 3 组合式 API
@@ -29,12 +31,15 @@
 ## 快速开始
 
 ### 环境要求
+
 - Node.js 18+
 - pnpm 8+
 - Git
 
 ### 安装步骤
+
 1. 克隆项目
+
    ```bash
    # 使用项目实际仓库 URL 替换 <repository-url>
    git clone <repository-url>
@@ -42,6 +47,7 @@
    ```
 
 2. 安装依赖
+
    ```bash
    pnpm install
    ```
@@ -53,6 +59,7 @@
    ```
 
 ### 开发命令
+
 ```bash
 # 安装依赖
 pnpm install
@@ -67,6 +74,7 @@ npx vue-tsc --noEmit
 ## 文档目录
 
 ### 架构文档
+
 了解项目的整体架构和设计理念。
 
 - [架构概述](architecture/overview.md) - 项目整体架构
@@ -75,15 +83,18 @@ npx vue-tsc --noEmit
 - [模块结构](architecture/module-structure.md) - 代码模块组织
 
 ### 功能文档
+
 详细了解每个功能的设计和实现。
 
 #### 通用功能
+
 - [通用功能组](features/general-features.md) - 楼层高亮、原生楼层、重贴检测
 - [导航菜单管理](features/navigation-management.md) - 自定义显示/隐藏导航菜单
 - [深色主题支持](features/dark-theme.md) - 自动主题检测和切换
 - [紧凑布局](features/compact-layout.md) - 优化组件布局
 
 #### 后台管理功能
+
 - [后台管理功能组](features/admin-features.md) - 头像查询、快捷回复、自动填充等
 - [头像查询](features/avatar-query.md) - 鼠标悬停显示用户违规记录
 - [快捷回复](features/quick-reply.md) - 举报处理页面快捷回复
@@ -96,6 +107,7 @@ npx vue-tsc --noEmit
 - [重复发帖检测](features/duplicate-post-detection.md) - 高亮显示重复发帖
 
 ### 开发文档
+
 开发指南和最佳实践。
 
 - [快速开始](development/getting-started.md) - 新开发者入门指南
@@ -107,6 +119,7 @@ npx vue-tsc --noEmit
 - [最佳实践](development/best-practices.md) - 开发经验和建议
 
 ### 配置文档
+
 项目配置文件和存储键管理。
 
 - [配置概述](config/overview.md) - 配置文件结构
@@ -115,6 +128,7 @@ npx vue-tsc --noEmit
 - [存储键规范](config/storage-keys.md) - 存储键命名规范
 
 ### 参考文档
+
 详细的文件参考和 API 文档。
 
 - [文件结构参考](reference/file-structure.md) - 项目文件结构
@@ -123,6 +137,7 @@ npx vue-tsc --noEmit
 - [配置文件参考](reference/configs.md) - 所有 JSON 配置文件
 
 ### 代码规范
+
 - [代码风格规范](code-style.md) - 编码规范和约定
 
 ## 贡献指南
@@ -130,11 +145,13 @@ npx vue-tsc --noEmit
 我们欢迎所有形式的贡献！以下是参与项目开发的一些指南。
 
 ### 报告问题
+
 1. 在提交问题前，请先搜索是否已有类似问题
 2. 使用问题模板提供详细信息
 3. 包括复现步骤、预期行为和实际行为
 
 ### 提交代码
+
 1. Fork 项目并创建特性分支
 2. 遵循代码风格规范
 3. 添加或更新测试
@@ -142,12 +159,14 @@ npx vue-tsc --noEmit
 5. 提交清晰的提交信息
 
 ### 开发流程
+
 1. **讨论功能**：在开始编码前讨论设计
 2. **编写测试**：测试驱动开发
 3. **代码审查**：所有更改都需要审查
 4. **持续集成**：确保 CI 通过
 
 ### 代码规范
+
 - 使用 TypeScript 和严格的类型检查
 - 遵循 ESLint 和 Prettier 配置
 - 编写清晰的注释和文档
@@ -166,5 +185,5 @@ npx vue-tsc --noEmit
 
 ---
 
-*最后更新：2026-04-17*  
-*文档版本：1.0.0*
+_最后更新：2026-04-17_  
+_文档版本：1.0.0_

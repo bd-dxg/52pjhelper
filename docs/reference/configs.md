@@ -18,6 +18,7 @@ src/configs/
 ## 导航菜单配置 (navigation.json)
 
 ### 文件位置
+
 `src/configs/navigation.json`
 
 ### 文件结构
@@ -56,40 +57,44 @@ src/configs/
 ### 字段说明
 
 #### 根级字段
-| 字段 | 类型 | 必填 | 说明 | 示例 |
-|------|------|------|------|------|
-| `version` | `string` | 是 | 配置版本号 | `"1.0.0"` |
-| `lastUpdated` | `string` | 否 | 最后更新时间 | `"2026-04-17"` |
-| `menus` | `Menu[]` | 是 | 菜单组数组 | `[...]` |
+
+| 字段          | 类型     | 必填 | 说明         | 示例           |
+| ------------- | -------- | ---- | ------------ | -------------- |
+| `version`     | `string` | 是   | 配置版本号   | `"1.0.0"`      |
+| `lastUpdated` | `string` | 否   | 最后更新时间 | `"2026-04-17"` |
+| `menus`       | `Menu[]` | 是   | 菜单组数组   | `[...]`        |
 
 #### 菜单组字段 (Menu)
-| 字段 | 类型 | 必填 | 说明 | 示例 |
-|------|------|------|------|------|
-| `id` | `string` | 是 | 菜单组唯一标识符 | `"general"` |
-| `title` | `string` | 是 | 菜单组显示标题 | `"通用功能"` |
-| `icon` | `string` | 否 | 菜单组图标名称 | `"settings"` |
-| `description` | `string` | 否 | 菜单组描述文本 | `"适用于所有用户的通用功能设置"` |
-| `collapsible` | `boolean` | 否 | 是否可折叠 | `true` |
-| `defaultCollapsed` | `boolean` | 否 | 默认是否折叠 | `false` |
-| `items` | `MenuItem[]` | 是 | 菜单项数组 | `[...]` |
+
+| 字段               | 类型         | 必填 | 说明             | 示例                             |
+| ------------------ | ------------ | ---- | ---------------- | -------------------------------- |
+| `id`               | `string`     | 是   | 菜单组唯一标识符 | `"general"`                      |
+| `title`            | `string`     | 是   | 菜单组显示标题   | `"通用功能"`                     |
+| `icon`             | `string`     | 否   | 菜单组图标名称   | `"settings"`                     |
+| `description`      | `string`     | 否   | 菜单组描述文本   | `"适用于所有用户的通用功能设置"` |
+| `collapsible`      | `boolean`    | 否   | 是否可折叠       | `true`                           |
+| `defaultCollapsed` | `boolean`    | 否   | 默认是否折叠     | `false`                          |
+| `items`            | `MenuItem[]` | 是   | 菜单项数组       | `[...]`                          |
 
 #### 菜单项字段 (MenuItem)
-| 字段 | 类型 | 必填 | 说明 | 示例 |
-|------|------|------|------|------|
-| `id` | `string` | 是 | 功能唯一标识符 | `"dark-theme"` |
-| `title` | `string` | 是 | 功能显示标题 | `"深色主题"` |
-| `description` | `string` | 否 | 功能详细描述 | `"自动检测系统主题或手动切换深色模式"` |
-| `icon` | `string` | 否 | 功能图标名称 | `"moon"` |
-| `category` | `string` | 否 | 功能分类 | `"appearance"` |
-| `defaultEnabled` | `boolean` | 否 | 默认是否启用 | `true` |
-| `requiresReload` | `boolean` | 否 | 是否需要刷新页面 | `false` |
-| `storageKey` | `string` | 否 | 存储键名 | `"dark_theme_enabled"` |
-| `dependencies` | `string[]` | 否 | 依赖的其他功能ID | `["feature-a"]` |
-| `conflicts` | `string[]` | 否 | 冲突的其他功能ID | `["feature-b"]` |
+
+| 字段             | 类型       | 必填 | 说明             | 示例                                   |
+| ---------------- | ---------- | ---- | ---------------- | -------------------------------------- |
+| `id`             | `string`   | 是   | 功能唯一标识符   | `"dark-theme"`                         |
+| `title`          | `string`   | 是   | 功能显示标题     | `"深色主题"`                           |
+| `description`    | `string`   | 否   | 功能详细描述     | `"自动检测系统主题或手动切换深色模式"` |
+| `icon`           | `string`   | 否   | 功能图标名称     | `"moon"`                               |
+| `category`       | `string`   | 否   | 功能分类         | `"appearance"`                         |
+| `defaultEnabled` | `boolean`  | 否   | 默认是否启用     | `true`                                 |
+| `requiresReload` | `boolean`  | 否   | 是否需要刷新页面 | `false`                                |
+| `storageKey`     | `string`   | 否   | 存储键名         | `"dark_theme_enabled"`                 |
+| `dependencies`   | `string[]` | 否   | 依赖的其他功能ID | `["feature-a"]`                        |
+| `conflicts`      | `string[]` | 否   | 冲突的其他功能ID | `["feature-b"]`                        |
 
 ### 配置示例
 
 #### 通用功能菜单组
+
 ```json
 {
   "id": "general",
@@ -126,6 +131,7 @@ src/configs/
 ## 存储键命名规范 (storage-keys.json)
 
 ### 文件位置
+
 `src/configs/storage-keys.json`
 
 ### 文件结构
@@ -154,34 +160,38 @@ src/configs/
 ### 字段说明
 
 #### 根级字段
-| 字段 | 类型 | 必填 | 说明 | 示例 |
-|------|------|------|------|------|
-| `version` | `string` | 是 | 配置版本号 | `"1.0.0"` |
-| `lastUpdated` | `string` | 否 | 最后更新时间 | `"2026-04-17"` |
-| `description` | `string` | 否 | 配置描述 | `"浏览器存储键命名规范"` |
-| `keys` | `object` | 是 | 预定义存储键 | `{...}` |
-| `patterns` | `object` | 否 | 存储键命名模式 | `{...}` |
+
+| 字段          | 类型     | 必填 | 说明           | 示例                     |
+| ------------- | -------- | ---- | -------------- | ------------------------ |
+| `version`     | `string` | 是   | 配置版本号     | `"1.0.0"`                |
+| `lastUpdated` | `string` | 否   | 最后更新时间   | `"2026-04-17"`           |
+| `description` | `string` | 否   | 配置描述       | `"浏览器存储键命名规范"` |
+| `keys`        | `object` | 是   | 预定义存储键   | `{...}`                  |
+| `patterns`    | `object` | 否   | 存储键命名模式 | `{...}`                  |
 
 #### 预定义存储键
-| 键名 | 类型 | 说明 | 使用场景 |
-|------|------|------|----------|
-| `user_settings` | `string` | 用户设置 | 存储用户个性化设置 |
-| `feature_toggles` | `string` | 功能开关状态 | 存储所有功能启用状态 |
-| `navigation_state` | `string` | 导航状态 | 存储导航菜单展开/折叠状态 |
-| `app_config` | `string` | 应用配置 | 存储应用级配置 |
-| `session_data` | `string` | 会话数据 | 存储临时会话数据 |
+
+| 键名               | 类型     | 说明         | 使用场景                  |
+| ------------------ | -------- | ------------ | ------------------------- |
+| `user_settings`    | `string` | 用户设置     | 存储用户个性化设置        |
+| `feature_toggles`  | `string` | 功能开关状态 | 存储所有功能启用状态      |
+| `navigation_state` | `string` | 导航状态     | 存储导航菜单展开/折叠状态 |
+| `app_config`       | `string` | 应用配置     | 存储应用级配置            |
+| `session_data`     | `string` | 会话数据     | 存储临时会话数据          |
 
 #### 命名模式
-| 模式 | 格式 | 示例 | 说明 |
-|------|------|------|------|
-| `feature` | `{feature_name}_enabled` | `dark_theme_enabled` | 功能开关状态 |
+
+| 模式               | 格式                      | 示例                  | 说明         |
+| ------------------ | ------------------------- | --------------------- | ------------ |
+| `feature`          | `{feature_name}_enabled`  | `dark_theme_enabled`  | 功能开关状态 |
 | `feature_settings` | `{feature_name}_settings` | `dark_theme_settings` | 功能特定设置 |
-| `user_data` | `user_{data_type}` | `user_preferences` | 用户数据 |
-| `cache` | `cache_{cache_key}` | `cache_user_avatar` | 缓存数据 |
+| `user_data`        | `user_{data_type}`        | `user_preferences`    | 用户数据     |
+| `cache`            | `cache_{cache_key}`       | `cache_user_avatar`   | 缓存数据     |
 
 ### 配置示例
 
 #### 完整配置示例
+
 ```json
 {
   "version": "1.0.0",
@@ -213,11 +223,13 @@ src/configs/
 ## 功能配置文件 (features/)
 
 ### 文件位置
+
 `src/configs/features/`
 
 ### 通用功能配置 (general.json)
 
 #### 文件结构
+
 ```json
 {
   "version": "1.0.0",
@@ -249,30 +261,33 @@ src/configs/
 ```
 
 #### 字段说明
-| 字段 | 类型 | 必填 | 说明 | 示例 |
-|------|------|------|------|------|
-| `version` | `string` | 是 | 配置版本号 | `"1.0.0"` |
-| `lastUpdated` | `string` | 否 | 最后更新时间 | `"2026-04-17"` |
-| `category` | `string` | 是 | 功能分类 | `"general"` |
-| `description` | `string` | 否 | 配置描述 | `"适用于所有用户的通用功能"` |
-| `features` | `object` | 是 | 功能配置对象 | `{...}` |
+
+| 字段          | 类型     | 必填 | 说明         | 示例                         |
+| ------------- | -------- | ---- | ------------ | ---------------------------- |
+| `version`     | `string` | 是   | 配置版本号   | `"1.0.0"`                    |
+| `lastUpdated` | `string` | 否   | 最后更新时间 | `"2026-04-17"`               |
+| `category`    | `string` | 是   | 功能分类     | `"general"`                  |
+| `description` | `string` | 否   | 配置描述     | `"适用于所有用户的通用功能"` |
+| `features`    | `object` | 是   | 功能配置对象 | `{...}`                      |
 
 #### 功能配置字段
-| 字段 | 类型 | 必填 | 说明 | 示例 |
-|------|------|------|------|------|
-| `name` | `string` | 是 | 功能名称 | `"深色主题"` |
-| `description` | `string` | 是 | 功能详细描述 | `"自动检测系统主题或手动切换深色模式"` |
-| `category` | `string` | 否 | 功能子分类 | `"appearance"` |
-| `defaultEnabled` | `boolean` | 否 | 默认启用状态 | `true` |
-| `storageKey` | `string` | 否 | 存储键名 | `"dark_theme_enabled"` |
-| `requiresReload` | `boolean` | 否 | 是否需要刷新页面 | `false` |
-| `dependencies` | `string[]` | 否 | 依赖的功能ID | `["feature-a"]` |
-| `conflicts` | `string[]` | 否 | 冲突的功能ID | `["feature-b"]` |
-| `settings` | `object` | 否 | 功能特定设置 | `{...}` |
+
+| 字段             | 类型       | 必填 | 说明             | 示例                                   |
+| ---------------- | ---------- | ---- | ---------------- | -------------------------------------- |
+| `name`           | `string`   | 是   | 功能名称         | `"深色主题"`                           |
+| `description`    | `string`   | 是   | 功能详细描述     | `"自动检测系统主题或手动切换深色模式"` |
+| `category`       | `string`   | 否   | 功能子分类       | `"appearance"`                         |
+| `defaultEnabled` | `boolean`  | 否   | 默认启用状态     | `true`                                 |
+| `storageKey`     | `string`   | 否   | 存储键名         | `"dark_theme_enabled"`                 |
+| `requiresReload` | `boolean`  | 否   | 是否需要刷新页面 | `false`                                |
+| `dependencies`   | `string[]` | 否   | 依赖的功能ID     | `["feature-a"]`                        |
+| `conflicts`      | `string[]` | 否   | 冲突的功能ID     | `["feature-b"]`                        |
+| `settings`       | `object`   | 否   | 功能特定设置     | `{...}`                                |
 
 ### 后台管理功能配置 (admin.json)
 
 #### 配置示例
+
 ```json
 {
   "version": "1.0.0",
@@ -305,11 +320,7 @@ src/configs/
       "dependencies": [],
       "conflicts": [],
       "settings": {
-        "templates": [
-          "已处理，感谢反馈",
-          "请提供更多信息",
-          "已警告用户"
-        ],
+        "templates": ["已处理，感谢反馈", "请提供更多信息", "已警告用户"],
         "autoInsert": true
       }
     }
@@ -320,6 +331,7 @@ src/configs/
 ### 自动填充功能配置 (auto-fill.json)
 
 #### 配置示例
+
 ```json
 {
   "version": "1.0.0",
@@ -386,10 +398,10 @@ const validateConfig = (config: any, schema: any): boolean => {
   if (!config.version) {
     return false
   }
-  
+
   // 根据 schema 验证配置
   // ...
-  
+
   return true
 }
 
@@ -407,7 +419,7 @@ const mergeFeatureConfigs = (configs: any[]): any => {
   return configs.reduce((merged, config) => {
     return {
       ...merged,
-      ...config.features
+      ...config.features,
     }
   }, {})
 }
@@ -428,15 +440,15 @@ const generateNavigationMenu = () => {
       id: item.id,
       title: item.title,
       description: item.description,
-      enabled: getFeatureState(item.storageKey || item.id)
-    }))
+      enabled: getFeatureState(item.storageKey || item.id),
+    })),
   }))
 }
 
 // 使用存储键配置
 const saveUserSettings = async (settings: any) => {
   await browser.storage.local.set({
-    [storageKeys.keys.user_settings]: settings
+    [storageKeys.keys.user_settings]: settings,
   })
 }
 ```
@@ -450,10 +462,10 @@ const saveUserSettings = async (settings: any) => {
 const viewAllConfigs = () => {
   console.log('=== 导航配置 ===')
   console.log(JSON.stringify(navigationConfig, null, 2))
-  
+
   console.log('=== 功能配置 ===')
   console.log(JSON.stringify(allFeatures, null, 2))
-  
+
   console.log('=== 存储键配置 ===')
   console.log(JSON.stringify(storageKeys, null, 2))
 }
@@ -465,25 +477,25 @@ const viewAllConfigs = () => {
 // 验证所有配置
 const validateAllConfigs = (): ValidationResult => {
   const errors: string[] = []
-  
+
   // 验证导航配置
   if (!navigationConfig.menus || !Array.isArray(navigationConfig.menus)) {
     errors.push('导航配置缺少 menus 字段或格式错误')
   }
-  
+
   // 验证功能配置
   if (!allFeatures || typeof allFeatures !== 'object') {
     errors.push('功能配置格式错误')
   }
-  
+
   // 验证存储键配置
   if (!storageKeys.keys || typeof storageKeys.keys !== 'object') {
     errors.push('存储键配置缺少 keys 字段或格式错误')
   }
-  
+
   return {
     valid: errors.length === 0,
-    errors
+    errors,
   }
 }
 ```
@@ -494,7 +506,7 @@ const validateAllConfigs = (): ValidationResult => {
 // 导出配置
 const exportConfig = (configName: string): string => {
   let config: any
-  
+
   switch (configName) {
     case 'navigation':
       config = navigationConfig
@@ -509,10 +521,10 @@ const exportConfig = (configName: string): string => {
       config = {
         navigation: navigationConfig,
         features: allFeatures,
-        storageKeys: storageKeys
+        storageKeys: storageKeys,
       }
   }
-  
+
   return JSON.stringify(config, null, 2)
 }
 
@@ -520,15 +532,15 @@ const exportConfig = (configName: string): string => {
 const downloadConfig = (configName: string) => {
   const configStr = exportConfig(configName)
   const filename = `${configName}-config-${new Date().toISOString().split('T')[0]}.json`
-  
+
   const blob = new Blob([configStr], { type: 'application/json' })
   const url = URL.createObjectURL(blob)
-  
+
   const a = document.createElement('a')
   a.href = url
   a.download = filename
   a.click()
-  
+
   URL.revokeObjectURL(url)
 }
 ```
@@ -540,12 +552,12 @@ const downloadConfig = (configName: string) => {
 const importConfig = async (configStr: string, configType: string): Promise<boolean> => {
   try {
     const config = JSON.parse(configStr)
-    
+
     // 验证配置
     if (!config.version) {
       throw new Error('配置缺少 version 字段')
     }
-    
+
     // 根据配置类型处理
     switch (configType) {
       case 'navigation':
@@ -559,7 +571,7 @@ const importConfig = async (configStr: string, configType: string): Promise<bool
       default:
         throw new Error(`不支持的配置类型: ${configType}`)
     }
-    
+
     return true
   } catch (error) {
     console.error('导入配置失败:', error)
@@ -618,7 +630,7 @@ const importConfig = async (configStr: string, configType: string): Promise<bool
 // 配置迁移函数
 const migrateConfig = (oldConfig: any, targetVersion: string): any => {
   const migratedConfig = { ...oldConfig }
-  
+
   // 版本 1.0.0 → 1.1.0 迁移
   if (oldConfig.version === '1.0.0' && targetVersion === '1.1.0') {
     // 添加新字段
@@ -626,10 +638,10 @@ const migrateConfig = (oldConfig: any, targetVersion: string): any => {
       migratedConfig.menus = migratedConfig.menus.map((menu: any) => ({
         ...menu,
         collapsible: menu.collapsible ?? true,
-        defaultCollapsed: menu.defaultCollapsed ?? false
+        defaultCollapsed: menu.defaultCollapsed ?? false,
       }))
     }
-    
+
     // 更新功能配置
     if (migratedConfig.features) {
       migratedConfig.features = Object.entries(migratedConfig.features).reduce(
@@ -637,18 +649,18 @@ const migrateConfig = (oldConfig: any, targetVersion: string): any => {
           acc[key] = {
             ...value,
             dependencies: value.dependencies || [],
-            conflicts: value.conflicts || []
+            conflicts: value.conflicts || [],
           }
           return acc
         },
-        {} as Record<string, any>
+        {} as Record<string, any>,
       )
     }
   }
-  
+
   migratedConfig.version = targetVersion
   migratedConfig.lastUpdated = new Date().toISOString().split('T')[0]
-  
+
   return migratedConfig
 }
 ```
@@ -688,5 +700,5 @@ const migrateConfig = (oldConfig: any, targetVersion: string): any => {
 
 ---
 
-*文档版本：1.0.0*  
-*最后更新：2026-04-17*
+_文档版本：1.0.0_  
+_最后更新：2026-04-17_

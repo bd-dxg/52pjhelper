@@ -281,20 +281,20 @@ dist/
 
 ### 项目配置文件
 
-| 文件 | 用途 | 重要字段 |
-|------|------|----------|
-| `package.json` | 项目配置和依赖管理 | `name`, `version`, `scripts`, `dependencies`, `devDependencies` |
-| `tsconfig.json` | TypeScript 配置 | `compilerOptions`, `include`, `exclude` |
-| `wxt.config.ts` | WXT 框架配置 | `manifest`, `runner`, `dev`, `build` |
-| `.oxfmt.json` | 代码格式化配置 | `printWidth`, `tabWidth`, `singleQuote` |
-| `.oxlint.json` | 代码检查配置 | `extends`, `rules` |
+| 文件            | 用途               | 重要字段                                                        |
+| --------------- | ------------------ | --------------------------------------------------------------- |
+| `package.json`  | 项目配置和依赖管理 | `name`, `version`, `scripts`, `dependencies`, `devDependencies` |
+| `tsconfig.json` | TypeScript 配置    | `compilerOptions`, `include`, `exclude`                         |
+| `wxt.config.ts` | WXT 框架配置       | `manifest`, `runner`, `dev`, `build`                            |
+| `.oxfmt.json`   | 代码格式化配置     | `printWidth`, `tabWidth`, `singleQuote`                         |
+| `.oxlint.json`  | 代码检查配置       | `extends`, `rules`                                              |
 
 ### Git 配置文件
 
-| 文件 | 用途 |
-|------|------|
-| `.gitignore` | 指定 Git 忽略的文件和目录 |
-| `.gitattributes` | 文件属性配置（如果有） |
+| 文件             | 用途                      |
+| ---------------- | ------------------------- |
+| `.gitignore`     | 指定 Git 忽略的文件和目录 |
+| `.gitattributes` | 文件属性配置（如果有）    |
 
 ## 重要文件说明
 
@@ -324,22 +324,22 @@ dist/
 
 ### 1. 文件命名规则
 
-| 文件类型 | 命名规范 | 示例 |
-|----------|----------|------|
-| Vue 组件 | PascalCase | `FeatureToggle.vue` |
-| TypeScript 文件 | camelCase | `featureManager.ts` |
-| 配置文件 | kebab-case | `navigation-config.json` |
-| 测试文件 | `.spec.ts` 后缀 | `featureManager.spec.ts` |
-| 样式文件 | kebab-case | `dark-theme.css` |
+| 文件类型        | 命名规范        | 示例                     |
+| --------------- | --------------- | ------------------------ |
+| Vue 组件        | PascalCase      | `FeatureToggle.vue`      |
+| TypeScript 文件 | camelCase       | `featureManager.ts`      |
+| 配置文件        | kebab-case      | `navigation-config.json` |
+| 测试文件        | `.spec.ts` 后缀 | `featureManager.spec.ts` |
+| 样式文件        | kebab-case      | `dark-theme.css`         |
 
 ### 2. 目录命名规则
 
-| 目录类型 | 命名规范 | 示例 |
-|----------|----------|------|
-| 源代码目录 | 小写复数 | `components/`, `utils/` |
-| 功能模块目录 | 小写单数 | `feature/`, `module/` |
-| 测试目录 | 小写 | `tests/`, `fixtures/` |
-| 构建输出目录 | kebab-case | `chrome-mv3-dev/` |
+| 目录类型     | 命名规范   | 示例                    |
+| ------------ | ---------- | ----------------------- |
+| 源代码目录   | 小写复数   | `components/`, `utils/` |
+| 功能模块目录 | 小写单数   | `feature/`, `module/`   |
+| 测试目录     | 小写       | `tests/`, `fixtures/`   |
+| 构建输出目录 | kebab-case | `chrome-mv3-dev/`       |
 
 ## 文件组织原则
 
@@ -436,5 +436,5 @@ src/
 
 ---
 
-*文档版本：1.0.0*  
-*最后更新：2026-04-17*
+_文档版本：1.0.0_  
+_最后更新：2026-04-17_

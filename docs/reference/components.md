@@ -22,33 +22,26 @@ src/components/
 
 **Props**:
 
-| 名称 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `variant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost' \| 'danger'` | `'primary'` | 按钮变体 |
-| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | 按钮尺寸 |
-| `disabled` | `boolean` | `false` | 是否禁用 |
-| `loading` | `boolean` | `false` | 加载状态 |
-| `type` | `'button' \| 'submit' \| 'reset'` | `'button'` | 按钮类型 |
-| `fullWidth` | `boolean` | `false` | 是否宽度100% |
+| 名称        | 类型                                                           | 默认值      | 说明         |
+| ----------- | -------------------------------------------------------------- | ----------- | ------------ |
+| `variant`   | `'primary' \| 'secondary' \| 'outline' \| 'ghost' \| 'danger'` | `'primary'` | 按钮变体     |
+| `size`      | `'sm' \| 'md' \| 'lg'`                                         | `'md'`      | 按钮尺寸     |
+| `disabled`  | `boolean`                                                      | `false`     | 是否禁用     |
+| `loading`   | `boolean`                                                      | `false`     | 加载状态     |
+| `type`      | `'button' \| 'submit' \| 'reset'`                              | `'button'`  | 按钮类型     |
+| `fullWidth` | `boolean`                                                      | `false`     | 是否宽度100% |
 
 **Events**:
 
-| 名称 | 参数 | 说明 |
-|------|------|------|
+| 名称    | 参数         | 说明     |
+| ------- | ------------ | -------- |
 | `click` | `MouseEvent` | 点击事件 |
 
 **使用示例**:
 
 ```vue
 <template>
-  <Button 
-    variant="primary" 
-    size="md"
-    :loading="isLoading"
-    @click="handleClick"
-  >
-    点击我
-  </Button>
+  <Button variant="primary" size="md" :loading="isLoading" @click="handleClick">点击我</Button>
 </template>
 ```
 
@@ -60,28 +53,24 @@ src/components/
 
 **Props**:
 
-| 名称 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `modelValue` | `boolean` | `false` | 绑定值 |
-| `label` | `string` | `''` | 标签文本 |
-| `disabled` | `boolean` | `false` | 是否禁用 |
+| 名称            | 类型      | 默认值  | 说明     |
+| --------------- | --------- | ------- | -------- |
+| `modelValue`    | `boolean` | `false` | 绑定值   |
+| `label`         | `string`  | `''`    | 标签文本 |
+| `disabled`      | `boolean` | `false` | 是否禁用 |
 | `indeterminate` | `boolean` | `false` | 中间状态 |
 
 **Events**:
 
-| 名称 | 参数 | 说明 |
-|------|------|------|
+| 名称                | 参数      | 说明       |
+| ------------------- | --------- | ---------- |
 | `update:modelValue` | `boolean` | 值更新事件 |
 
 **使用示例**:
 
 ```vue
 <template>
-  <Checkbox 
-    v-model="checked"
-    label="同意条款"
-    :disabled="isDisabled"
-  />
+  <Checkbox v-model="checked" label="同意条款" :disabled="isDisabled" />
 </template>
 ```
 
@@ -93,32 +82,31 @@ src/components/
 
 **Props**:
 
-| 名称 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `modelValue` | `boolean` | `false` | 绑定值 |
-| `label` | `string` | `''` | 标签文本 |
-| `description` | `string` | `''` | 描述文本 |
-| `disabled` | `boolean` | `false` | 是否禁用 |
-| `loading` | `boolean` | `false` | 加载状态 |
+| 名称          | 类型      | 默认值  | 说明     |
+| ------------- | --------- | ------- | -------- |
+| `modelValue`  | `boolean` | `false` | 绑定值   |
+| `label`       | `string`  | `''`    | 标签文本 |
+| `description` | `string`  | `''`    | 描述文本 |
+| `disabled`    | `boolean` | `false` | 是否禁用 |
+| `loading`     | `boolean` | `false` | 加载状态 |
 
 **Events**:
 
-| 名称 | 参数 | 说明 |
-|------|------|------|
-| `update:modelValue` | `boolean` | 值更新事件 |
-| `change` | `boolean` | 状态改变事件 |
+| 名称                | 参数      | 说明         |
+| ------------------- | --------- | ------------ |
+| `update:modelValue` | `boolean` | 值更新事件   |
+| `change`            | `boolean` | 状态改变事件 |
 
 **使用示例**:
 
 ```vue
 <template>
-  <Switch 
+  <Switch
     v-model="enabled"
     label="深色主题"
     description="启用深色模式"
     :loading="isSaving"
-    @change="handleThemeChange"
-  />
+    @change="handleThemeChange" />
 </template>
 ```
 
@@ -130,36 +118,30 @@ src/components/
 
 **Props**:
 
-| 名称 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `modelValue` | `string` | `''` | 绑定值 |
-| `type` | `'text' \| 'password' \| 'email' \| 'number' \| 'url'` | `'text'` | 输入类型 |
-| `placeholder` | `string` | `''` | 占位文本 |
-| `disabled` | `boolean` | `false` | 是否禁用 |
-| `readonly` | `boolean` | `false` | 是否只读 |
-| `error` | `string` | `''` | 错误信息 |
-| `maxlength` | `number` | `undefined` | 最大长度 |
+| 名称          | 类型                                                   | 默认值      | 说明     |
+| ------------- | ------------------------------------------------------ | ----------- | -------- |
+| `modelValue`  | `string`                                               | `''`        | 绑定值   |
+| `type`        | `'text' \| 'password' \| 'email' \| 'number' \| 'url'` | `'text'`    | 输入类型 |
+| `placeholder` | `string`                                               | `''`        | 占位文本 |
+| `disabled`    | `boolean`                                              | `false`     | 是否禁用 |
+| `readonly`    | `boolean`                                              | `false`     | 是否只读 |
+| `error`       | `string`                                               | `''`        | 错误信息 |
+| `maxlength`   | `number`                                               | `undefined` | 最大长度 |
 
 **Events**:
 
-| 名称 | 参数 | 说明 |
-|------|------|------|
-| `update:modelValue` | `string` | 值更新事件 |
-| `input` | `string` | 输入事件 |
-| `blur` | `FocusEvent` | 失去焦点事件 |
-| `focus` | `FocusEvent` | 获得焦点事件 |
+| 名称                | 参数         | 说明         |
+| ------------------- | ------------ | ------------ |
+| `update:modelValue` | `string`     | 值更新事件   |
+| `input`             | `string`     | 输入事件     |
+| `blur`              | `FocusEvent` | 失去焦点事件 |
+| `focus`             | `FocusEvent` | 获得焦点事件 |
 
 **使用示例**:
 
 ```vue
 <template>
-  <Input 
-    v-model="username"
-    type="text"
-    placeholder="请输入用户名"
-    :error="usernameError"
-    @blur="validateUsername"
-  />
+  <Input v-model="username" type="text" placeholder="请输入用户名" :error="usernameError" @blur="validateUsername" />
 </template>
 ```
 
@@ -171,42 +153,38 @@ src/components/
 
 **Props**:
 
-| 名称 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `title` | `string` | `''` | 卡片标题 |
-| `subtitle` | `string` | `''` | 卡片副标题 |
-| `padding` | `'none' \| 'sm' \| 'md' \| 'lg'` | `'md'` | 内边距大小 |
-| `shadow` | `'none' \| 'sm' \| 'md' \| 'lg'` | `'sm'` | 阴影大小 |
-| `border` | `boolean` | `true` | 是否显示边框 |
+| 名称       | 类型                             | 默认值 | 说明         |
+| ---------- | -------------------------------- | ------ | ------------ |
+| `title`    | `string`                         | `''`   | 卡片标题     |
+| `subtitle` | `string`                         | `''`   | 卡片副标题   |
+| `padding`  | `'none' \| 'sm' \| 'md' \| 'lg'` | `'md'` | 内边距大小   |
+| `shadow`   | `'none' \| 'sm' \| 'md' \| 'lg'` | `'sm'` | 阴影大小     |
+| `border`   | `boolean`                        | `true` | 是否显示边框 |
 
 **Slots**:
 
-| 名称 | 说明 |
-|------|------|
-| `default` | 卡片内容 |
-| `header` | 卡片头部 |
-| `footer` | 卡片底部 |
+| 名称      | 说明         |
+| --------- | ------------ |
+| `default` | 卡片内容     |
+| `header`  | 卡片头部     |
+| `footer`  | 卡片底部     |
 | `actions` | 卡片操作区域 |
 
 **使用示例**:
 
 ```vue
 <template>
-  <Card 
-    title="功能设置"
-    subtitle="管理扩展功能"
-    padding="md"
-  >
+  <Card title="功能设置" subtitle="管理扩展功能" padding="md">
     <template #header>
       <div class="card-header-actions">
         <Button size="sm">重置</Button>
       </div>
     </template>
-    
+
     <div class="card-content">
       <!-- 卡片内容 -->
     </div>
-    
+
     <template #footer>
       <div class="card-footer">
         <Button variant="primary">保存</Button>
@@ -226,34 +204,29 @@ src/components/
 
 **Props**:
 
-| 名称 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `feature` | `string` | `''` | 功能标识符 |
-| `label` | `string` | `''` | 功能名称 |
-| `description` | `string` | `''` | 功能描述 |
-| `disabled` | `boolean` | `false` | 是否禁用 |
-| `showStatus` | `boolean` | `true` | 是否显示状态文本 |
+| 名称          | 类型      | 默认值  | 说明             |
+| ------------- | --------- | ------- | ---------------- |
+| `feature`     | `string`  | `''`    | 功能标识符       |
+| `label`       | `string`  | `''`    | 功能名称         |
+| `description` | `string`  | `''`    | 功能描述         |
+| `disabled`    | `boolean` | `false` | 是否禁用         |
+| `showStatus`  | `boolean` | `true`  | 是否显示状态文本 |
 
 **Events**:
 
-| 名称 | 参数 | 说明 |
-|------|------|------|
+| 名称     | 参数      | 说明             |
+| -------- | --------- | ---------------- |
 | `change` | `boolean` | 功能状态改变事件 |
 
 **使用示例**:
 
 ```vue
 <template>
-  <FeatureToggle 
-    feature="dark-theme"
-    label="深色主题"
-    description="启用深色模式界面"
-    @change="handleThemeToggle"
-  />
+  <FeatureToggle feature="dark-theme" label="深色主题" description="启用深色模式界面" @change="handleThemeToggle" />
 </template>
 
 <script setup>
-const handleThemeToggle = (enabled) => {
+const handleThemeToggle = enabled => {
   console.log(`深色主题 ${enabled ? '启用' : '禁用'}`)
 }
 </script>
@@ -267,25 +240,22 @@ const handleThemeToggle = (enabled) => {
 
 **Props**:
 
-| 名称 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `autoDetect` | `boolean` | `true` | 是否自动检测系统主题 |
+| 名称           | 类型      | 默认值  | 说明                 |
+| -------------- | --------- | ------- | -------------------- |
+| `autoDetect`   | `boolean` | `true`  | 是否自动检测系统主题 |
 | `showSchedule` | `boolean` | `false` | 是否显示定时切换选项 |
 
 **Events**:
 
-| 名称 | 参数 | 说明 |
-|------|------|------|
+| 名称           | 参数                          | 说明         |
+| -------------- | ----------------------------- | ------------ |
 | `theme-change` | `'light' \| 'dark' \| 'auto'` | 主题改变事件 |
 
 **使用示例**:
 
 ```vue
 <template>
-  <DarkThemeToggle 
-    :auto-detect="true"
-    @theme-change="handleThemeChange"
-  />
+  <DarkThemeToggle :auto-detect="true" @theme-change="handleThemeChange" />
 </template>
 ```
 
@@ -297,26 +267,22 @@ const handleThemeToggle = (enabled) => {
 
 **Props**:
 
-| 名称 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
+| 名称           | 类型                             | 默认值     | 说明     |
+| -------------- | -------------------------------- | ---------- | -------- |
 | `spacingLevel` | `'tight' \| 'normal' \| 'loose'` | `'normal'` | 间距级别 |
-| `fontSize` | `'small' \| 'medium' \| 'large'` | `'medium'` | 字体大小 |
+| `fontSize`     | `'small' \| 'medium' \| 'large'` | `'medium'` | 字体大小 |
 
 **Events**:
 
-| 名称 | 参数 | 说明 |
-|------|------|------|
+| 名称            | 参数                                    | 说明             |
+| --------------- | --------------------------------------- | ---------------- |
 | `layout-change` | `{ spacing: string, fontSize: string }` | 布局设置改变事件 |
 
 **使用示例**:
 
 ```vue
 <template>
-  <CompactLayoutToggle 
-    :spacing-level="spacing"
-    :font-size="fontSize"
-    @layout-change="updateLayout"
-  />
+  <CompactLayoutToggle :spacing-level="spacing" :font-size="fontSize" @layout-change="updateLayout" />
 </template>
 ```
 
@@ -328,27 +294,24 @@ const handleThemeToggle = (enabled) => {
 
 **Props**:
 
-| 名称 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `menuItems` | `MenuItem[]` | `[]` | 菜单项列表 |
-| `collapsible` | `boolean` | `true` | 是否可折叠 |
-| `rememberState` | `boolean` | `true` | 是否记住展开状态 |
+| 名称            | 类型         | 默认值 | 说明             |
+| --------------- | ------------ | ------ | ---------------- |
+| `menuItems`     | `MenuItem[]` | `[]`   | 菜单项列表       |
+| `collapsible`   | `boolean`    | `true` | 是否可折叠       |
+| `rememberState` | `boolean`    | `true` | 是否记住展开状态 |
 
 **Events**:
 
-| 名称 | 参数 | 说明 |
-|------|------|------|
-| `item-toggle` | `{ id: string, enabled: boolean }` | 菜单项开关事件 |
+| 名称          | 参数                                 | 说明           |
+| ------------- | ------------------------------------ | -------------- |
+| `item-toggle` | `{ id: string, enabled: boolean }`   | 菜单项开关事件 |
 | `menu-toggle` | `{ id: string, collapsed: boolean }` | 菜单组折叠事件 |
 
 **使用示例**:
 
 ```vue
 <template>
-  <NavigationSettings 
-    :menu-items="navigationItems"
-    @item-toggle="handleItemToggle"
-  />
+  <NavigationSettings :menu-items="navigationItems" @item-toggle="handleItemToggle" />
 </template>
 ```
 
@@ -362,19 +325,19 @@ const handleThemeToggle = (enabled) => {
 
 **Props**:
 
-| 名称 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `title` | `string` | `'52pj Helper'` | 页面标题 |
-| `showLogo` | `boolean` | `true` | 是否显示 logo |
-| `showNav` | `boolean` | `true` | 是否显示导航 |
+| 名称       | 类型      | 默认值          | 说明          |
+| ---------- | --------- | --------------- | ------------- |
+| `title`    | `string`  | `'52pj Helper'` | 页面标题      |
+| `showLogo` | `boolean` | `true`          | 是否显示 logo |
+| `showNav`  | `boolean` | `true`          | 是否显示导航  |
 
 **Slots**:
 
-| 名称 | 说明 |
-|------|------|
-| `left` | 左侧内容 |
+| 名称     | 说明     |
+| -------- | -------- |
+| `left`   | 左侧内容 |
 | `center` | 中间内容 |
-| `right` | 右侧内容 |
+| `right`  | 右侧内容 |
 
 **使用示例**:
 
@@ -386,7 +349,7 @@ const handleThemeToggle = (enabled) => {
         <ArrowLeftIcon />
       </Button>
     </template>
-    
+
     <template #right>
       <Button variant="ghost">
         <SettingsIcon />
@@ -404,29 +367,25 @@ const handleThemeToggle = (enabled) => {
 
 **Props**:
 
-| 名称 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `items` | `SidebarItem[]` | `[]` | 侧边栏项目 |
-| `collapsed` | `boolean` | `false` | 是否折叠 |
-| `width` | `string` | `'250px'` | 宽度 |
-| `collapsedWidth` | `string` | `'60px'` | 折叠时宽度 |
+| 名称             | 类型            | 默认值    | 说明       |
+| ---------------- | --------------- | --------- | ---------- |
+| `items`          | `SidebarItem[]` | `[]`      | 侧边栏项目 |
+| `collapsed`      | `boolean`       | `false`   | 是否折叠   |
+| `width`          | `string`        | `'250px'` | 宽度       |
+| `collapsedWidth` | `string`        | `'60px'`  | 折叠时宽度 |
 
 **Events**:
 
-| 名称 | 参数 | 说明 |
-|------|------|------|
-| `item-click` | `string` | 项目点击事件 |
+| 名称              | 参数      | 说明             |
+| ----------------- | --------- | ---------------- |
+| `item-click`      | `string`  | 项目点击事件     |
 | `collapse-change` | `boolean` | 折叠状态改变事件 |
 
 **使用示例**:
 
 ```vue
 <template>
-  <Sidebar 
-    :items="sidebarItems"
-    :collapsed="isCollapsed"
-    @item-click="handleSidebarClick"
-  />
+  <Sidebar :items="sidebarItems" :collapsed="isCollapsed" @item-click="handleSidebarClick" />
 </template>
 ```
 
@@ -438,33 +397,30 @@ const handleThemeToggle = (enabled) => {
 
 **Props**:
 
-| 名称 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
+| 名称          | 类型      | 默认值 | 说明           |
+| ------------- | --------- | ------ | -------------- |
 | `showVersion` | `boolean` | `true` | 是否显示版本号 |
-| `showLinks` | `boolean` | `true` | 是否显示链接 |
-| `copyright` | `string` | `''` | 版权信息 |
+| `showLinks`   | `boolean` | `true` | 是否显示链接   |
+| `copyright`   | `string`  | `''`   | 版权信息       |
 
 **Slots**:
 
-| 名称 | 说明 |
-|------|------|
-| `left` | 左侧内容 |
+| 名称     | 说明     |
+| -------- | -------- |
+| `left`   | 左侧内容 |
 | `center` | 中间内容 |
-| `right` | 右侧内容 |
+| `right`  | 右侧内容 |
 
 **使用示例**:
 
 ```vue
 <template>
-  <Footer 
-    :show-version="true"
-    copyright="© 2026 52pj Helper"
-  >
+  <Footer :show-version="true" copyright="© 2026 52pj Helper">
     <template #left>
       <a href="#" class="footer-link">帮助</a>
       <a href="#" class="footer-link">反馈</a>
     </template>
-    
+
     <template #right>
       <span class="version">v1.0.0</span>
     </template>
@@ -485,6 +441,7 @@ const handleThemeToggle = (enabled) => {
 **Slots**: 无
 
 **功能**:
+
 - 显示功能开关列表
 - 提供快速设置入口
 - 显示扩展状态信息
@@ -512,6 +469,7 @@ const handleThemeToggle = (enabled) => {
 **Slots**: 无
 
 **功能**:
+
 - 完整的功能设置
 - 高级配置选项
 - 数据导入导出
@@ -551,7 +509,7 @@ const handleThemeToggle = (enabled) => {
 <template>
   <!-- 使用 v-bind 传递多个 props -->
   <Button v-bind="buttonProps" />
-  
+
   <!-- 动态绑定 props -->
   <Input :type="inputType" :placeholder="placeholderText" />
 </template>
@@ -560,7 +518,7 @@ const handleThemeToggle = (enabled) => {
 const buttonProps = {
   variant: 'primary',
   size: 'lg',
-  disabled: false
+  disabled: false,
 }
 
 const inputType = ref('text')
@@ -574,13 +532,13 @@ const placeholderText = ref('请输入内容')
 <template>
   <!-- 使用 @ 语法监听事件 -->
   <Switch @change="handleSwitchChange" />
-  
+
   <!-- 使用内联处理 -->
   <Button @click="count++">增加 {{ count }}</Button>
 </template>
 
 <script setup>
-const handleSwitchChange = (enabled) => {
+const handleSwitchChange = enabled => {
   console.log('开关状态:', enabled)
 }
 
@@ -598,7 +556,7 @@ const count = ref(0)
       <p>用户名: {{ user.name }}</p>
       <p>邮箱: {{ user.email }}</p>
     </div>
-    
+
     <!-- 具名 slot -->
     <template #footer>
       <Button @click="editUser">编辑</Button>
@@ -613,11 +571,9 @@ const count = ref(0)
 <template>
   <!-- 使用 class 定制样式 -->
   <Button class="custom-button">自定义按钮</Button>
-  
+
   <!-- 使用 style 绑定 -->
-  <Card :style="{ backgroundColor: cardColor }">
-    内容
-  </Card>
+  <Card :style="{ backgroundColor: cardColor }">内容</Card>
 </template>
 
 <style scoped>
@@ -646,7 +602,7 @@ interface ButtonProps {
 const props = withDefaults(defineProps<ButtonProps>(), {
   variant: 'primary',
   size: 'md',
-  disabled: false
+  disabled: false,
 })
 ```
 
@@ -658,7 +614,7 @@ const props = withDefaults(defineProps<ButtonProps>(), {
 
 ```typescript
 const emit = defineEmits<{
-  'click': [event: MouseEvent]
+  click: [event: MouseEvent]
   'update:model-value': [value: string]
   'custom-event': [data: CustomData]
 }>()
@@ -676,11 +632,11 @@ const emit = defineEmits<{
     <header v-if="$slots.header" class="card-header">
       <slot name="header" />
     </header>
-    
+
     <div class="card-body">
       <slot />
     </div>
-    
+
     <footer v-if="$slots.footer" class="card-footer">
       <slot name="footer" />
     </footer>
@@ -705,7 +661,7 @@ const emit = defineEmits<{
 .button {
   --button-bg: var(--color-primary);
   --button-color: var(--color-white);
-  
+
   background-color: var(--button-bg);
   color: var(--button-color);
 }
@@ -734,15 +690,15 @@ import Button from '@/components/common/Button.vue'
 describe('Button', () => {
   it('渲染正确的变体', () => {
     const wrapper = mount(Button, {
-      props: { variant: 'primary' }
+      props: { variant: 'primary' },
     })
-    
+
     expect(wrapper.classes()).toContain('button--primary')
   })
-  
+
   it('触发点击事件', async () => {
     const wrapper = mount(Button)
-    
+
     await wrapper.trigger('click')
     expect(wrapper.emitted('click')).toHaveLength(1)
   })
@@ -756,9 +712,9 @@ describe('Button 快照', () => {
   it('匹配快照', () => {
     const wrapper = mount(Button, {
       props: { variant: 'primary', size: 'md' },
-      slots: { default: '点击我' }
+      slots: { default: '点击我' },
     })
-    
+
     expect(wrapper.html()).toMatchSnapshot()
   })
 })
@@ -772,5 +728,5 @@ describe('Button 快照', () => {
 
 ---
 
-*文档版本：1.0.0*  
-*最后更新：2026-04-17*
+_文档版本：1.0.0_  
+_最后更新：2026-04-17_

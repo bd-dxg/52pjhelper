@@ -50,12 +50,12 @@ const { enabled, toggleFeature, isToggling } = useFeatureToggle(
 
 ### API 参考
 
-| 属性/方法 | 类型 | 说明 |
-|-----------|------|------|
-| `enabled` | `Ref<boolean>` | 功能是否启用 |
-| `isToggling` | `Ref<boolean>` | 是否正在切换状态 |
-| `toggleFeature()` | `() => Promise<void>` | 切换功能状态 |
-| `initialize()` | `() => Promise<void>` | 初始化功能状态 |
+| 属性/方法         | 类型                  | 说明             |
+| ----------------- | --------------------- | ---------------- |
+| `enabled`         | `Ref<boolean>`        | 功能是否启用     |
+| `isToggling`      | `Ref<boolean>`        | 是否正在切换状态 |
+| `toggleFeature()` | `() => Promise<void>` | 切换功能状态     |
+| `initialize()`    | `() => Promise<void>` | 初始化功能状态   |
 
 ### 使用示例
 
@@ -91,13 +91,13 @@ const { enabled, toggleFeature, isToggling } = useFeatureToggle(
 
 ### 字段说明
 
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| `name` | `string` | 是 | 功能显示名称 |
-| `description` | `string` | 是 | 功能详细描述 |
-| `defaultEnabled` | `boolean` | 是 | 默认启用状态 |
-| `storageKey` | `string` | 是 | 存储键名 |
-| `targetPages` | `string[]` | 是 | 目标页面URL模式 |
+| 字段             | 类型       | 必填 | 说明            |
+| ---------------- | ---------- | ---- | --------------- |
+| `name`           | `string`   | 是   | 功能显示名称    |
+| `description`    | `string`   | 是   | 功能详细描述    |
+| `defaultEnabled` | `boolean`  | 是   | 默认启用状态    |
+| `storageKey`     | `string`   | 是   | 存储键名        |
+| `targetPages`    | `string[]` | 是   | 目标页面URL模式 |
 
 ### 存储键命名规范
 
@@ -218,12 +218,12 @@ const toggleFeature = async () => {
 
 ### CSS 类名规范
 
-| 类名 | 用途 |
-|------|------|
+| 类名                | 用途     |
+| ------------------- | -------- |
 | `.toggle-container` | 组件容器 |
-| `.toggle-label` | 标签元素 |
-| `.toggle-switch` | 开关容器 |
-| `.slider` | 开关滑块 |
+| `.toggle-label`     | 标签元素 |
+| `.toggle-switch`    | 开关容器 |
+| `.slider`           | 开关滑块 |
 
 ### 共享样式
 
@@ -251,40 +251,51 @@ const toggleFeature = async () => {
 ## 最佳实践
 
 ### 1. 配置存储优先
+
 所有组件状态都应支持从 `browser.storage` 读取和保存。
 
 ### 2. 通信容错
+
 与 content script 通信时，必须添加 try-catch 错误处理。
 
 ### 3. 页面判断
+
 在发送消息前，必须检查当前页面是否是 52pojie.cn。
 
 ### 4. 用户体验
+
 通信失败时，应提供适当的 fallback 方案，而不是报错。
 
 ### 5. 代码简洁
+
 避免在初始化阶段进行不必要的通信，保持代码简洁和高效。
 
 ## 新建功能开发流程
 
 ### 步骤 1：创建配置文件
+
 在 `src/configs/` 目录下创建 JSON 配置文件。
 
 ### 步骤 2：创建组件文件
+
 在 `src/components/` 目录下创建 Vue 组件文件。
 
 ### 步骤 3：使用 useFeatureToggle
+
 在组件中使用 `useFeatureToggle` 可组合函数。
 
 ### 步骤 4：注册组件
+
 在 `src/entries/popup/main.ts` 中注册组件（如果需要）。
 
 ### 步骤 5：添加到设置页面
+
 在 `src/pages/settings/SettingsPanel.vue` 中添加组件引用。
 
 ## 示例：创建头像查询功能开关
 
 ### 1. 创建配置文件
+
 `src/configs/avatarQuery.json`:
 
 ```json
@@ -293,14 +304,12 @@ const toggleFeature = async () => {
   "description": "鼠标悬停显示用户违规记录",
   "defaultEnabled": true,
   "storageKey": "avatarQueryEnabled",
-  "targetPages": [
-    "https://www.52pojie.cn/forum-*.html",
-    "https://www.52pojie.cn/thread-*.html"
-  ]
+  "targetPages": ["https://www.52pojie.cn/forum-*.html", "https://www.52pojie.cn/thread-*.html"]
 }
 ```
 
 ### 2. 创建组件文件
+
 `src/components/AvatarQueryToggle.vue`:
 
 ```vue

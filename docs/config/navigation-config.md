@@ -47,38 +47,38 @@ src/configs/navigation.json
 
 ### 根级字段
 
-| 字段 | 类型 | 必填 | 说明 | 示例 |
-|------|------|------|------|------|
-| `version` | `string` | 是 | 配置版本号，遵循语义化版本 | `"1.0.0"` |
-| `lastUpdated` | `string` | 否 | 最后更新时间（ISO 8601格式） | `"2026-04-17"` |
-| `menus` | `Menu[]` | 是 | 菜单组数组 | `[...]` |
+| 字段          | 类型     | 必填 | 说明                         | 示例           |
+| ------------- | -------- | ---- | ---------------------------- | -------------- |
+| `version`     | `string` | 是   | 配置版本号，遵循语义化版本   | `"1.0.0"`      |
+| `lastUpdated` | `string` | 否   | 最后更新时间（ISO 8601格式） | `"2026-04-17"` |
+| `menus`       | `Menu[]` | 是   | 菜单组数组                   | `[...]`        |
 
 ### 菜单组字段 (Menu)
 
-| 字段 | 类型 | 必填 | 说明 | 示例 |
-|------|------|------|------|------|
-| `id` | `string` | 是 | 菜单组唯一标识符 | `"general"` |
-| `title` | `string` | 是 | 菜单组显示标题 | `"通用功能"` |
-| `icon` | `string` | 否 | 菜单组图标名称 | `"settings"` |
-| `description` | `string` | 否 | 菜单组描述文本 | `"适用于所有用户的通用功能设置"` |
-| `collapsible` | `boolean` | 否 | 是否可折叠，默认 `true` | `true` |
-| `defaultCollapsed` | `boolean` | 否 | 默认是否折叠，默认 `false` | `false` |
-| `items` | `MenuItem[]` | 是 | 菜单项数组 | `[...]` |
+| 字段               | 类型         | 必填 | 说明                       | 示例                             |
+| ------------------ | ------------ | ---- | -------------------------- | -------------------------------- |
+| `id`               | `string`     | 是   | 菜单组唯一标识符           | `"general"`                      |
+| `title`            | `string`     | 是   | 菜单组显示标题             | `"通用功能"`                     |
+| `icon`             | `string`     | 否   | 菜单组图标名称             | `"settings"`                     |
+| `description`      | `string`     | 否   | 菜单组描述文本             | `"适用于所有用户的通用功能设置"` |
+| `collapsible`      | `boolean`    | 否   | 是否可折叠，默认 `true`    | `true`                           |
+| `defaultCollapsed` | `boolean`    | 否   | 默认是否折叠，默认 `false` | `false`                          |
+| `items`            | `MenuItem[]` | 是   | 菜单项数组                 | `[...]`                          |
 
 ### 菜单项字段 (MenuItem)
 
-| 字段 | 类型 | 必填 | 说明 | 示例 |
-|------|------|------|------|------|
-| `id` | `string` | 是 | 功能唯一标识符 | `"dark-theme"` |
-| `title` | `string` | 是 | 功能显示标题 | `"深色主题"` |
-| `description` | `string` | 否 | 功能详细描述 | `"自动检测系统主题或手动切换深色模式"` |
-| `icon` | `string` | 否 | 功能图标名称 | `"moon"` |
-| `category` | `string` | 否 | 功能分类 | `"appearance"` |
-| `defaultEnabled` | `boolean` | 否 | 默认是否启用，默认 `false` | `true` |
-| `requiresReload` | `boolean` | 否 | 启用后是否需要刷新页面，默认 `false` | `false` |
-| `storageKey` | `string` | 否 | 存储键名，默认使用 `id` | `"dark_theme_enabled"` |
-| `dependencies` | `string[]` | 否 | 依赖的其他功能ID | `["feature-a", "feature-b"]` |
-| `conflicts` | `string[]` | 否 | 冲突的其他功能ID | `["feature-c"]` |
+| 字段             | 类型       | 必填 | 说明                                 | 示例                                   |
+| ---------------- | ---------- | ---- | ------------------------------------ | -------------------------------------- |
+| `id`             | `string`   | 是   | 功能唯一标识符                       | `"dark-theme"`                         |
+| `title`          | `string`   | 是   | 功能显示标题                         | `"深色主题"`                           |
+| `description`    | `string`   | 否   | 功能详细描述                         | `"自动检测系统主题或手动切换深色模式"` |
+| `icon`           | `string`   | 否   | 功能图标名称                         | `"moon"`                               |
+| `category`       | `string`   | 否   | 功能分类                             | `"appearance"`                         |
+| `defaultEnabled` | `boolean`  | 否   | 默认是否启用，默认 `false`           | `true`                                 |
+| `requiresReload` | `boolean`  | 否   | 启用后是否需要刷新页面，默认 `false` | `false`                                |
+| `storageKey`     | `string`   | 否   | 存储键名，默认使用 `id`              | `"dark_theme_enabled"`                 |
+| `dependencies`   | `string[]` | 否   | 依赖的其他功能ID                     | `["feature-a", "feature-b"]`           |
+| `conflicts`      | `string[]` | 否   | 冲突的其他功能ID                     | `["feature-c"]`                        |
 
 ## 配置示例
 
@@ -221,11 +221,9 @@ const validateNavigationConfig = (config: any): boolean => {
   if (!config.version || !config.menus) {
     return false
   }
-  
+
   // 验证菜单结构
-  return config.menus.every((menu: any) => 
-    menu.id && menu.title && Array.isArray(menu.items)
-  )
+  return config.menus.every((menu: any) => menu.id && menu.title && Array.isArray(menu.items))
 }
 
 if (!validateNavigationConfig(navigationConfig)) {
@@ -257,8 +255,8 @@ const generateNavigationMenu = () => {
       dependencies: item.dependencies || [],
       conflicts: item.conflicts || [],
       // 获取当前状态
-      enabled: getFeatureState(item.storageKey || item.id)
-    }))
+      enabled: getFeatureState(item.storageKey || item.id),
+    })),
   }))
 }
 ```
@@ -268,37 +266,35 @@ const generateNavigationMenu = () => {
 ```typescript
 // 检查功能依赖
 const checkFeatureDependencies = (featureId: string): string[] => {
-  const menu = navigationConfig.menus.find(m => 
-    m.items.some(item => item.id === featureId)
-  )
-  
+  const menu = navigationConfig.menus.find(m => m.items.some(item => item.id === featureId))
+
   if (!menu) {
     return []
   }
-  
+
   const feature = menu.items.find(item => item.id === featureId)
   if (!feature?.dependencies) {
     return []
   }
-  
+
   // 检查依赖的功能是否已启用
   const unmetDependencies = feature.dependencies.filter(depId => {
     const depState = getFeatureState(depId)
     return !depState
   })
-  
+
   return unmetDependencies
 }
 
 // 启用功能前检查依赖
 const enableFeatureWithDependencies = async (featureId: string): Promise<boolean> => {
   const unmetDependencies = checkFeatureDependencies(featureId)
-  
+
   if (unmetDependencies.length > 0) {
     console.warn(`功能 ${featureId} 依赖以下未启用的功能:`, unmetDependencies)
     return false
   }
-  
+
   // 启用功能
   await setFeatureState(featureId, true)
   return true
@@ -310,32 +306,30 @@ const enableFeatureWithDependencies = async (featureId: string): Promise<boolean
 ```typescript
 // 检查功能冲突
 const checkFeatureConflicts = (featureId: string): string[] => {
-  const menu = navigationConfig.menus.find(m => 
-    m.items.some(item => item.id === featureId)
-  )
-  
+  const menu = navigationConfig.menus.find(m => m.items.some(item => item.id === featureId))
+
   if (!menu) {
     return []
   }
-  
+
   const feature = menu.items.find(item => item.id === featureId)
   if (!feature?.conflicts) {
     return []
   }
-  
+
   // 检查冲突的功能是否已启用
   const activeConflicts = feature.conflicts.filter(conflictId => {
     const conflictState = getFeatureState(conflictId)
     return conflictState
   })
-  
+
   return activeConflicts
 }
 
 // 处理功能冲突
 const resolveFeatureConflicts = async (featureId: string): Promise<boolean> => {
   const activeConflicts = checkFeatureConflicts(featureId)
-  
+
   if (activeConflicts.length > 0) {
     // 自动禁用冲突的功能
     for (const conflictId of activeConflicts) {
@@ -343,7 +337,7 @@ const resolveFeatureConflicts = async (featureId: string): Promise<boolean> => {
       await setFeatureState(conflictId, false)
     }
   }
-  
+
   // 启用新功能
   await setFeatureState(featureId, true)
   return true
@@ -378,11 +372,11 @@ const resolveFeatureConflicts = async (featureId: string): Promise<boolean> => {
   "description": "更新后的描述",
   "icon": "updated-icon",
   "category": "updated-category",
-  "defaultEnabled": true,  // 更改默认值
-  "requiresReload": true,  // 更改重载要求
+  "defaultEnabled": true, // 更改默认值
+  "requiresReload": true, // 更改重载要求
   "storageKey": "existing_feature_enabled",
-  "dependencies": ["new-dependency"],  // 添加依赖
-  "conflicts": ["conflicting-feature"]  // 添加冲突
+  "dependencies": ["new-dependency"], // 添加依赖
+  "conflicts": ["conflicting-feature"] // 添加冲突
 }
 ```
 
@@ -409,51 +403,52 @@ const resolveFeatureConflicts = async (featureId: string): Promise<boolean> => {
 const validateNavigationConfig = (config: any): ValidationResult => {
   const errors: string[] = []
   const warnings: string[] = []
-  
+
   // 检查必填字段
   if (!config.version) {
     errors.push('缺少 version 字段')
   }
-  
+
   if (!Array.isArray(config.menus)) {
     errors.push('menus 必须是数组')
   }
-  
+
   // 检查每个菜单组
   config.menus?.forEach((menu: any, index: number) => {
     if (!menu.id) {
       errors.push(`菜单组 ${index}: 缺少 id 字段`)
     }
-    
+
     if (!menu.title) {
       errors.push(`菜单组 ${menu.id}: 缺少 title 字段`)
     }
-    
+
     // 检查菜单项
     menu.items?.forEach((item: any, itemIndex: number) => {
       if (!item.id) {
         errors.push(`菜单组 ${menu.id}, 项目 ${itemIndex}: 缺少 id 字段`)
       }
-      
+
       if (!item.title) {
         errors.push(`功能 ${item.id}: 缺少 title 字段`)
       }
-      
+
       // 检查存储键唯一性
       const storageKey = item.storageKey || item.id
-      const duplicate = config.menus.flatMap((m: any) => m.items)
+      const duplicate = config.menus
+        .flatMap((m: any) => m.items)
         .filter((i: any) => (i.storageKey || i.id) === storageKey)
-      
+
       if (duplicate.length > 1) {
         warnings.push(`存储键 ${storageKey} 被多个功能使用`)
       }
     })
   })
-  
+
   return {
     valid: errors.length === 0,
     errors,
-    warnings
+    warnings,
   }
 }
 ```
@@ -464,7 +459,7 @@ const validateNavigationConfig = (config: any): ValidationResult => {
 // 迁移旧版本配置
 const migrateNavigationConfig = (oldConfig: any, targetVersion: string): any => {
   const migratedConfig = { ...oldConfig }
-  
+
   // 版本 1.0.0 → 1.1.0 迁移
   if (oldConfig.version === '1.0.0' && targetVersion === '1.1.0') {
     // 添加新字段
@@ -475,14 +470,14 @@ const migrateNavigationConfig = (oldConfig: any, targetVersion: string): any => 
       items: menu.items.map((item: any) => ({
         ...item,
         dependencies: item.dependencies || [],
-        conflicts: item.conflicts || []
-      }))
+        conflicts: item.conflicts || [],
+      })),
     }))
   }
-  
+
   migratedConfig.version = targetVersion
   migratedConfig.lastUpdated = new Date().toISOString().split('T')[0]
-  
+
   return migratedConfig
 }
 ```
@@ -495,5 +490,5 @@ const migrateNavigationConfig = (oldConfig: any, targetVersion: string): any => 
 
 ---
 
-*文档版本：1.0.0*  
-*最后更新：2026-04-17*
+_文档版本：1.0.0_  
+_最后更新：2026-04-17_

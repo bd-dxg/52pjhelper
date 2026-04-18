@@ -15,13 +15,14 @@
 const { enabled, toggle } = useFeatureToggle('feature-name')
 
 // 状态自动与浏览器存储同步
-watch(enabled, (newValue) => {
+watch(enabled, newValue => {
   // 状态变化时自动保存到存储
   console.log(`功能状态已更新: ${newValue}`)
 })
 ```
 
 **好处**：
+
 - 用户设置持久化
 - 跨会话状态保持
 - 支持用户自定义配置
@@ -38,9 +39,9 @@ const sendMessageToContentScript = async () => {
   try {
     const response = await browser.runtime.sendMessage({
       type: 'GET_FEATURE_STATE',
-      feature: 'feature-name'
+      feature: 'feature-name',
     })
-    
+
     if (response?.success) {
       return response.data
     }
@@ -70,7 +71,7 @@ const safeSendMessage = async (message: any) => {
     console.warn('非目标页面，跳过消息发送')
     return null
   }
-  
+
   try {
     return await browser.runtime.sendMessage(message)
   } catch (error) {
@@ -122,6 +123,7 @@ onMounted(() => {
 ### 1. 组件设计原则
 
 #### 单一职责原则
+
 每个组件只负责一个特定的功能或 UI 部分。
 
 ```vue
@@ -137,12 +139,15 @@ onMounted(() => {
   <div>
     <button>按钮</button>
     <input v-model="search" />
-    <ul>...</ul>
+    <ul>
+      ...
+    </ul>
   </div>
 </template>
 ```
 
 #### 可组合性
+
 组件应该易于组合和重用。
 
 ```vue
@@ -162,13 +167,14 @@ onMounted(() => {
 ### 2. Props 设计
 
 #### 明确的接口
+
 使用 TypeScript 定义明确的 props 接口。
 
 ```typescript
 interface ButtonProps {
   // 必填属性
   label: string
-  
+
   // 可选属性
   variant?: 'primary' | 'secondary' | 'outline'
   size?: 'sm' | 'md' | 'lg'
@@ -179,25 +185,27 @@ const props = defineProps<ButtonProps>()
 ```
 
 #### 合理的默认值
+
 为可选属性提供合理的默认值。
 
 ```typescript
 withDefaults(defineProps<ButtonProps>(), {
   variant: 'primary',
   size: 'md',
-  disabled: false
+  disabled: false,
 })
 ```
 
 ### 3. 事件通信
 
 #### 明确的事件命名
+
 使用 kebab-case 命名自定义事件。
 
 ```typescript
 // 子组件定义事件
 const emit = defineEmits<{
-  'click': [event: MouseEvent]
+  click: [event: MouseEvent]
   'update:model-value': [value: string]
   'custom-event': [data: CustomData]
 }>()
@@ -208,15 +216,12 @@ emit('update:model-value', newValue)
 ```
 
 #### 父组件监听
+
 在父组件中明确监听事件。
 
 ```vue
 <template>
-  <ChildComponent
-    @click="handleClick"
-    @update:model-value="handleUpdate"
-    @custom-event="handleCustom"
-  />
+  <ChildComponent @click="handleClick" @update:model-value="handleUpdate" @custom-event="handleCustom" />
 </template>
 ```
 
@@ -225,6 +230,7 @@ emit('update:model-value', newValue)
 ### 1. 使用可组合函数
 
 #### 功能状态管理
+
 使用 `useFeatureToggle` 管理功能开关状态。
 
 ```typescript
@@ -232,12 +238,13 @@ emit('update:model-value', newValue)
 const { enabled, toggle, isLoading } = useFeatureToggle('dark-mode')
 
 // 状态自动持久化
-watch(enabled, (newValue) => {
+watch(enabled, newValue => {
   document.documentElement.classList.toggle('dark', newValue)
 })
 ```
 
 #### 本地状态管理
+
 对于组件内部状态，使用 `ref` 和 `computed`。
 
 ```typescript
@@ -254,6 +261,7 @@ const increment = () => {
 ### 2. 存储操作
 
 #### 统一存储接口
+
 使用 `storageHelper` 进行存储操作。
 
 ```typescript
@@ -264,11 +272,12 @@ const saveUserSettings = async (settings: UserSettings) => {
 
 // 读取用户设置
 const loadUserSettings = async (): Promise<UserSettings> => {
-  return await storageHelper.get('userSettings') || defaultSettings
+  return (await storageHelper.get('userSettings')) || defaultSettings
 }
 ```
 
 #### 存储键命名规范
+
 遵循统一的存储键命名规范。
 
 ```typescript
@@ -276,7 +285,7 @@ const loadUserSettings = async (): Promise<UserSettings> => {
 const STORAGE_KEYS = {
   USER_SETTINGS: 'user_settings',
   FEATURE_TOGGLES: 'feature_toggles',
-  RECENT_SEARCHES: 'recent_searches'
+  RECENT_SEARCHES: 'recent_searches',
 }
 
 // 使用
@@ -288,13 +297,14 @@ await storageHelper.set(STORAGE_KEYS.USER_SETTINGS, settings)
 ### 1. 减少不必要的渲染
 
 #### 使用 computed
+
 对于派生数据，使用 `computed` 而不是在模板中计算。
 
 ```vue
 <template>
   <!-- Good: 使用 computed -->
   <div>{{ formattedDate }}</div>
-  
+
   <!-- Bad: 在模板中计算 -->
   <div>{{ new Date(date).toLocaleDateString() }}</div>
 </template>
@@ -307,6 +317,7 @@ const formattedDate = computed(() => {
 ```
 
 #### 使用 v-memo
+
 对于复杂组件，使用 `v-memo` 避免不必要的重新渲染。
 
 ```vue
@@ -321,14 +332,13 @@ const formattedDate = computed(() => {
 ### 2. 懒加载
 
 #### 组件懒加载
+
 对于非关键组件，使用动态导入。
 
 ```vue
 <script setup>
 // 懒加载组件
-const HeavyComponent = defineAsyncComponent(() =>
-  import('./HeavyComponent.vue')
-)
+const HeavyComponent = defineAsyncComponent(() => import('./HeavyComponent.vue'))
 </script>
 
 <template>
@@ -344,6 +354,7 @@ const HeavyComponent = defineAsyncComponent(() =>
 ```
 
 #### 数据懒加载
+
 对于非关键数据，延迟加载。
 
 ```typescript
@@ -373,6 +384,7 @@ onMounted(() => {
 ### 1. 全局错误处理
 
 #### Vue 错误处理
+
 注册全局错误处理器。
 
 ```typescript
@@ -381,18 +393,19 @@ app.config.errorHandler = (err, instance, info) => {
   console.error('Vue 错误:', err)
   console.error('组件实例:', instance)
   console.error('错误信息:', info)
-  
+
   // 发送错误报告
   reportError(err)
 }
 ```
 
 #### Promise 错误处理
+
 处理未捕获的 Promise 错误。
 
 ```typescript
 // 全局 Promise 错误处理
-window.addEventListener('unhandledrejection', (event) => {
+window.addEventListener('unhandledrejection', event => {
   console.error('未处理的 Promise 错误:', event.reason)
   event.preventDefault()
 })
@@ -401,6 +414,7 @@ window.addEventListener('unhandledrejection', (event) => {
 ### 2. 组件级错误处理
 
 #### 错误边界
+
 使用错误边界组件捕获子组件错误。
 
 ```vue
@@ -421,10 +435,8 @@ const ErrorBoundary = defineComponent({
     return false // 阻止错误继续向上传播
   },
   render() {
-    return this.hasError 
-      ? h('div', '组件加载失败') 
-      : this.$slots.default?.()
-  }
+    return this.hasError ? h('div', '组件加载失败') : this.$slots.default?.()
+  },
 })
 </script>
 ```
@@ -434,6 +446,7 @@ const ErrorBoundary = defineComponent({
 ### 1. 类型安全
 
 #### 严格的 TypeScript 配置
+
 使用严格的 TypeScript 配置。
 
 ```json
@@ -451,6 +464,7 @@ const ErrorBoundary = defineComponent({
 ```
 
 #### 避免 any 类型
+
 使用 `unknown` 代替 `any`。
 
 ```typescript
@@ -471,6 +485,7 @@ const parseData = (data: any): ParsedData => {
 ### 2. 代码组织
 
 #### 单一文件原则
+
 每个文件只包含一个主要的导出。
 
 ```typescript
@@ -480,12 +495,19 @@ export const useFeatureToggle = (featureName: string) => {
 }
 
 // Bad: 多个不相关的导出
-export const useFeatureToggle = () => { /* ... */ }
-export const useUserData = () => { /* ... */ }
-export const formatDate = () => { /* ... */ }
+export const useFeatureToggle = () => {
+  /* ... */
+}
+export const useUserData = () => {
+  /* ... */
+}
+export const formatDate = () => {
+  /* ... */
+}
 ```
 
 #### 合理的文件大小
+
 保持文件大小在 300 行以内。
 
 ```bash
@@ -498,6 +520,7 @@ find src -name "*.ts" -o -name "*.vue" | xargs wc -l | sort -n
 ### 1. 测试策略
 
 #### 单元测试
+
 测试独立的函数和组件。
 
 ```typescript
@@ -512,6 +535,7 @@ describe('storageHelper', () => {
 ```
 
 #### 组件测试
+
 测试组件渲染和交互。
 
 ```typescript
@@ -519,11 +543,11 @@ describe('storageHelper', () => {
 describe('FeatureToggle', () => {
   it('应该正确渲染开关状态', async () => {
     const wrapper = mount(FeatureToggle, {
-      props: { feature: 'dark-mode' }
+      props: { feature: 'dark-mode' },
     })
-    
+
     expect(wrapper.find('.toggle').classes()).toContain('off')
-    
+
     await wrapper.find('.toggle').trigger('click')
     expect(wrapper.find('.toggle').classes()).toContain('on')
   })
@@ -533,6 +557,7 @@ describe('FeatureToggle', () => {
 ### 2. 测试数据
 
 #### 使用测试工厂
+
 创建可重用的测试数据工厂。
 
 ```typescript
@@ -541,7 +566,7 @@ const createTestUser = (overrides = {}): User => ({
   id: 1,
   name: '测试用户',
   email: 'test@example.com',
-  ...overrides
+  ...overrides,
 })
 
 // 在测试中使用
@@ -549,6 +574,7 @@ const user = createTestUser({ name: '自定义用户' })
 ```
 
 #### 模拟外部依赖
+
 模拟浏览器 API 和其他外部依赖。
 
 ```typescript
@@ -556,8 +582,8 @@ const user = createTestUser({ name: '自定义用户' })
 vi.mock('@/utils/storageHelper', () => ({
   storageHelper: {
     get: vi.fn().mockResolvedValue({ darkMode: true }),
-    set: vi.fn().mockResolvedValue(undefined)
-  }
+    set: vi.fn().mockResolvedValue(undefined),
+  },
 }))
 ```
 
@@ -570,5 +596,5 @@ vi.mock('@/utils/storageHelper', () => ({
 
 ---
 
-*文档版本：1.0.0*  
-*最后更新：2026-04-17*
+_文档版本：1.0.0_  
+_最后更新：2026-04-17_

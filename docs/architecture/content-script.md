@@ -7,24 +7,28 @@ Content Script 是浏览器扩展的核心组件，负责在吾爱破解论坛�
 ## 架构设计原则
 
 ### 1. 模块化设计
+
 - 每个功能独立成模块，职责清晰
 - 模块间通过明确定义的接口通信
 - 支持按需加载，减少资源占用
 - 便于单元测试和调试
 
 ### 2. 松耦合架构
+
 - 功能模块之间最小化依赖
 - 通过事件和消息进行通信
 - 支持热插拔功能模块
 - 便于功能扩展和维护
 
 ### 3. 性能优化
+
 - 延迟加载非关键功能
 - 使用事件委托减少事件监听器
 - 实现智能缓存机制
 - 优化DOM操作，避免重排重绘
 
 ### 4. 错误隔离
+
 - 每个功能模块独立错误处理
 - 防止单个功能故障影响整体
 - 提供详细的错误日志
@@ -33,152 +37,161 @@ Content Script 是浏览器扩展的核心组件，负责在吾爱破解论坛�
 ## 核心模块
 
 ### 1. 主入口模块 (`index.ts`)
+
 **位置**: `src/entries/content/index.ts` (46行)
 
 **职责**:
+
 - 协调各个功能模块的初始化
 - 创建管理器实例容器
 - 防止重复初始化
 - 提供统一的错误处理
 
 **关键代码**:
+
 ```typescript
 // 防止重复初始化
 if (window.__52pjhelperInitialized) {
-  console.warn('52pjhelper already initialized');
-  return;
+  console.warn('52pjhelper already initialized')
+  return
 }
-window.__52pjhelperInitialized = true;
+window.__52pjhelperInitialized = true
 
 // 创建管理器容器
-const managers: FeatureManager[] = [];
+const managers: FeatureManager[] = []
 
 // 初始化所有功能管理器
 try {
-  const initializationResult = await initializeFeatures();
-  managers.push(...initializationResult.managers);
+  const initializationResult = await initializeFeatures()
+  managers.push(...initializationResult.managers)
 } catch (error) {
-  console.error('Failed to initialize features:', error);
+  console.error('Failed to initialize features:', error)
 }
 ```
 
 ### 2. 初始化模块 (`initialization.ts`)
+
 **位置**: `src/entries/content/initialization.ts` (68行)
 
 **职责**:
+
 - 统一管理所有功能管理器的初始化
 - 处理功能依赖关系
 - 提供初始化状态监控
 - 支持初始化重试机制
 
 **关键代码**:
+
 ```typescript
 export async function initializeFeatures(): Promise<InitializationResult> {
-  const managers: FeatureManager[] = [];
-  const errors: InitializationError[] = [];
-  
+  const managers: FeatureManager[] = []
+  const errors: InitializationError[] = []
+
   // 按顺序初始化功能
   for (const featureConfig of FEATURE_CONFIGS) {
     try {
-      const manager = await createFeatureManager(featureConfig);
-      managers.push(manager);
+      const manager = await createFeatureManager(featureConfig)
+      managers.push(manager)
     } catch (error) {
       errors.push({
         feature: featureConfig.name,
         error: error as Error,
-        timestamp: new Date()
-      });
+        timestamp: new Date(),
+      })
     }
   }
-  
-  return { managers, errors };
+
+  return { managers, errors }
 }
 ```
 
 ### 3. 消息处理器 (`messageHandler.ts`)
+
 **位置**: `src/entries/content/messageHandler.ts` (375行)
 
 **职责**:
+
 - 处理来自 popup 的消息通信
 - 统一的消息路由和响应机制
 - 支持异步消息处理
 - 提供消息验证和安全性检查
 
 **关键代码**:
+
 ```typescript
 export class MessageHandler {
-  private handlers = new Map<string, MessageHandlerFunction>();
-  
+  private handlers = new Map<string, MessageHandlerFunction>()
+
   // 注册消息处理器
   registerHandler(type: string, handler: MessageHandlerFunction): void {
-    this.handlers.set(type, handler);
+    this.handlers.set(type, handler)
   }
-  
+
   // 处理消息
   async handleMessage(message: ExtensionMessage): Promise<MessageResponse> {
-    const handler = this.handlers.get(message.type);
+    const handler = this.handlers.get(message.type)
     if (!handler) {
       return {
         success: false,
-        error: `No handler for message type: ${message.type}`
-      };
+        error: `No handler for message type: ${message.type}`,
+      }
     }
-    
+
     try {
-      const result = await handler(message.payload);
-      return { success: true, data: result };
+      const result = await handler(message.payload)
+      return { success: true, data: result }
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error'
-      };
+        error: error instanceof Error ? error.message : 'Unknown error',
+      }
     }
   }
 }
 ```
 
 ### 4. 存储监听器 (`storageListener.ts`)
+
 **位置**: `src/entries/content/storageListener.ts` (156行)
 
 **职责**:
+
 - 监听浏览器存储变化
 - 实现跨页面状态同步
 - 处理存储冲突和合并
 - 提供存储变化事件通知
 
 **关键代码**:
+
 ```typescript
 export class StorageListener {
-  private listeners = new Map<string, StorageChangeCallback[]>();
-  
+  private listeners = new Map<string, StorageChangeCallback[]>()
+
   // 初始化监听
   initialize(): void {
     browser.storage.onChanged.addListener((changes, areaName) => {
-      this.handleStorageChange(changes, areaName);
-    });
+      this.handleStorageChange(changes, areaName)
+    })
   }
-  
+
   // 处理存储变化
-  private handleStorageChange(
-    changes: { [key: string]: browser.storage.StorageChange },
-    areaName: string
-  ): void {
+  private handleStorageChange(changes: { [key: string]: browser.storage.StorageChange }, areaName: string): void {
     for (const [key, change] of Object.entries(changes)) {
-      const keyListeners = this.listeners.get(key);
+      const keyListeners = this.listeners.get(key)
       if (keyListeners) {
         keyListeners.forEach(listener => {
-          listener(change, areaName);
-        });
+          listener(change, areaName)
+        })
       }
     }
   }
-  
+
   // 注册存储变化监听器
   addChangeListener(key: string, callback: StorageChangeCallback): void {
     if (!this.listeners.has(key)) {
-      this.listeners.set(key, []);
+      this.listeners.set(key, [])
     }
-    this.listeners.get(key)!.push(callback);
+    this.listeners.get(key)!.push(callback)
   }
 }
 ```
@@ -186,62 +199,64 @@ export class StorageListener {
 ## 功能管理器模式
 
 ### 管理器基类
+
 ```typescript
 export abstract class FeatureManager {
-  protected enabled = false;
-  protected config: FeatureConfig;
-  
+  protected enabled = false
+  protected config: FeatureConfig
+
   constructor(config: FeatureConfig) {
-    this.config = config;
+    this.config = config
   }
-  
+
   // 初始化功能
-  abstract initialize(): Promise<void>;
-  
+  abstract initialize(): Promise<void>
+
   // 启用功能
   async enable(): Promise<void> {
-    this.enabled = true;
-    await this.onEnable();
+    this.enabled = true
+    await this.onEnable()
   }
-  
+
   // 禁用功能
   async disable(): Promise<void> {
-    this.enabled = false;
-    await this.onDisable();
+    this.enabled = false
+    await this.onDisable()
   }
-  
+
   // 功能启用时的回调
-  protected abstract onEnable(): Promise<void>;
-  
+  protected abstract onEnable(): Promise<void>
+
   // 功能禁用时的回调
-  protected abstract onDisable(): Promise<void>;
-  
+  protected abstract onDisable(): Promise<void>
+
   // 获取功能状态
   isEnabled(): boolean {
-    return this.enabled;
+    return this.enabled
   }
 }
 ```
 
 ### 功能管理器实现示例
+
 ```typescript
 export class NavigationManager extends FeatureManager {
-  private navigationElement: HTMLElement | null = null;
-  
+  private navigationElement: HTMLElement | null = null
+
   async initialize(): Promise<void> {
     // 初始化逻辑
-    this.navigationElement = document.querySelector('#navigation');
+    this.navigationElement = document.querySelector('#navigation')
   }
-  
+
   protected async onEnable(): Promise<void> {
     if (this.navigationElement) {
-      this.navigationElement.style.display = 'block';
+      this.navigationElement.style.display = 'block'
     }
   }
-  
+
   protected async onDisable(): Promise<void> {
     if (this.navigationElement) {
-      this.navigationElement.style.display = 'none';
+      this.navigationElement.style.display = 'none'
     }
   }
 }
@@ -250,18 +265,21 @@ export class NavigationManager extends FeatureManager {
 ## 通信机制
 
 ### 1. Popup ↔ Content Script 通信
+
 - 使用 `browser.runtime.sendMessage` API
 - 支持请求-响应模式
 - 提供类型安全的消息接口
 - 处理通信超时和错误
 
 ### 2. 功能模块间通信
+
 - 使用自定义事件系统
 - 支持事件冒泡和捕获
 - 提供事件命名空间
 - 实现事件取消机制
 
 ### 3. 存储同步通信
+
 - 通过 `browser.storage` API 同步状态
 - 支持实时状态更新
 - 处理存储冲突
@@ -270,18 +288,21 @@ export class NavigationManager extends FeatureManager {
 ## 错误处理策略
 
 ### 1. 初始化错误处理
+
 - 记录详细的错误日志
 - 提供错误恢复机制
 - 支持部分功能降级
 - 防止错误传播
 
 ### 2. 运行时错误处理
+
 - 使用 try-catch 包装关键操作
 - 提供用户友好的错误提示
 - 实现错误上报机制
 - 支持错误重试
 
 ### 3. 通信错误处理
+
 - 处理消息超时
 - 验证消息格式
 - 提供错误响应
@@ -290,18 +311,21 @@ export class NavigationManager extends FeatureManager {
 ## 性能优化策略
 
 ### 1. 资源加载优化
+
 - 按需加载功能模块
 - 使用代码分割
 - 实现懒加载机制
 - 优化资源缓存
 
 ### 2. DOM 操作优化
+
 - 使用事件委托
 - 批量DOM操作
 - 避免强制同步布局
 - 使用虚拟DOM技术
 
 ### 3. 内存管理优化
+
 - 及时清理事件监听器
 - 使用 WeakMap/WeakSet
 - 实现对象池
@@ -310,18 +334,21 @@ export class NavigationManager extends FeatureManager {
 ## 测试策略
 
 ### 1. 单元测试
+
 - 测试独立的功能模块
 - 模拟浏览器环境
 - 验证边界条件
 - 确保代码覆盖率
 
 ### 2. 集成测试
+
 - 测试模块间交互
 - 验证通信机制
 - 测试错误处理
 - 确保系统稳定性
 
 ### 3. 端到端测试
+
 - 测试完整用户流程
 - 验证页面交互
 - 测试性能指标
@@ -330,18 +357,21 @@ export class NavigationManager extends FeatureManager {
 ## 部署和维护
 
 ### 1. 版本管理
+
 - 遵循语义化版本控制
 - 提供版本迁移指南
 - 支持向后兼容
 - 管理功能开关
 
 ### 2. 监控和日志
+
 - 收集性能指标
 - 记录错误日志
 - 监控用户行为
 - 提供分析报告
 
 ### 3. 更新策略
+
 - 支持热更新
 - 提供更新通知
 - 处理更新冲突
@@ -350,6 +380,7 @@ export class NavigationManager extends FeatureManager {
 ---
 
 **相关链接**：
+
 - [架构概述](overview.md)
 - [技术栈详解](technical-stack.md)
 - [模块结构](module-structure.md)

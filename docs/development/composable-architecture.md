@@ -22,6 +22,7 @@
 **作用**: 提供统一的功能开关逻辑，封装了通用的功能开关逻辑，包括初始化、切换和状态管理。
 
 **特点**:
+
 - 统一的功能开关逻辑
 - 内置防抖机制，防止重复点击
 - 统一的错误处理和用户反馈
@@ -47,12 +48,12 @@ const { enabled, toggleFeature, isToggling } = useFeatureToggle(
 
 **API 参考**:
 
-| 属性/方法 | 类型 | 说明 |
-|-----------|------|------|
-| `enabled` | `Ref<boolean>` | 功能是否启用 |
-| `isToggling` | `Ref<boolean>` | 是否正在切换状态 |
-| `toggleFeature()` | `() => Promise<void>` | 切换功能状态 |
-| `initialize()` | `() => Promise<void>` | 初始化功能状态 |
+| 属性/方法         | 类型                  | 说明             |
+| ----------------- | --------------------- | ---------------- |
+| `enabled`         | `Ref<boolean>`        | 功能是否启用     |
+| `isToggling`      | `Ref<boolean>`        | 是否正在切换状态 |
+| `toggleFeature()` | `() => Promise<void>` | 切换功能状态     |
+| `initialize()`    | `() => Promise<void>` | 初始化功能状态   |
 
 ## 核心工具类
 
@@ -63,6 +64,7 @@ const { enabled, toggleFeature, isToggling } = useFeatureToggle(
 **作用**: 功能管理器基类，提供统一的功能管理模式，封装了功能启用/禁用、状态切换和初始化逻辑。
 
 **特点**:
+
 - 统一的功能管理模式
 - 支持目标页面匹配和自动初始化
 - 提供一致的 API 接口，便于扩展和维护
@@ -96,6 +98,7 @@ const avatarQueryManager = createFeatureManager(options)
 **作用**: 存储操作辅助工具，提供统一的浏览器存储操作接口。
 
 **特点**:
+
 - 支持多种数据类型：布尔值、字符串、数组、对象
 - 内置错误处理和默认值支持
 - 提供批量操作和清空功能
@@ -126,6 +129,7 @@ await storageHelper.saveArray('recentSearches', ['query1', 'query2'])
 **作用**: 消息通信辅助工具，提供统一的浏览器消息通信接口。
 
 **特点**:
+
 - 封装了消息发送和响应处理
 - 支持功能切换的通用逻辑
 - 内置目标网站检查和错误处理
@@ -161,6 +165,7 @@ await messageHelper.toggleFeature({
 **作用**: URL 匹配工具，提供统一的 URL 匹配功能。
 
 **特点**:
+
 - 支持多种匹配模式：精确匹配、包含匹配、正则匹配、通配符匹配
 - 自动检测匹配模式，简化配置
 - 内置安全检查，防止正则表达式注入
@@ -187,38 +192,47 @@ const regexMatch = urlMatcher.regexMatch(/thread-\d+-\d+-\d+\.html/, window.loca
 ## 架构优势
 
 ### 1. 代码复用性
+
 通过可组合函数，相同的逻辑可以在多个组件中复用，减少重复代码。
 
 ### 2. 可维护性
+
 功能逻辑集中管理，修改一处即可影响所有使用该逻辑的组件。
 
 ### 3. 测试友好
+
 可组合函数可以独立测试，无需依赖组件上下文。
 
 ### 4. 类型安全
+
 完整的 TypeScript 类型支持，提供更好的开发体验。
 
 ### 5. 渐进式采用
+
 可以逐步将现有代码迁移到可组合函数架构，无需一次性重写。
 
 ## 最佳实践
 
 ### 1. 命名规范
+
 - 可组合函数以 `use` 开头，如 `useFeatureToggle`
 - 工具类使用描述性名称，如 `storageHelper`
 - 类型定义使用 PascalCase
 
 ### 2. 错误处理
+
 - 所有异步操作都需要错误处理
 - 使用统一的错误处理模式
 - 提供用户友好的错误信息
 
 ### 3. 响应式管理
+
 - 合理使用 `ref` 和 `reactive`
 - 避免不必要的响应式包装
 - 使用 `computed` 处理派生状态
 
 ### 4. 性能优化
+
 - 使用 `watchEffect` 和 `watch` 时注意依赖收集
 - 避免在渲染函数中执行昂贵操作
 - 合理使用缓存和记忆化
@@ -226,12 +240,14 @@ const regexMatch = urlMatcher.regexMatch(/thread-\d+-\d+-\d+\.html/, window.loca
 ## 迁移指南
 
 ### 从选项式 API 迁移
+
 1. 将 `data` 转换为 `ref` 或 `reactive`
 2. 将 `methods` 转换为普通函数
 3. 将 `computed` 转换为 `computed` 函数
 4. 将生命周期钩子转换为对应的组合式 API
 
 ### 从混合模式迁移
+
 1. 识别可复用的逻辑
 2. 提取为可组合函数
 3. 更新组件使用新函数
