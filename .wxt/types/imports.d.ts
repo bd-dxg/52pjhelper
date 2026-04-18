@@ -27,7 +27,6 @@ declare global {
   const createTableDataExtractor: typeof import('D:/code/front-end/52pjhelper/src/utils/tableDataExtractor').createTableDataExtractor
   const createTableSelector: typeof import('D:/code/front-end/52pjhelper/src/utils/tableSelector').createTableSelector
   const createUrlMatcher: typeof import('D:/code/front-end/52pjhelper/src/utils/urlMatcher').createUrlMatcher
-  const createUserBlacklist: typeof import('D:/code/front-end/52pjhelper/src/utils/userBlacklist').createUserBlacklist
   const createUserLinkQuery: typeof import('D:/code/front-end/52pjhelper/src/utils/userLinkQuery').createUserLinkQuery
   const customRef: typeof import('vue').customRef
   const defineAppConfig: typeof import('wxt/utils/define-app-config').defineAppConfig
@@ -201,9 +200,6 @@ declare global {
   export type { UrlMatchMode, UrlMatchRule, IUrlMatcher } from 'D:/code/front-end/52pjhelper/src/utils/urlMatcher'
   import('D:/code/front-end/52pjhelper/src/utils/urlMatcher')
   // @ts-ignore
-  export type { IUserBlacklist } from 'D:/code/front-end/52pjhelper/src/utils/userBlacklist'
-  import('D:/code/front-end/52pjhelper/src/utils/userBlacklist')
-  // @ts-ignore
   export type { UserInfo } from 'D:/code/front-end/52pjhelper/src/utils/userInfo'
   import('D:/code/front-end/52pjhelper/src/utils/userInfo')
   // @ts-ignore
@@ -240,7 +236,6 @@ declare module 'vue' {
     readonly createTableDataExtractor: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/tableDataExtractor')['createTableDataExtractor']>
     readonly createTableSelector: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/tableSelector')['createTableSelector']>
     readonly createUrlMatcher: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/urlMatcher')['createUrlMatcher']>
-    readonly createUserBlacklist: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userBlacklist')['createUserBlacklist']>
     readonly createUserLinkQuery: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userLinkQuery')['createUserLinkQuery']>
     readonly customRef: UnwrapRef<typeof import('vue')['customRef']>
     readonly defineAppConfig: UnwrapRef<typeof import('wxt/utils/define-app-config')['defineAppConfig']>

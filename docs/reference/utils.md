@@ -12,6 +12,17 @@ src/utils/
 ├── urlMatcher.ts        # URL 匹配工具
 ├── domHelper.ts         # DOM 操作辅助工具
 ├── validationHelper.ts  # 数据验证工具
+├── userBlacklist.ts     # 用户黑名单工具类（模块化重构版本）
+├── userBlacklist/       # 用户黑名单模块化实现
+│   ├── index.ts         # 统一导出
+│   ├── types.ts         # 类型定义
+│   ├── config.ts        # 配置常量
+│   ├── data.ts          # 数据加载和保存
+│   ├── ui.ts            # 样式和弹窗UI
+│   ├── processing.ts    # 用户名处理和扫描
+│   ├── events.ts        # 事件监听
+│   ├── manager.ts       # 核心管理器逻辑
+│   └── factory.ts       # 工厂函数
 └── index.ts             # 统一导出文件
 ```
 
@@ -1077,6 +1088,238 @@ onMounted(() => {
 })
 ```
 
+## 用户黑名单工具类 (userBlacklist.ts)
+
+### 概述
+
+用户黑名单工具类提供高亮显示黑名单用户的功能，鼠标悬停时显示用户的网盘信息。该模块已重构为模块化结构，遵循 `utils/contentFilter` 的模式。
+
+### 模块化结构
+
+```
+src/utils/userBlacklist/
+├── index.ts         # 统一导出所有公共API
+├── types.ts         # 类型定义（接口和类型别名）
+├── config.ts        # 配置常量和默认数据
+├── data.ts          # 数据加载、保存和自动更新检查
+├── ui.ts            # 样式注入、弹窗创建和显示逻辑
+├── processing.ts    # 用户名处理、扫描和防抖逻辑
+├── events.ts        # DOM 变化监听和事件管理
+├── manager.ts       # 核心管理器类，封装所有业务逻辑
+└── factory.ts       # 工厂函数，创建管理器实例
+```
+
+### 主要接口
+
+#### `IUserBlacklist` 接口
+
+用户黑名单管理器接口，定义所有公共方法：
+
+```typescript
+interface IUserBlacklist {
+  /** 启用功能 */
+  enable(): Promise<void>
+  /** 禁用功能 */
+  disable(): Promise<void>
+  /** 切换功能状态 */
+  toggle(): Promise<boolean>
+  /** 获取功能状态 */
+  getStatus(): boolean
+  /** 手动更新黑名单数据 */
+  updateData(data: UserBlacklistData): Promise<void>
+  /** 获取黑名单数据 */
+  getData(): Promise<UserBlacklistData>
+  /** 检查是否需要自动更新 */
+  shouldAutoUpdate(): Promise<boolean>
+  /** 重新加载数据并重新扫描 */
+  reloadData(): Promise<void>
+}
+```
+
+### 数据类型
+
+#### `UserBlacklistItem`
+
+用户黑名单条目：
+
+```typescript
+interface UserBlacklistItem {
+  forumId: string           // 论坛ID（唯一标识）
+  cloudStorages: CloudStorageRecord[]  // 网盘记录数组
+  note?: string             // 备注信息（可选）
+}
+```
+
+#### `CloudStorageRecord`
+
+网盘记录：
+
+```typescript
+interface CloudStorageRecord {
+  provider: string  // 网盘厂商（如"百度"、"夸克"、"迅雷"等）
+  id: string        // 网盘ID（可能包含*号隐藏部分）
+  postLink: string  // 帖子链接（可能为空）
+  recorder: string  // 记录者（管理员用户名）
+}
+```
+
+### 主要函数
+
+#### `createUserBlacklist()`
+
+创建用户黑名单管理器实例：
+
+```typescript
+import { createUserBlacklist } from '@/utils/userBlacklist'
+
+// 创建管理器实例
+const userBlacklist = createUserBlacklist()
+
+// 启用功能
+await userBlacklist.enable()
+
+// 获取功能状态
+const isEnabled = userBlacklist.getStatus()
+
+// 切换功能状态
+const newState = await userBlacklist.toggle()
+```
+
+### 配置常量
+
+```typescript
+// 存储键常量
+export const STORAGE_KEY = 'userBlacklist_enabled'
+export const DATA_STORAGE_KEY = 'userBlacklist_data'
+export const LAST_UPDATE_KEY = 'userBlacklist_lastUpdate'
+export const AUTO_UPDATE_INTERVAL = 7 * 24 * 60 * 60 * 1000 // 7天
+export const USERNAME_SELECTOR = 'a[href*="home.php?mod=space&uid="]'
+```
+
+### 使用示例
+
+#### 1. 基本使用
+
+```typescript
+import { createUserBlacklist } from '@/utils/userBlacklist'
+
+// 创建并初始化
+const blacklistManager = createUserBlacklist()
+
+// 在需要时启用
+await blacklistManager.enable()
+
+// 获取当前数据
+const data = await blacklistManager.getData()
+console.log(`当前有 ${data.length} 个黑名单用户`)
+
+// 手动更新数据
+await blacklistManager.updateData(newData)
+```
+
+#### 2. 在 Vue 组件中使用
+
+```vue
+<script setup lang="ts">
+import { createUserBlacklist } from '@/utils/userBlacklist'
+import { onMounted, ref } from 'vue'
+
+const blacklistManager = createUserBlacklist()
+const isEnabled = ref(false)
+
+onMounted(() => {
+  isEnabled.value = blacklistManager.getStatus()
+})
+
+const toggleBlacklist = async () => {
+  const newState = await blacklistManager.toggle()
+  isEnabled.value = newState
+}
+</script>
+
+<template>
+  <div>
+    <button @click="toggleBlacklist">
+      {{ isEnabled ? '禁用黑名单' : '启用黑名单' }}
+    </button>
+    <p>当前状态: {{ isEnabled ? '已启用' : '已禁用' }}</p>
+  </div>
+</template>
+```
+
+#### 3. 数据管理
+
+```typescript
+import { createUserBlacklist } from '@/utils/userBlacklist'
+
+const blacklistManager = createUserBlacklist()
+
+// 检查是否需要自动更新
+const needsUpdate = await blacklistManager.shouldAutoUpdate()
+if (needsUpdate) {
+  console.log('需要更新黑名单数据')
+  // 从服务器获取最新数据并更新
+  const newData = await fetchBlacklistData()
+  await blacklistManager.updateData(newData)
+}
+
+// 重新加载数据（例如在数据源变化后）
+await blacklistManager.reloadData()
+```
+
+### 功能特点
+
+1. **模块化设计**：代码按功能职责分离，便于维护和测试
+2. **向后兼容**：保持原有接口不变，现有代码无需修改
+3. **性能优化**：使用防抖扫描和快速查找 Set 提高性能
+4. **自动更新**：支持检查数据是否需要自动更新
+5. **响应式 UI**：鼠标悬停显示详细信息弹窗
+6. **DOM 监听**：自动监听页面变化，处理动态加载的内容
+
+### 与其他模块的集成
+
+#### 与表格数据提取器集成
+
+用户黑名单模块会自动从表格数据提取器加载数据：
+
+```typescript
+// 自动从表格数据提取器加载黑名单数据
+const extractedData = await loadBlacklistDataFromTableExtractor()
+```
+
+#### 与存储助手集成
+
+使用统一的存储接口管理配置和数据：
+
+```typescript
+import { storageHelper } from '@/utils/storageHelper'
+
+// 保存配置
+await storageHelper.saveBoolean(STORAGE_KEY, isEnabled)
+
+// 加载数据
+const storedData = await storageHelper.loadArray<UserBlacklistItem>(DATA_STORAGE_KEY, [])
+```
+
+### 错误处理
+
+```typescript
+try {
+  await blacklistManager.enable()
+} catch (error) {
+  console.error('启用用户黑名单失败:', error)
+  // 提供 fallback 行为
+  showErrorMessage('无法启用黑名单功能')
+}
+```
+
+### 最佳实践
+
+1. **延迟初始化**：工厂函数内部使用异步初始化，不阻塞构造
+2. **资源清理**：禁用功能时会清理所有注入的样式和事件监听器
+3. **防抖处理**：DOM 扫描使用防抖避免频繁操作
+4. **类型安全**：使用 TypeScript 接口确保类型安全
+
 ## 相关文档
 
 - [项目文件结构](./file-structure.md) - 项目文件结构说明
@@ -1085,5 +1328,6 @@ onMounted(() => {
 
 ---
 
-_文档版本：1.0.0_  
-_最后更新：2026-04-17_
+_文档版本：1.1.0_  
+_最后更新：2026-04-18_  
+_更新内容：添加用户黑名单模块化重构文档_

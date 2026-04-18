@@ -16,7 +16,7 @@ import { createDuplicatePostDetection } from '@utils/duplicatePostDetection'
 import { initializeRowClickToCheck } from '@utils/rowClickToCheck'
 import { createContentFilter } from '@utils/contentFilter'
 import { createTableDataExtractor } from '@utils/tableDataExtractor'
-import { createUserBlacklist } from '@utils/userBlacklist'
+import { createUserBlacklist } from '@utils/userBlacklist/index'
 import * as autoFill from '@utils/autofills'
 import type { ManagerInstances } from './messageHandler'
 
