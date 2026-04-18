@@ -16,11 +16,11 @@ export const processUsernameElement = (
   const username = element.textContent?.trim()
   if (!username) return
 
-  console.log(`[用户黑名单] 处理用户名: "${username}"`)
+  // console.log(`[用户黑名单] 处理用户名: "${username}"`)
 
   // 检查是否在黑名单中
   if (blacklistIds.has(username.toLowerCase())) {
-    console.log(`[用户黑名单] 用户名 "${username}" 在黑名单中，添加高亮样式`)
+    // console.log(`[用户黑名单] 用户名 "${username}" 在黑名单中，添加高亮样式`)
     // 添加高亮样式
     element.classList.add('user-blacklist-highlight')
 
@@ -47,9 +47,9 @@ export const scanAndProcessUsernames = (
   blacklistIds: Set<string>,
   blacklistData: UserBlacklistData
 ): void => {
-  console.log('[用户黑名单] 开始扫描用户名元素，选择器:', USERNAME_SELECTOR)
+  // console.log('[用户黑名单] 开始扫描用户名元素，选择器:', USERNAME_SELECTOR)
   const usernameElements = document.querySelectorAll<HTMLAnchorElement>(USERNAME_SELECTOR)
-  console.log(`[用户黑名单] 找到 ${usernameElements.length} 个用户名元素`)
+  // console.log(`[用户黑名单] 找到 ${usernameElements.length} 个用户名元素`)
   usernameElements.forEach(element => {
     processUsernameElement(element, blacklistIds, blacklistData)
   })

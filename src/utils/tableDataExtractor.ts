@@ -61,7 +61,7 @@ export function createTableDataExtractor(): ITableDataExtractor {
    * 查找目标表格
    */
   const findTargetTable = (): HTMLTableElement | null => {
-    return document.querySelector('table#pid54896942') as HTMLTableElement | null
+    return document.querySelector('table#pid54896942 .t_f') as HTMLTableElement | null
   }
 
   /**
@@ -77,7 +77,7 @@ export function createTableDataExtractor(): ITableDataExtractor {
   const extractTableData = (table: HTMLTableElement): TableData => {
     const rows: TableRow[] = []
 
-    // 获取所有行（跳过表头行）
+    // 获取所有行
     const tableRows = table.querySelectorAll('tr')
 
     tableRows.forEach((row, rowIndex) => {
@@ -88,14 +88,14 @@ export function createTableDataExtractor(): ITableDataExtractor {
         cells.push({
           index: cellIndex,
           content: cell.textContent?.trim() || '',
-          html: cell.innerHTML.trim()
+          html: cell.innerHTML.trim(),
         })
       })
 
       if (cells.length > 0) {
         rows.push({
           index: rowIndex,
-          cells
+          cells,
         })
       }
     })
@@ -104,7 +104,7 @@ export function createTableDataExtractor(): ITableDataExtractor {
       id: table.id || '',
       selector: 'table' + (table.id ? `#${table.id}` : ''),
       rows,
-      extractedAt: new Date().toISOString()
+      extractedAt: new Date().toISOString(),
     }
   }
 
@@ -119,42 +119,42 @@ export function createTableDataExtractor(): ITableDataExtractor {
 
     const targetTable = findTargetTable()
     if (!targetTable) {
-      console.log('未找到目标表格: table#pid54896942')
+      // console.log('未找到目标表格: table#pid54896942')
       return
     }
 
-    console.log('找到目标表格:', targetTable)
+    // console.log('找到目标表格:', targetTable)
 
     // 查找子表格
     const subTables = findSubTables(targetTable)
-    console.log(`找到 ${subTables.length} 个子表格`)
+    // console.log(`找到 ${subTables.length} 个子表格`)
 
     // 提取目标表格数据
     const targetTableData = extractTableData(targetTable)
-    console.log('目标表格数据:', targetTableData)
+    // console.log('目标表格数据:', targetTableData)
 
     // 提取所有子表格数据
     const subTablesData = subTables.map((table, index) => ({
       index,
-      data: extractTableData(table)
+      data: extractTableData(table),
     }))
 
-    console.log('子表格数据:', subTablesData)
+    // console.log('子表格数据:', subTablesData)
 
     // 保存到存储
     const allData = {
       targetTable: targetTableData,
       subTables: subTablesData,
       url: window.location.href,
-      extractedAt: new Date().toISOString()
+      extractedAt: new Date().toISOString(),
     }
 
     // 保存到本地存储
     try {
       await browser.storage.local.set({
-        'tableDataExtractor_lastExtraction': allData
+        tableDataExtractor_lastExtraction: allData,
       })
-      console.log('表格数据已保存到存储')
+      // console.log('表格数据已保存到存储')
     } catch (error) {
       console.error('保存表格数据失败:', error)
     }
@@ -171,7 +171,7 @@ export function createTableDataExtractor(): ITableDataExtractor {
 
     // 如果没找到，设置 MutationObserver 监听 DOM 变化
     if (!hasExtracted) {
-      observer = new MutationObserver((mutations) => {
+      observer = new MutationObserver(mutations => {
         for (const mutation of mutations) {
           if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
             void extractData()
@@ -185,7 +185,7 @@ export function createTableDataExtractor(): ITableDataExtractor {
 
       observer.observe(document.body, {
         childList: true,
-        subtree: true
+        subtree: true,
       })
 
       // 设置超时，避免无限监听
@@ -195,7 +195,7 @@ export function createTableDataExtractor(): ITableDataExtractor {
           observer = null
         }
         if (!hasExtracted) {
-          console.log('超时：未找到目标表格')
+          // console.log('超时：未找到目标表格')
         }
       }, 10000) // 10秒超时
     }

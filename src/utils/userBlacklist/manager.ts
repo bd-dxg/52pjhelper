@@ -32,7 +32,7 @@ export class UserBlacklistManager {
   async loadBlacklistData(): Promise<void> {
     this.blacklistData = await loadBlacklistData()
     this.blacklistIds = new Set(this.blacklistData.map(item => item.forumId.toLowerCase()))
-    console.log(`[用户黑名单] 加载完成，共 ${this.blacklistData.length} 个用户，ID列表:`, Array.from(this.blacklistIds))
+    // console.log(`[用户黑名单] 加载完成，共 ${this.blacklistData.length} 个用户，ID列表:`, Array.from(this.blacklistIds))
   }
 
   /**
@@ -45,6 +45,8 @@ export class UserBlacklistManager {
     await this.saveConfig()
     injectStyles()
     attachEventListeners(this.blacklistIds, this.blacklistData)
+    // 立即扫描现有的用户名元素
+    scanAndProcessUsernames(this.blacklistIds, this.blacklistData)
   }
 
   /**
@@ -131,6 +133,8 @@ export class UserBlacklistManager {
     if (this.isEnabled) {
       injectStyles()
       attachEventListeners(this.blacklistIds, this.blacklistData)
+      // 立即扫描现有的用户名元素
+      scanAndProcessUsernames(this.blacklistIds, this.blacklistData)
     }
   }
 }

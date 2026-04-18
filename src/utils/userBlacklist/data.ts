@@ -24,11 +24,21 @@ export const loadBlacklistDataFromTableExtractor = async (): Promise<UserBlackli
     if (extractionDataTyped.targetTable && extractionDataTyped.targetTable.rows) {
       console.log('[用户黑名单] 目标表格行数:', extractionDataTyped.targetTable.rows.length)
 
-      // 打印前几行数据
-      const sampleRows = extractionDataTyped.targetTable.rows.slice(0, 3)
-      sampleRows.forEach((row, index: number) => {
-        console.log(`[用户黑名单] 行 ${index} 单元格:`, row.cells.map((cell) => cell.content))
-      })
+      // 调试信息：表格数据提取（生产环境可注释掉）
+      // const sampleRows = extractionDataTyped.targetTable.rows.slice(0, 15)
+      // console.log(`[用户黑名单] 表格前 ${sampleRows.length} 行数据（原始）:`)
+      // sampleRows.forEach((row, index: number) => {
+      //   const cellContents = row.cells.map((cell) => cell.content)
+      //   const serialNumber = row.cells[0]?.content?.trim() || ''
+      //   const forumId = row.cells[1]?.content?.trim() || ''
+      //   console.log(`[用户黑名单] 行 ${index}:`, {
+      //     cells: cellContents,
+      //     serialNumber,
+      //     forumId,
+      //     isHeader: serialNumber.includes('序号') || forumId.includes('论坛id'),
+      //     isTemplate: forumId === '示例用户' || (serialNumber === '0' && forumId === '示例用户')
+      //   })
+      // })
     }
 
     // 根据论坛黑名单表格结构解析数据
@@ -54,6 +64,30 @@ export const loadBlacklistDataFromTableExtractor = async (): Promise<UserBlackli
           const postLink = cells[4]?.content?.trim() // 第5列：帖子链接
           const recorder = cells[5]?.content?.trim() // 第6列：记录者
           const note = cells[6]?.content?.trim() // 第7列：备注
+
+          // 跳过表头行、模板行和无效行
+          // 1. 表头行特征：序号列包含"序号"、"编号"等关键词
+          // 2. 模板行特征：论坛ID为"示例用户"或序号为"0"的模板数据
+          // 3. 无效行：所有关键字段都为空
+          const isHeaderOrTemplateRow =
+            // 表头行：序号列的表头关键词
+            serialNumber.includes('序号') || serialNumber.includes('编号') ||
+            // 表头行：论坛ID列的表头关键词
+            forumId.includes('论坛id') || forumId.includes('论坛ID') ||
+            forumId.includes('72主题') ||
+            // 模板行：序号为"0"且论坛ID为"示例用户"
+            (serialNumber === '0' && forumId === '示例用户') ||
+            // 模板行：论坛ID为"示例用户"（无论序号是什么）
+            forumId === '示例用户' ||
+            // 其他可能的表头关键词
+            serialNumber.includes('主题') || forumId.includes('主题') ||
+            // 空行或无效数据
+            (!serialNumber && !forumId && !provider && !cloudId)
+
+          if (isHeaderOrTemplateRow) {
+            // console.log('[用户黑名单] 跳过行（表头/模板/无效）:', { serialNumber, forumId, provider, cloudId })
+            return
+          }
 
           // 如果序号不是"-"，说明是新用户
           if (serialNumber !== '-' && forumId && forumId !== '-') {
@@ -99,7 +133,7 @@ export const loadBlacklistDataFromTableExtractor = async (): Promise<UserBlackli
       })
     }
 
-    console.log(`[用户黑名单] 从表格解析出 ${blacklistItems.length} 个用户`)
+    // console.log(`[用户黑名单] 从表格解析出 ${blacklistItems.length} 个用户`)
     return blacklistItems.length > 0 ? blacklistItems : DEFAULT_BLACKLIST_DATA
   } catch (error) {
     console.error('[用户黑名单] 从表格数据提取器加载数据失败:', error)
