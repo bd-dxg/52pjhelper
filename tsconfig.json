@@ -7,23 +7,19 @@
     "noEmit": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-
     /* Type Checking */
     "strict": true,
     "lib": ["DOM", "WebWorker", "ESNext"],
-
     /* Completeness */
     "skipLibCheck": true,
-
     /* Path Mapping */
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@com/*": ["src/components/*"],
-      "@utils/*": ["src/utils/*"],
-      "@ent/*": ["src/entries/*"],
-      "@pages/*": ["src/pages/*"],
-      "@conf/*": ["src/configs/*"]
+      "@/*": ["./src/*"],
+      "@com/*": ["./src/components/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@ent/*": ["./src/entries/*"],
+      "@pages/*": ["./src/pages/*"],
+      "@conf/*": ["./src/configs/*"]
     }
   },
   "exclude": ["packages", "templates", "node_modules"]
