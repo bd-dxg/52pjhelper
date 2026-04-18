@@ -1,10 +1,15 @@
 <template>
   <div class="blacklist-update-container">
-    <button class="blacklist-update-button" @click="updateBlacklistData" :disabled="isUpdating">
+    <button class="btn-update" @click="updateBlacklistData" :disabled="isUpdating">
       {{ isUpdating ? '更新中...' : '更新黑名单' }}
     </button>
-    <div v-if="message" class="blacklist-update-message" :class="messageType">
-      {{ message }}
+    <!-- 成功消息提示 -->
+    <div v-if="showSuccessMessage" class="update-status-message success">
+      <span>✓ 黑名单数据已更新</span>
+    </div>
+    <!-- 错误消息提示 -->
+    <div v-else-if="showErrorMessage" class="update-status-message error">
+      <span>✗ {{ errorMessage }}</span>
     </div>
   </div>
 </template>
@@ -17,8 +22,9 @@ const emit = defineEmits<{
 }>()
 
 const isUpdating = ref(false)
-const message = ref('')
-const messageType = ref<'success' | 'error' | ''>('')
+const showSuccessMessage = ref(false)
+const showErrorMessage = ref(false)
+const errorMessage = ref('')
 
 // 数据源页面URL
 const DATA_SOURCE_URL = 'https://www.52pojie.cn/thread-2094795-1-1.html'
@@ -28,8 +34,9 @@ const updateBlacklistData = async (): Promise<void> => {
   if (isUpdating.value) return
 
   isUpdating.value = true
-  message.value = '正在打开数据源页面...'
-  messageType.value = ''
+  showSuccessMessage.value = false
+  showErrorMessage.value = false
+  errorMessage.value = ''
 
   try {
     // 创建新标签页打开数据源页面
@@ -53,27 +60,25 @@ const updateBlacklistData = async (): Promise<void> => {
     // 关闭数据源标签页
     await browser.tabs.remove(dataSourceTab.id!)
 
-    // 直接更新成功，不依赖当前页面
-    message.value = '黑名单数据已更新'
-    messageType.value = 'success'
+    // 显示成功消息
+    showSuccessMessage.value = true
 
     // 触发更新事件
     emit('update')
 
     // 3秒后清除成功消息
     setTimeout(() => {
-      message.value = ''
-      messageType.value = ''
+      showSuccessMessage.value = false
     }, 3000)
   } catch (error) {
     console.error('更新黑名单数据失败:', error)
-    message.value = error instanceof Error ? error.message : '更新失败，请重试'
-    messageType.value = 'error'
+    errorMessage.value = error instanceof Error ? error.message : '更新失败，请重试'
+    showErrorMessage.value = true
 
     // 5秒后清除错误消息
     setTimeout(() => {
-      message.value = ''
-      messageType.value = ''
+      showErrorMessage.value = false
+      errorMessage.value = ''
     }, 5000)
   } finally {
     isUpdating.value = false
@@ -84,28 +89,31 @@ const updateBlacklistData = async (): Promise<void> => {
 <style scoped>
 .blacklist-update-container {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px; /* 减少间隙 */
+  min-width: 100px; /* 确保容器有足够宽度 */
 }
 
-.blacklist-update-button {
-  padding: 8px 16px;
+/* 按钮样式 */
+.btn-update {
+  padding: 6px 12px;
   background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
   color: white;
   border: none;
-  border-radius: 8px;
-  font-size: 13px;
+  border-radius: 6px;
+  font-size: 12px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
-  white-space: nowrap; /* 防止文字换行 */
-  min-width: 100px; /* 确保按钮有足够宽度 */
+  white-space: nowrap;
+  min-width: 90px;
 }
 
-.blacklist-update-button::before {
+.btn-update::before {
   content: '';
   position: absolute;
   top: 0;
@@ -116,54 +124,68 @@ const updateBlacklistData = async (): Promise<void> => {
   transition: left 0.5s;
 }
 
-.blacklist-update-button:hover:not(:disabled) {
+.btn-update:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.blacklist-update-button:hover:not(:disabled)::before {
+.btn-update:hover:not(:disabled)::before {
   left: 100%;
 }
 
-.blacklist-update-button:active:not(:disabled) {
+.btn-update:active:not(:disabled) {
   transform: translateY(0);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-.blacklist-update-button:disabled {
+.btn-update:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   background: linear-gradient(135deg, #999 0%, #777 100%);
 }
 
-.blacklist-update-message {
-  padding: 8px;
-  border-radius: 4px;
-  font-size: 14px;
-  animation: slideIn 0.3s ease-in;
-  max-width: 200px;
+/* 更新状态消息提示 */
+.update-status-message {
+  position: absolute;
+  top: 0;
+  padding: 6px;
+  white-space: nowrap;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  animation: slideDown 0.3s ease-out;
+  text-align: center;
+  width: 100%;
 }
 
-.blacklist-update-message.success {
-  background-color: var(--success-bg);
-  color: var(--success-color);
-  border: 1px solid var(--success-border);
+.update-status-message span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
 }
 
-.blacklist-update-message.error {
-  background-color: var(--error-bg);
-  color: var(--error-color);
-  border: 1px solid var(--error-border);
+/* 成功消息 */
+.update-status-message.success {
+  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+  color: white;
 }
 
-@keyframes slideIn {
+/* 错误消息 */
+.update-status-message.error {
+  background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+  color: white;
+}
+
+@keyframes slideDown {
   from {
     opacity: 0;
-    transform: translateX(100px);
+    transform: translateY(-10px);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0);
   }
 }
 </style>

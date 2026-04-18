@@ -210,11 +210,12 @@ const showMessage = (text: string, type: 'success' | 'error' = 'success') => {
 /* 右上角按钮容器 */
 .header-buttons-container {
   position: absolute;
-  top: 12px;
-  right: 5px;
+  top: 8px; /* 减少上边距 */
+  right: 8px; /* 增加右边距 */
   display: flex;
-  align-items: center;
-  gap: 12px;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px; /* 进一步减少间隙 */
   z-index: 10;
 }
 

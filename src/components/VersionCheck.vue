@@ -171,70 +171,32 @@ const checkUpdateNow = async () => {
   gap: 8px;
 }
 
+/* 按钮样式 */
 .btn-update,
-.btn-dismiss {
-  padding: 8px 16px;
+.btn-dismiss,
+.btn-check {
+  padding: 6px 12px;
   background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
   color: white;
   border: none;
-  border-radius: 8px;
-  font-size: 13px;
+  border-radius: 6px;
+  font-size: 12px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
-  white-space: nowrap; /* 防止文字换行 */
-  min-width: 80px; /* 确保按钮有足够宽度 */
-}
-
-.btn-update::before,
-.btn-dismiss::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s;
-}
-
-.btn-update:hover,
-.btn-dismiss:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.btn-update:hover::before,
-.btn-dismiss:hover::before {
-  left: 100%;
-}
-
-.btn-update:active,
-.btn-dismiss:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+  min-width: 70px;
 }
 
 .btn-check {
-  padding: 8px 16px;
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  position: relative;
-  overflow: hidden;
-  white-space: nowrap; /* 防止文字换行 */
-  min-width: 100px; /* 确保按钮有足够宽度 */
+  min-width: 90px;
 }
 
+.btn-update::before,
+.btn-dismiss::before,
 .btn-check::before {
   content: '';
   position: absolute;
@@ -246,20 +208,28 @@ const checkUpdateNow = async () => {
   transition: left 0.5s;
 }
 
+.btn-update:hover:not(:disabled),
+.btn-dismiss:hover:not(:disabled),
 .btn-check:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
+.btn-update:hover:not(:disabled)::before,
+.btn-dismiss:hover:not(:disabled)::before,
 .btn-check:hover:not(:disabled)::before {
   left: 100%;
 }
 
+.btn-update:active:not(:disabled),
+.btn-dismiss:active:not(:disabled),
 .btn-check:active:not(:disabled) {
   transform: translateY(0);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
+.btn-update:disabled,
+.btn-dismiss:disabled,
 .btn-check:disabled {
   opacity: 0.6;
   cursor: not-allowed;
@@ -268,19 +238,19 @@ const checkUpdateNow = async () => {
 
 /* 已是最新版本提示 */
 .up-to-date-message {
-  padding: 8px 16px;
+  padding: 6px 12px;
   background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
   color: white;
-  border-radius: 8px;
-  font-size: 13px;
+  border-radius: 6px;
+  font-size: 12px;
   font-weight: 500;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   animation: slideDown 0.3s ease-out;
 }
 
 .up-to-date-message span {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
 }
 </style>

@@ -1,0 +1,7 @@
+/* 通用样式文件 - 包含按钮和消息样式 */
+
+/* 导入按钮样式 */
+@import './buttons.css';
+
+/* 导入消息样式 */
+@import './messages.css';

@@ -160,43 +160,69 @@ export function createUserBlacklist(): IUserBlacklist {
         })
       }
 
-      // 这里需要根据实际的表格结构解析数据
-      // 根据常见的论坛黑名单表格结构，假设表格有这些列：
-      // 序号 | 论坛ID | 网盘厂商 | 网盘ID | 帖子链接 | 记录者 | 备注
+      // 根据论坛黑名单表格结构解析数据
+      // 表格结构：序号 | 论坛ID | 网盘厂商 | 网盘ID | 帖子链接 | 记录者 | 备注
+      // 规则：
+      // 1. 每个用户的第一行有"序号"和"论坛ID"
+      // 2. 同一用户的其他网盘记录行中，"序号"和"论坛ID"都是"-"
+      // 3. 需要跟踪当前用户，将同一用户的所有网盘记录合并
 
       const blacklistItems: UserBlacklistItem[] = []
 
       if (extractionDataTyped.targetTable && extractionDataTyped.targetTable.rows) {
+        let currentForumId = ''
+        let currentNote = ''
+
         extractionDataTyped.targetTable.rows.forEach((row) => {
           const cells = row.cells
-          if (cells.length >= 6) { // 至少需要6列数据
+          if (cells.length >= 7) { // 表格有7列
+            const serialNumber = cells[0]?.content?.trim() // 第1列：序号
             const forumId = cells[1]?.content?.trim() // 第2列：论坛ID
             const provider = cells[2]?.content?.trim() // 第3列：网盘厂商
             const cloudId = cells[3]?.content?.trim() // 第4列：网盘ID
             const postLink = cells[4]?.content?.trim() // 第5列：帖子链接
             const recorder = cells[5]?.content?.trim() // 第6列：记录者
-            const note = cells[6]?.content?.trim() // 第7列：备注（可选）
+            const note = cells[6]?.content?.trim() // 第7列：备注
 
-            if (forumId) {
+            // 如果序号不是"-"，说明是新用户
+            if (serialNumber !== '-' && forumId && forumId !== '-') {
+              currentForumId = forumId
+              currentNote = note || ''
+
               // 查找是否已存在该用户的记录
-              let existingItem = blacklistItems.find(item => item.forumId === forumId)
+              let existingItem = blacklistItems.find(item => item.forumId === currentForumId)
 
               if (!existingItem) {
                 existingItem = {
-                  forumId,
+                  forumId: currentForumId,
                   cloudStorages: [],
-                  note
+                  note: currentNote
                 }
                 blacklistItems.push(existingItem)
               }
+            }
 
-              // 添加网盘记录
-              existingItem.cloudStorages.push({
-                provider: provider || '未知',
-                id: cloudId || '',
-                postLink: postLink || '',
-                recorder: recorder || ''
-              })
+            // 如果有当前用户且网盘厂商有值，添加网盘记录
+            if (currentForumId && provider && provider.trim() !== '') {
+              const existingItem = blacklistItems.find(item => item.forumId === currentForumId)
+              if (existingItem) {
+                // 检查是否已存在相同的网盘记录
+                const existingStorage = existingItem.cloudStorages.find(
+                  storage => storage.provider === provider && storage.id === cloudId
+                )
+
+                if (!existingStorage) {
+                  // 处理帖子链接：如果是"-"则保持为空
+                  const processedPostLink = postLink === '-' ? '' : (postLink || '')
+
+                  existingItem.cloudStorages.push({
+                    provider: provider || '未知',
+                    id: cloudId || '',
+                    postLink: processedPostLink,
+                    recorder: recorder || ''
+                  })
+                }
+              }
             }
           }
         })
