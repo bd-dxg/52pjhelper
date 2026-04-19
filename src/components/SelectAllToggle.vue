@@ -14,9 +14,6 @@
 import selectAllConfig from '@/configs/selectAll.json'
 import { useFeatureToggle } from '@/composables/useFeatureToggle'
 
-const emit = defineEmits<{
-  (e: 'show-message', text: string, type: 'success' | 'error'): void
-}>()
 
 const config = {
   name: selectAllConfig.name,
@@ -26,9 +23,7 @@ const config = {
   messageType: 'TOGGLE_SELECT_ALL',
 }
 
-const { enabled, toggleFeature, isToggling } = useFeatureToggle(config, (text, type) => {
-  emit('show-message', text, type)
-})
+const { enabled, toggleFeature, isToggling } = useFeatureToggleWithNotification(config)
 </script>
 
 <style scoped src="@/styles/toggle.css"></style>

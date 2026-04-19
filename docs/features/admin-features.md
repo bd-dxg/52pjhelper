@@ -232,7 +232,7 @@
 - `duplicatePostDetectionEnabled` - 重复发帖检测开关
 - `rowClickToCheckEnabled` - 勾选范围开关
 - `contentFilterEnabled` - 灌水筛选开关
-- `userBlacklistEnabled` - 用户黑名单开关
+- `userCloudDiskListEnabled` - 网盘名单开关
 - `versionCheckEnabled` - 版本更新检查开关
 
 ### 默认状态
@@ -255,7 +255,7 @@ src/components/
 ├── DuplicatePostDetectionToggle.vue # 重复发帖检测组件
 ├── RowClickToCheckToggle.vue    # 勾选范围组件
 ├── ContentFilterToggle.vue      # 灌水筛选组件
-├── UserBlacklistToggle.vue      # 用户黑名单组件
+├── UserCloudDiskListToggle.vue      # 用户黑名单组件
 └── UpdateBanner.vue             # 版本更新提示组件
 ```
 
@@ -272,7 +272,7 @@ src/utils/
 ├── duplicatePostDetection.ts   # 重复发帖检测管理
 ├── rowClickToCheck.ts          # 勾选范围管理
 ├── contentFilter.ts            # 灌水筛选管理
-├── userBlacklist/              # 用户黑名单模块化实现
+├── userCloudDiskList/              # 用户黑名单模块化实现
 │   ├── index.ts                # 统一导出
 │   ├── types.ts                # 类型定义
 │   ├── config.ts               # 配置常量
@@ -351,7 +351,7 @@ A: 支持百度、夸克、迅雷等多种网盘厂商，数据格式包含网�
 
 - [自动填充详解](auto-fill.md)
 - [灌水筛选配置指南](content-filter.md)
-- [用户黑名单工具类参考](../reference/utils.md#用户黑名单工具类-userblacklistts)
+- [用户黑名单工具类参考](../reference/utils.md#用户黑名单工具类-userCloudDiskListts)
 - [组件开发指南](../development/component-guide.md)
 - [可组合函数式架构](../development/composable-architecture.md)
 

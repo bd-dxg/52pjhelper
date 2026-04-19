@@ -11,16 +11,14 @@
 </template>
 
 <script setup lang="ts">
-import nativeFloorDisplayConfig from '@/configs/nativeFloorDisplay.json'
-import { useFeatureToggle } from '@/composables/useFeatureToggle'
-
+import { useFeatureToggleWithNotification } from '@/composables/useFeatureToggleWithNotification'
 
 const config = {
-  name: nativeFloorDisplayConfig.name,
-  description: nativeFloorDisplayConfig.description,
-  storageKey: nativeFloorDisplayConfig.storageKey,
-  defaultEnabled: nativeFloorDisplayConfig.defaultEnabled,
-  messageType: 'TOGGLE_NATIVE_FLOOR_DISPLAY',
+  name: '测试通知功能',
+  description: '测试功能启用/禁用的通知颜色',
+  storageKey: 'test-notification-enabled',
+  defaultEnabled: true,
+  messageType: 'TOGGLE_TEST_NOTIFICATION',
 }
 
 const { enabled, toggleFeature, isToggling } = useFeatureToggleWithNotification(config)

@@ -2,7 +2,7 @@
 // Types for the #import virtual module
 declare module '#imports' {
   export { browser, Browser } from 'wxt/browser';
-  export { storage, StorageArea, WxtStorage, WxtStorageItem, StorageItemKey, StorageAreaChanges, MigrationError } from 'wxt/utils/storage';
+  export { storage, WxtStorage, WxtStorageItem, StorageArea, StorageItemKey, StorageAreaChanges, MigrationError } from 'wxt/utils/storage';
   export { getAppConfig, useAppConfig } from 'wxt/utils/app-config';
   export { ContentScriptContext, WxtWindowEventMap } from 'wxt/utils/content-script-context';
   export { createIframeUi, IframeContentScriptUi, IframeContentScriptUiOptions } from 'wxt/utils/content-script-ui/iframe';
@@ -19,6 +19,8 @@ declare module '#imports' {
   export { onActivated, onBeforeMount, onBeforeUnmount, onBeforeUpdate, onErrorCaptured, onDeactivated, onMounted, onServerPrefetch, onUnmounted, onUpdated, useAttrs, useSlots, computed, customRef, isReadonly, isRef, isShallow, isProxy, isReactive, markRaw, reactive, readonly, ref, shallowReactive, shallowReadonly, shallowRef, triggerRef, toRaw, toRef, toRefs, toValue, unref, watch, watchEffect, watchPostEffect, watchSyncEffect, defineComponent, defineAsyncComponent, getCurrentInstance, h, inject, nextTick, provide, useCssModule, createApp, effectScope, EffectScope, getCurrentScope, onScopeDispose, Component, Slot, Slots, ComponentPublicInstance, ComputedRef, DirectiveBinding, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, ShallowRef, MaybeRef, MaybeRefOrGetter, VNode, WritableComputedRef, onRenderTracked, onRenderTriggered, resolveComponent, useCssVars, useModel, getCurrentWatcher, onWatcherCleanup, useId, useTemplateRef } from 'vue';
   export { fakeBrowser } from 'wxt/testing';
   export { useFeatureToggle, VueFeatureConfig, UseFeatureToggleReturn } from '../src/composables/useFeatureToggle';
+  export { useFeatureToggleWithNotification } from '../src/composables/useFeatureToggleWithNotification';
+  export { useNotification, notification, NotificationAction, NotificationOptions, NotificationItem } from '../src/composables/useNotification';
   export { createAvatarQuery, IAvatarQuery } from '../src/utils/avatarQuery';
   export { createDefaultTime, IDefaultTime } from '../src/utils/defaultTime';
   export { createDuplicatePostDetection, IDuplicatePostDetection } from '../src/utils/duplicatePostDetection';

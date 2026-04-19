@@ -68,6 +68,7 @@ declare global {
   const markRaw: typeof import('vue').markRaw
   const messageHelper: typeof import('D:/code/front-end/52pjhelper/src/utils/messageHelper').messageHelper
   const nextTick: typeof import('vue').nextTick
+  const notification: typeof import('D:/code/front-end/52pjhelper/src/composables/useNotification').notification
   const onActivated: typeof import('vue').onActivated
   const onBeforeMount: typeof import('vue').onBeforeMount
   const onBeforeUnmount: typeof import('vue').onBeforeUnmount
@@ -110,8 +111,10 @@ declare global {
   const useCssModule: typeof import('vue').useCssModule
   const useCssVars: typeof import('vue').useCssVars
   const useFeatureToggle: typeof import('D:/code/front-end/52pjhelper/src/composables/useFeatureToggle').useFeatureToggle
+  const useFeatureToggleWithNotification: typeof import('D:/code/front-end/52pjhelper/src/composables/useFeatureToggleWithNotification').useFeatureToggleWithNotification
   const useId: typeof import('vue').useId
   const useModel: typeof import('vue').useModel
+  const useNotification: typeof import('D:/code/front-end/52pjhelper/src/composables/useNotification').useNotification
   const useSlots: typeof import('vue').useSlots
   const useTemplateRef: typeof import('vue').useTemplateRef
   const versionChecker: typeof import('D:/code/front-end/52pjhelper/src/utils/versionChecker').versionChecker
@@ -128,7 +131,7 @@ declare global {
   export type { Browser } from 'wxt/browser'
   import('wxt/browser')
   // @ts-ignore
-  export type { StorageArea, WxtStorage, WxtStorageItem, StorageItemKey, StorageAreaChanges, MigrationError } from 'wxt/utils/storage'
+  export type { WxtStorage, WxtStorageItem, StorageArea, StorageItemKey, StorageAreaChanges, MigrationError } from 'wxt/utils/storage'
   import('wxt/utils/storage')
   // @ts-ignore
   export type { WxtWindowEventMap } from 'wxt/utils/content-script-context'
@@ -157,6 +160,9 @@ declare global {
   // @ts-ignore
   export type { VueFeatureConfig, UseFeatureToggleReturn } from 'D:/code/front-end/52pjhelper/src/composables/useFeatureToggle'
   import('D:/code/front-end/52pjhelper/src/composables/useFeatureToggle')
+  // @ts-ignore
+  export type { NotificationAction, NotificationOptions, NotificationItem } from 'D:/code/front-end/52pjhelper/src/composables/useNotification'
+  import('D:/code/front-end/52pjhelper/src/composables/useNotification')
   // @ts-ignore
   export type { IAvatarQuery } from 'D:/code/front-end/52pjhelper/src/utils/avatarQuery'
   import('D:/code/front-end/52pjhelper/src/utils/avatarQuery')
@@ -277,6 +283,7 @@ declare module 'vue' {
     readonly markRaw: UnwrapRef<typeof import('vue')['markRaw']>
     readonly messageHelper: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/messageHelper')['messageHelper']>
     readonly nextTick: UnwrapRef<typeof import('vue')['nextTick']>
+    readonly notification: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/composables/useNotification')['notification']>
     readonly onActivated: UnwrapRef<typeof import('vue')['onActivated']>
     readonly onBeforeMount: UnwrapRef<typeof import('vue')['onBeforeMount']>
     readonly onBeforeUnmount: UnwrapRef<typeof import('vue')['onBeforeUnmount']>
@@ -319,8 +326,10 @@ declare module 'vue' {
     readonly useCssModule: UnwrapRef<typeof import('vue')['useCssModule']>
     readonly useCssVars: UnwrapRef<typeof import('vue')['useCssVars']>
     readonly useFeatureToggle: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/composables/useFeatureToggle')['useFeatureToggle']>
+    readonly useFeatureToggleWithNotification: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/composables/useFeatureToggleWithNotification')['useFeatureToggleWithNotification']>
     readonly useId: UnwrapRef<typeof import('vue')['useId']>
     readonly useModel: UnwrapRef<typeof import('vue')['useModel']>
+    readonly useNotification: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/composables/useNotification')['useNotification']>
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>
     readonly useTemplateRef: UnwrapRef<typeof import('vue')['useTemplateRef']>
     readonly versionChecker: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/versionChecker')['versionChecker']>

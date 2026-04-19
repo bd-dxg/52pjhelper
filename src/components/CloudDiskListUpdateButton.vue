@@ -15,7 +15,6 @@ const emit = defineEmits<{
 }>()
 
 const isUpdating = ref(false)
-const errorMessage = ref('')
 
 const { success, error } = useNotification()
 
@@ -27,7 +26,6 @@ const updateCloudDiskListData = async (): Promise<void> => {
   if (isUpdating.value) return
 
   isUpdating.value = true
-  errorMessage.value = ''
 
   try {
     // 创建新标签页打开数据源页面
@@ -59,9 +57,6 @@ const updateCloudDiskListData = async (): Promise<void> => {
   } catch (err) {
     console.error('更新网盘名单数据失败:', err)
     const message = err instanceof Error ? err.message : '更新失败，请重试'
-    errorMessage.value = message
-
-    // 显示错误通知
     error(message, { title: '更新失败' })
   } finally {
     isUpdating.value = false
@@ -93,7 +88,7 @@ const updateCloudDiskListData = async (): Promise<void> => {
   position: relative;
   overflow: hidden;
   white-space: nowrap;
-  min-width: 90px;
+  min-width: 100px;
 }
 
 .btn-update::before {

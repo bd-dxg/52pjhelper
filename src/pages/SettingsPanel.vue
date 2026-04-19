@@ -24,14 +24,8 @@
       <!-- 右上角按钮容器 -->
       <div class="header-buttons-container">
         <VersionCheck />
-        <BlacklistUpdateButton @update="handleBlacklistUpdate" />
+        <CloudDiskListUpdateButton @update="handleCloudDiskListUpdate" />
       </div>
-      <!-- 消息提示 -->
-      <aside class="message-container" role="status" aria-live="polite">
-        <output v-if="message" class="message" :class="messageType">
-          {{ message }}
-        </output>
-      </aside>
     </header>
 
     <!-- 选项卡导航 -->
@@ -60,15 +54,18 @@
     <div class="tabs-content">
       <!-- 导航菜单设置 -->
       <section v-show="activeTab === 'navigation'" role="tabpanel" class="tab-panel" aria-labelledby="navigation-tab">
-        <NavigationSettings @show-message="showMessage" />
+        <NavigationSettings />
       </section>
 
       <!-- 便捷查询设置 -->
       <section v-show="activeTab === 'quickQuery'" role="tabpanel" class="tab-panel" aria-labelledby="quickQuery-tab">
-        <GeneralFeaturesToggle @show-message="showMessage" />
-        <AdminFeaturesToggle v-if="isAdmin" @show-message="showMessage" />
+        <GeneralFeaturesToggle />
+        <AdminFeaturesToggle v-if="isAdmin" />
       </section>
     </div>
+
+    <!-- 全局通知容器 -->
+    <NotificationContainer />
   </main>
 </template>
 
@@ -77,8 +74,10 @@ import NavigationSettings from '@com/NavigationSettings.vue'
 import GeneralFeaturesToggle from '@com/GeneralFeaturesToggle.vue'
 import AdminFeaturesToggle from '@com/AdminFeaturesToggle.vue'
 import VersionCheck from '@com/VersionCheck.vue'
-import BlacklistUpdateButton from '@com/BlacklistUpdateButton.vue'
+import CloudDiskListUpdateButton from '@com/CloudDiskListUpdateButton.vue'
+import NotificationContainer from '@com/NotificationContainer.vue'
 import { getUserInfoFromCache, type UserInfo } from '@utils/userInfo'
+import { useNotification } from '@/composables/useNotification'
 
 defineOptions({
   name: 'SettingsPanel',
@@ -98,8 +97,6 @@ const userInfo = ref<UserInfo>({
   },
 })
 
-const message = ref('')
-const messageType = ref<'success' | 'error' | ''>('')
 const activeTab = ref<'navigation' | 'quickQuery'>('navigation')
 const ACTIVE_TAB_STORAGE_KEY = 'activeTab'
 
@@ -126,7 +123,7 @@ const saveActiveTab = async (tab: 'navigation' | 'quickQuery') => {
 }
 
 // 处理黑名单更新事件
-const handleBlacklistUpdate = () => {
+const handleCloudDiskListUpdate = () => {
   // 可以在这里添加一些全局处理逻辑，比如刷新页面数据等
   console.log('黑名单数据已更新')
 }
@@ -183,13 +180,23 @@ onMounted(() => {
   loadActiveTab()
 })
 
-// 显示消息
+// 显示消息（兼容旧接口）
 const showMessage = (text: string, type: 'success' | 'error' = 'success') => {
-  message.value = text
-  messageType.value = type
-  setTimeout(() => {
-    message.value = ''
-  }, 3000)
+  const { success, error, warning } = useNotification()
+
+  // 根据消息内容判断是启用还是禁用
+  if (type === 'success') {
+    if (text.includes('已禁用')) {
+      // 功能禁用显示橙色警告
+      warning(text, { title: '功能禁用' })
+    } else {
+      // 功能启用显示绿色成功
+      success(text, { title: '功能启用' })
+    }
+  } else {
+    error(text, { title: '操作失败' })
+  }
+
 }
 </script>
 

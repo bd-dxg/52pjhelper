@@ -117,6 +117,8 @@ npx vue-tsc --noEmit
 - [可组合函数式架构](development/composable-architecture.md) - Vue 3 组合式 API
 - [通信机制](development/communication.md) - Popup 与 Content Script 通信
 - [组件开发指南](development/component-guide.md) - 功能开关组件规范
+- [通知系统指南](development/notification-system.md) - 统一的通知系统使用
+- [通知系统迁移指南](development/notification-migration.md) - 从旧系统迁移到新系统
 - [最佳实践](development/best-practices.md) - 开发经验和建议
 
 ### 配置文档

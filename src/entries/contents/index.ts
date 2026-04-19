@@ -24,7 +24,7 @@ const managers: ManagerInstances = {
   duplicatePostDetectionManager: null,
   contentFilterManager: null,
   tableDataExtractorManager: null,
-  userBlacklistManager: null,
+  userCloudDiskListManager: null,
 }
 
 export default defineContentScript({

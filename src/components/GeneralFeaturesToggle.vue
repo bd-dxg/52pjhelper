@@ -2,9 +2,9 @@
   <div class="features-section">
     <h3 class="section-title">通用功能</h3>
     <div class="toggle-grid">
-      <FloorHighlighterToggle @show-message="handleShowMessage" />
-      <NativeFloorDisplayToggle @show-message="handleShowMessage" />
-      <DuplicatePostDetectionToggle @show-message="handleShowMessage" />
+      <FloorHighlighterToggle />
+      <NativeFloorDisplayToggle />
+      <DuplicatePostDetectionToggle />
     </div>
   </div>
 </template>
@@ -18,13 +18,6 @@ defineOptions({
   name: 'GeneralFeaturesToggle',
 })
 
-const emit = defineEmits<{
-  (e: 'show-message', text: string, type: 'success' | 'error'): void
-}>()
-
-const handleShowMessage = (text: string, type: 'success' | 'error' = 'success') => {
-  emit('show-message', text, type)
-}
 </script>
 
 <style scoped>

@@ -13,7 +13,7 @@ import type { IDefaultTime } from '@utils/defaultTime'
 import type { IDuplicatePostDetection } from '@utils/duplicatePostDetection'
 import type { IContentFilter } from '@utils/contentFilter'
 import type { ITableDataExtractor } from '@utils/tableDataExtractor'
-import type { IUserBlacklist } from '@utils/userBlacklist/index'
+import type { IUserCloudDiskList } from '@utils/userCloudDiskList/index'
 import { applyNavConfig } from '@utils/navigationHider'
 import { saveQuickReplyConfig, initQuickReply, cleanupQuickReply } from '@utils/quickReply'
 import { getUserInfo, saveUserInfoToCache } from '@utils/userInfo'
@@ -35,7 +35,7 @@ export interface ManagerInstances {
   duplicatePostDetectionManager: IDuplicatePostDetection | null
   contentFilterManager: IContentFilter | null
   tableDataExtractorManager: ITableDataExtractor | null
-  userBlacklistManager: IUserBlacklist | null
+  userCloudDiskListManager: IUserCloudDiskList | null
 }
 
 /**
@@ -445,42 +445,43 @@ export function registerMessageListener(managers: ManagerInstances): void {
     }
 
     // 用户黑名单功能切换
-    if (message.type === 'TOGGLE_USER_BLACKLIST') {
-      if (managers.userBlacklistManager) {
-        managers.userBlacklistManager
+    if (message.type === 'TOGGLE_USER_CloudDiskList') {
+      if (managers.userCloudDiskListManager) {
+        managers.userCloudDiskListManager
           .toggle()
           .then((enabled: boolean) => {
             sendResponse({ success: true, enabled })
           })
           .catch((error: unknown) => {
-            console.error('Toggle user blacklist failed:', error)
+            console.error('Toggle user CloudDiskList failed:', error)
             sendResponse({ success: false, message: 'Toggle failed' })
           })
         return true
       } else {
-        sendResponse({ success: false, message: 'UserBlacklistManager not initialized' })
+        sendResponse({ success: false, message: 'UserCloudDiskListManager not initialized' })
         return false
       }
     }
 
     // 获取用户黑名单状态
-    if (message.type === 'GET_USER_BLACKLIST_STATUS') {
-      if (managers.userBlacklistManager) {
-        const enabled = managers.userBlacklistManager.getStatus()
+    if (message.type === 'GET_USER_CloudDiskList_STATUS') {
+      if (managers.userCloudDiskListManager) {
+        const enabled = managers.userCloudDiskListManager.getStatus()
         sendResponse({ success: true, enabled })
       } else {
-        sendResponse({ success: false, message: 'UserBlacklistManager not initialized' })
+        sendResponse({ success: false, message: 'UserCloudDiskListManager not initialized' })
       }
       return false
     }
 
     // 重新加载用户黑名单数据
-    if (message.type === 'RELOAD_USER_BLACKLIST_DATA') {
-      if (managers.userBlacklistManager) {
+    if (message.type === 'RELOAD_USER_CloudDiskList_DATA') {
+      if (managers.userCloudDiskListManager) {
         // 重新加载数据并重新扫描
-        const userBlacklistManager = managers.userBlacklistManager as any
-        if (userBlacklistManager.reloadData) {
-          userBlacklistManager.reloadData()
+        const userCloudDiskListManager = managers.userCloudDiskListManager as any
+        if (userCloudDiskListManager.reloadData) {
+          userCloudDiskListManager
+            .reloadData()
             .then(() => {
               sendResponse({ success: true, message: '数据已重新加载' })
             })
@@ -494,7 +495,7 @@ export function registerMessageListener(managers: ManagerInstances): void {
           return false
         }
       } else {
-        sendResponse({ success: false, message: 'UserBlacklistManager not initialized' })
+        sendResponse({ success: false, message: 'UserCloudDiskListManager not initialized' })
         return false
       }
     }
@@ -505,19 +506,20 @@ export function registerMessageListener(managers: ManagerInstances): void {
         // 强制提取表格数据
         const tableDataExtractorManager = managers.tableDataExtractorManager as any
         if (tableDataExtractorManager.forceExtract) {
-          tableDataExtractorManager.forceExtract()
+          tableDataExtractorManager
+            .forceExtract()
             .then(async () => {
               // 提取成功后，立即重新加载用户黑名单数据
-              if (managers.userBlacklistManager) {
-                const userBlacklistManager = managers.userBlacklistManager as any
-                if (userBlacklistManager.reloadData) {
-                  await userBlacklistManager.reloadData()
+              if (managers.userCloudDiskListManager) {
+                const userCloudDiskListManager = managers.userCloudDiskListManager as any
+                if (userCloudDiskListManager.reloadData) {
+                  await userCloudDiskListManager.reloadData()
                   sendResponse({ success: true, message: '表格数据已提取并重新加载黑名单' })
                 } else {
                   sendResponse({ success: true, message: '表格数据已提取（reloadData方法不存在）' })
                 }
               } else {
-                sendResponse({ success: true, message: '表格数据已提取（UserBlacklistManager未初始化）' })
+                sendResponse({ success: true, message: '表格数据已提取（UserCloudDiskListManager未初始化）' })
               }
             })
             .catch((error: unknown) => {

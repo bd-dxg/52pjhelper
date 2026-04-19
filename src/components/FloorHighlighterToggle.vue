@@ -14,9 +14,6 @@
 import floorHighlighterConfig from '@/configs/floorHighlighter.json'
 import { useFeatureToggle } from '@/composables/useFeatureToggle'
 
-const emit = defineEmits<{
-  (e: 'show-message', text: string, type: 'success' | 'error'): void
-}>()
 
 const config = {
   name: floorHighlighterConfig.name,
@@ -26,9 +23,7 @@ const config = {
   messageType: 'TOGGLE_FLOOR_HIGHLIGHTER',
 }
 
-const { enabled, toggleFeature, isToggling } = useFeatureToggle(config, (text, type) => {
-  emit('show-message', text, type)
-})
+const { enabled, toggleFeature, isToggling } = useFeatureToggleWithNotification(config)
 </script>
 
 <style scoped src="@/styles/toggle.css"></style>

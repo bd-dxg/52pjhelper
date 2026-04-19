@@ -16,7 +16,7 @@ import { createDuplicatePostDetection } from '@utils/duplicatePostDetection'
 import { initializeRowClickToCheck } from '@utils/rowClickToCheck'
 import { createContentFilter } from '@utils/contentFilter'
 import { createTableDataExtractor } from '@utils/tableDataExtractor'
-import { createUserBlacklist } from '@utils/userBlacklist/index'
+import { createUserCloudDiskList } from '@utils/userCloudDiskList/index'
 import * as autoFill from '@utils/autofills'
 import type { ManagerInstances } from './messageHandler'
 
@@ -76,5 +76,5 @@ export async function initializeManagers(managers: ManagerInstances): Promise<vo
   managers.tableDataExtractorManager = createTableDataExtractor()
 
   // 初始化用户黑名单功能
-  managers.userBlacklistManager = createUserBlacklist()
+  managers.userCloudDiskListManager = createUserCloudDiskList()
 }

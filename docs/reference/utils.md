@@ -12,8 +12,8 @@ src/utils/
 ├── urlMatcher.ts        # URL 匹配工具
 ├── domHelper.ts         # DOM 操作辅助工具
 ├── validationHelper.ts  # 数据验证工具
-├── userBlacklist.ts     # 用户黑名单工具类（模块化重构版本）
-├── userBlacklist/       # 用户黑名单模块化实现
+├── userCloudDiskList.ts     # 网盘名单工具类（模块化重构版本）
+├── userCloudDiskList/       # 网盘名单模块化实现
 │   ├── index.ts         # 统一导出
 │   ├── types.ts         # 类型定义
 │   ├── config.ts        # 配置常量
@@ -1088,7 +1088,7 @@ onMounted(() => {
 })
 ```
 
-## 用户黑名单工具类 (userBlacklist.ts)
+## 用户黑名单工具类 (userCloudDiskList.ts)
 
 ### 概述
 
@@ -1097,7 +1097,7 @@ onMounted(() => {
 ### 模块化结构
 
 ```
-src/utils/userBlacklist/
+src/utils/userCloudDiskList/
 ├── index.ts         # 统一导出所有公共API
 ├── types.ts         # 类型定义（接口和类型别名）
 ├── config.ts        # 配置常量和默认数据
@@ -1110,6 +1110,7 @@ src/utils/userBlacklist/
 ```
 
 **各模块职责**：
+
 - **data.ts**：数据管理模块，负责从表格数据提取器加载数据、本地存储操作、自动更新检查
 - **types.ts**：类型定义，包括用户黑名单条目、网盘记录、表格提取数据结构
 - **config.ts**：配置常量，包括存储键、默认数据、自动更新间隔等
@@ -1122,12 +1123,12 @@ src/utils/userBlacklist/
 
 ### 主要接口
 
-#### `IUserBlacklist` 接口
+#### `IUserCloudDiskList` 接口
 
 用户黑名单管理器接口，定义所有公共方法：
 
 ```typescript
-interface IUserBlacklist {
+interface IUserCloudDiskList {
   /** 启用功能 */
   enable(): Promise<void>
   /** 禁用功能 */
@@ -1137,9 +1138,9 @@ interface IUserBlacklist {
   /** 获取功能状态 */
   getStatus(): boolean
   /** 手动更新黑名单数据 */
-  updateData(data: UserBlacklistData): Promise<void>
+  updateData(data: UserCloudDiskListData): Promise<void>
   /** 获取黑名单数据 */
-  getData(): Promise<UserBlacklistData>
+  getData(): Promise<UserCloudDiskListData>
   /** 检查是否需要自动更新 */
   shouldAutoUpdate(): Promise<boolean>
   /** 重新加载数据并重新扫描 */
@@ -1149,15 +1150,15 @@ interface IUserBlacklist {
 
 ### 数据类型
 
-#### `UserBlacklistItem`
+#### `UserCloudDiskListItem`
 
 用户黑名单条目：
 
 ```typescript
-interface UserBlacklistItem {
-  forumId: string           // 论坛ID（唯一标识）
-  cloudStorages: CloudStorageRecord[]  // 网盘记录数组
-  note?: string             // 备注信息（可选）
+interface UserCloudDiskListItem {
+  forumId: string // 论坛ID（唯一标识）
+  cloudStorages: CloudStorageRecord[] // 网盘记录数组
+  note?: string // 备注信息（可选）
 }
 ```
 
@@ -1167,10 +1168,10 @@ interface UserBlacklistItem {
 
 ```typescript
 interface CloudStorageRecord {
-  provider: string  // 网盘厂商（如"百度"、"夸克"、"迅雷"等）
-  id: string        // 网盘ID（可能包含*号隐藏部分）
-  postLink: string  // 帖子链接（可能为空）
-  recorder: string  // 记录者（管理员用户名）
+  provider: string // 网盘厂商（如"百度"、"夸克"、"迅雷"等）
+  id: string // 网盘ID（可能包含*号隐藏部分）
+  postLink: string // 帖子链接（可能为空）
+  recorder: string // 记录者（管理员用户名）
 }
 ```
 
@@ -1192,59 +1193,59 @@ interface TableExtractionData {
 
 ### 主要函数
 
-#### `createUserBlacklist()`
+#### `createUserCloudDiskList()`
 
 创建用户黑名单管理器实例：
 
 ```typescript
-import { createUserBlacklist } from '@/utils/userBlacklist'
+import { createUserCloudDiskList } from '@/utils/userCloudDiskList'
 
 // 创建管理器实例
-const userBlacklist = createUserBlacklist()
+const userCloudDiskList = createUserCloudDiskList()
 
 // 启用功能
-await userBlacklist.enable()
+await userCloudDiskList.enable()
 
 // 获取功能状态
-const isEnabled = userBlacklist.getStatus()
+const isEnabled = userCloudDiskList.getStatus()
 
 // 切换功能状态
-const newState = await userBlacklist.toggle()
+const newState = await userCloudDiskList.toggle()
 ```
 
-#### `loadBlacklistDataFromTableExtractor()`
+#### `loadCloudDiskListDataFromTableExtractor()`
 
 从表格数据提取器加载黑名单数据：
 
 ```typescript
-import { loadBlacklistDataFromTableExtractor } from '@/utils/userBlacklist'
+import { loadCloudDiskListDataFromTableExtractor } from '@/utils/userCloudDiskList'
 
 // 从表格数据提取器加载数据
-const blacklistData = await loadBlacklistDataFromTableExtractor()
-console.log(`从表格解析出 ${blacklistData.length} 个用户`)
+const CloudDiskListData = await loadCloudDiskListDataFromTableExtractor()
+console.log(`从表格解析出 ${CloudDiskListData.length} 个用户`)
 ```
 
-#### `loadBlacklistData()`
+#### `loadCloudDiskListData()`
 
 加载黑名单数据（优先从本地存储加载，无数据时从表格提取器加载）：
 
 ```typescript
-import { loadBlacklistData } from '@/utils/userBlacklist'
+import { loadCloudDiskListData } from '@/utils/userCloudDiskList'
 
 // 加载黑名单数据
-const blacklistData = await loadBlacklistData()
-console.log(`加载了 ${blacklistData.length} 条黑名单数据`)
+const CloudDiskListData = await loadCloudDiskListData()
+console.log(`加载了 ${CloudDiskListData.length} 条黑名单数据`)
 ```
 
-#### `saveBlacklistData()`
+#### `saveCloudDiskListData()`
 
 保存黑名单数据到本地存储：
 
 ```typescript
-import { saveBlacklistData } from '@/utils/userBlacklist'
+import { saveCloudDiskListData } from '@/utils/userCloudDiskList'
 
 // 保存黑名单数据
-await saveBlacklistData(blacklistData)
+await saveCloudDiskListData(CloudDiskListData)
 console.log('黑名单数据已保存')
 ```
 
@@ -1253,7 +1254,7 @@ console.log('黑名单数据已保存')
 检查是否需要自动更新黑名单数据：
 
 ```typescript
-import { shouldAutoUpdate } from '@/utils/userBlacklist'
+import { shouldAutoUpdate } from '@/utils/userCloudDiskList'
 
 // 检查是否需要自动更新
 const needsUpdate = await shouldAutoUpdate()
@@ -1266,14 +1267,14 @@ if (needsUpdate) {
 
 ```typescript
 // 存储键常量
-export const STORAGE_KEY = 'userBlacklist_enabled'
-export const DATA_STORAGE_KEY = 'userBlacklist_data'
-export const LAST_UPDATE_KEY = 'userBlacklist_lastUpdate'
+export const STORAGE_KEY = 'userCloudDiskList_enabled'
+export const DATA_STORAGE_KEY = 'userCloudDiskList_data'
+export const LAST_UPDATE_KEY = 'userCloudDiskList_lastUpdate'
 export const AUTO_UPDATE_INTERVAL = 24 * 60 * 60 * 1000 // 1天
 export const USERNAME_SELECTOR = 'a[href*="home.php?mod=space&uid="]'
 
 // 默认黑名单数据（空数组）
-export const DEFAULT_BLACKLIST_DATA: UserBlacklistData = []
+export const DEFAULT_CloudDiskList_DATA: UserCloudDiskListData = []
 ```
 
 ### 使用示例
@@ -1281,45 +1282,45 @@ export const DEFAULT_BLACKLIST_DATA: UserBlacklistData = []
 #### 1. 基本使用
 
 ```typescript
-import { createUserBlacklist } from '@/utils/userBlacklist'
+import { createUserCloudDiskList } from '@/utils/userCloudDiskList'
 
 // 创建并初始化
-const blacklistManager = createUserBlacklist()
+const CloudDiskListManager = createUserCloudDiskList()
 
 // 在需要时启用
-await blacklistManager.enable()
+await CloudDiskListManager.enable()
 
 // 获取当前数据
-const data = await blacklistManager.getData()
+const data = await CloudDiskListManager.getData()
 console.log(`当前有 ${data.length} 个黑名单用户`)
 
 // 手动更新数据
-await blacklistManager.updateData(newData)
+await CloudDiskListManager.updateData(newData)
 ```
 
 #### 2. 在 Vue 组件中使用
 
 ```vue
 <script setup lang="ts">
-import { createUserBlacklist } from '@/utils/userBlacklist'
+import { createUserCloudDiskList } from '@/utils/userCloudDiskList'
 import { onMounted, ref } from 'vue'
 
-const blacklistManager = createUserBlacklist()
+const CloudDiskListManager = createUserCloudDiskList()
 const isEnabled = ref(false)
 
 onMounted(() => {
-  isEnabled.value = blacklistManager.getStatus()
+  isEnabled.value = CloudDiskListManager.getStatus()
 })
 
-const toggleBlacklist = async () => {
-  const newState = await blacklistManager.toggle()
+const toggleCloudDiskList = async () => {
+  const newState = await CloudDiskListManager.toggle()
   isEnabled.value = newState
 }
 </script>
 
 <template>
   <div>
-    <button @click="toggleBlacklist">
+    <button @click="toggleCloudDiskList">
       {{ isEnabled ? '禁用黑名单' : '启用黑名单' }}
     </button>
     <p>当前状态: {{ isEnabled ? '已启用' : '已禁用' }}</p>
@@ -1330,21 +1331,21 @@ const toggleBlacklist = async () => {
 #### 3. 数据管理
 
 ```typescript
-import { createUserBlacklist } from '@/utils/userBlacklist'
+import { createUserCloudDiskList } from '@/utils/userCloudDiskList'
 
-const blacklistManager = createUserBlacklist()
+const CloudDiskListManager = createUserCloudDiskList()
 
 // 检查是否需要自动更新
-const needsUpdate = await blacklistManager.shouldAutoUpdate()
+const needsUpdate = await CloudDiskListManager.shouldAutoUpdate()
 if (needsUpdate) {
   console.log('需要更新黑名单数据')
   // 从服务器获取最新数据并更新
-  const newData = await fetchBlacklistData()
-  await blacklistManager.updateData(newData)
+  const newData = await fetchCloudDiskListData()
+  await CloudDiskListManager.updateData(newData)
 }
 
 // 重新加载数据（例如在数据源变化后）
-await blacklistManager.reloadData()
+await CloudDiskListManager.reloadData()
 ```
 
 ### 功能特点
@@ -1364,10 +1365,11 @@ await blacklistManager.reloadData()
 
 ```typescript
 // 自动从表格数据提取器加载黑名单数据
-const extractedData = await loadBlacklistDataFromTableExtractor()
+const extractedData = await loadCloudDiskListDataFromTableExtractor()
 ```
 
 **表格结构解析规则**：
+
 - 表格结构：序号 | 论坛ID | 网盘厂商 | 网盘ID | 帖子链接 | 记录者 | 备注
 - 每个用户的第一行有"序号"和"论坛ID"
 - 同一用户的其他网盘记录行中，"序号"和"论坛ID"都是"-"
@@ -1386,14 +1388,14 @@ import { storageHelper } from '@/utils/storageHelper'
 await storageHelper.saveBoolean(STORAGE_KEY, isEnabled)
 
 // 加载数据
-const storedData = await storageHelper.loadArray<UserBlacklistItem>(DATA_STORAGE_KEY, [])
+const storedData = await storageHelper.loadArray<UserCloudDiskListItem>(DATA_STORAGE_KEY, [])
 ```
 
 ### 错误处理
 
 ```typescript
 try {
-  await blacklistManager.enable()
+  await CloudDiskListManager.enable()
 } catch (error) {
   console.error('启用用户黑名单失败:', error)
   // 提供 fallback 行为

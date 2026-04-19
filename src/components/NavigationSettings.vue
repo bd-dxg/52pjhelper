@@ -22,10 +22,11 @@
 
 <script setup lang="ts">
 import { DEFAULT_NAV_MENUS, loadNavConfig, saveNavConfig, toggleMenu as toggleMenuUtil } from '@utils/navigationHider'
+import { useNotification } from '@/composables/useNotification'
 
 const navMenus = DEFAULT_NAV_MENUS
 const hiddenMenus = ref<string[]>([])
-const emit = defineEmits(['show-message'])
+const { success, error } = useNotification()
 
 // 检查菜单是否被隐藏
 const isMenuHidden = (menuId: string) => {
@@ -37,7 +38,7 @@ const toggleMenu = async (menuId: string) => {
   try {
     const config = await toggleMenuUtil(menuId)
     hiddenMenus.value = config.hiddenMenus
-    emit('show-message', '设置已更新', 'success')
+    success('设置已更新', { title: '操作成功' })
 
     // 发送消息到 content script，通知其更新网页 DOM（仅在 52pojie.cn 页面）
     const [tab] = await browser.tabs.query({ active: true, currentWindow: true })
@@ -47,8 +48,8 @@ const toggleMenu = async (menuId: string) => {
         config,
       })
     }
-  } catch (error) {
-    emit('show-message', '更新设置失败', 'error')
+  } catch (err) {
+    error('更新设置失败', { title: '操作失败' })
   }
 }
 
@@ -58,7 +59,7 @@ const resetConfig = async () => {
     const defaultConfig = { hiddenMenus: [] }
     await saveNavConfig(defaultConfig)
     hiddenMenus.value = []
-    emit('show-message', '配置已重置为默认', 'success')
+    success('配置已重置为默认', { title: '操作成功' })
 
     // 发送消息到 content script，通知其更新网页 DOM（仅在 52pojie.cn 页面）
     const [tab] = await browser.tabs.query({ active: true, currentWindow: true })
@@ -68,8 +69,8 @@ const resetConfig = async () => {
         config: defaultConfig,
       })
     }
-  } catch (error) {
-    emit('show-message', '重置配置失败', 'error')
+  } catch (err) {
+    error('重置配置失败', { title: '操作失败' })
   }
 }
 
@@ -78,9 +79,9 @@ onMounted(async () => {
   try {
     const config = await loadNavConfig()
     hiddenMenus.value = config.hiddenMenus
-  } catch (error) {
-    console.error('Failed to load navigation config:', error)
-    emit('show-message', '加载配置失败', 'error')
+  } catch (err) {
+    console.error('Failed to load navigation config:', err)
+    error('加载配置失败', { title: '操作失败' })
   }
 })
 </script>

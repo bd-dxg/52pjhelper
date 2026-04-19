@@ -12,11 +12,7 @@
 
 <script setup lang="ts">
 import userCloudDiskListConfig from '@/configs/userCloudDiskList.json'
-import { useFeatureToggle } from '@/composables/useFeatureToggle'
-
-const emit = defineEmits<{
-  (e: 'show-message', text: string, type: 'success' | 'error'): void
-}>()
+import { useFeatureToggleWithNotification } from '@/composables/useFeatureToggleWithNotification'
 
 const config = {
   name: userCloudDiskListConfig.name,
@@ -26,9 +22,7 @@ const config = {
   messageType: 'TOGGLE_USER_CloudDiskList',
 }
 
-const { enabled, toggleFeature, isToggling } = useFeatureToggle(config, (text, type) => {
-  emit('show-message', text, type)
-})
+const { enabled, toggleFeature, isToggling } = useFeatureToggleWithNotification(config)
 </script>
 
 <style scoped src="@/styles/toggle.css"></style>

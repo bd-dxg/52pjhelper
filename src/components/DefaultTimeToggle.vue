@@ -12,11 +12,8 @@
 
 <script setup lang="ts">
 import defaultTimeConfig from '@/configs/defaultTime.json'
-import { useFeatureToggle } from '@/composables/useFeatureToggle'
+import { useFeatureToggleWithNotification } from '@/composables/useFeatureToggleWithNotification'
 
-const emit = defineEmits<{
-  (e: 'show-message', text: string, type: 'success' | 'error'): void
-}>()
 
 const config = {
   name: defaultTimeConfig.name,
@@ -26,9 +23,7 @@ const config = {
   messageType: 'TOGGLE_DEFAULT_TIME',
 }
 
-const { enabled, toggleFeature, isToggling } = useFeatureToggle(config, (text, type) => {
-  emit('show-message', text, type)
-})
+const { enabled, toggleFeature, isToggling } = useFeatureToggleWithNotification(config)
 </script>
 
 <style scoped src="@/styles/toggle.css"></style>

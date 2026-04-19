@@ -11,26 +11,24 @@
       <button class="btn-dismiss" @click="dismissUpdate">忽略</button>
     </div>
   </div>
-  <!-- 已是最新版本提示 -->
-  <div v-else-if="showUpToDateMessage" class="up-to-date-message">
-    <span>✓ 已是最新版本，无需更新</span>
-  </div>
   <!-- 调试按钮：手动检查更新 -->
   <div v-else class="check-update-container">
     <button class="btn-check" @click="checkUpdateNow" :disabled="isChecking">
-      {{ isChecking ? '检查中...' : '检查更新' }}
+      {{ isChecking ? '检查中...' : '检查插件更新' }}
     </button>
   </div>
 </template>
 
 <script setup lang="ts">
 import config from '@conf/versionCheck.json'
+import { useNotification } from '@/composables/useNotification'
 
 const showBanner = ref(false)
 const latestVersion = ref('')
 const currentVersion = ref('')
 const isChecking = ref(false)
-const showUpToDateMessage = ref(false)
+
+const { update, info, success } = useNotification()
 
 const loadUpdateInfo = async () => {
   try {
@@ -52,6 +50,7 @@ onMounted(loadUpdateInfo)
 const openUpdatePage = () => {
   browser.tabs.create({ url: config.threadUrl })
   showBanner.value = false
+  update('正在打开更新页面...', { title: '版本更新' })
 }
 
 const dismissUpdate = async () => {
@@ -61,6 +60,7 @@ const dismissUpdate = async () => {
       version: latestVersion.value,
     })
     showBanner.value = false
+    success(`已忽略版本 ${latestVersion.value} 的更新`, { title: '版本更新' })
   } catch (error) {
     console.error('忽略更新失败:', error)
   }
@@ -70,7 +70,6 @@ const checkUpdateNow = async () => {
   if (isChecking.value) return
 
   isChecking.value = true
-  showUpToDateMessage.value = false
   try {
     // 清除忽略标记（用户主动检查更新，应该显示所有可用更新）
     await browser.runtime.sendMessage({ type: 'CLEAR_DISMISSED' })
@@ -90,10 +89,7 @@ const checkUpdateNow = async () => {
           currentVersion.value = response.currentVersion
         } else if (!response.hasUpdate) {
           // 已是最新版本
-          showUpToDateMessage.value = true
-          setTimeout(() => {
-            showUpToDateMessage.value = false
-          }, 3000)
+          success('已是最新版本，无需更新', { title: '版本检查' })
         }
       }
 
@@ -192,7 +188,7 @@ const checkUpdateNow = async () => {
 }
 
 .btn-check {
-  min-width: 90px;
+  min-width: 100px;
 }
 
 .btn-update::before,

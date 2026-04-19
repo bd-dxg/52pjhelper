@@ -2,16 +2,16 @@
   <div class="features-section">
     <h3 class="section-title">后台管理功能</h3>
     <div class="toggle-grid">
-      <AvatarQueryToggle @show-message="handleShowMessage" />
-      <QuickReplyToggle @show-message="handleShowMessage" />
-      <AutoFillToggle @show-message="handleShowMessage" />
-      <SelectAllToggle @show-message="handleShowMessage" />
-      <TableSelectorToggle @show-message="handleShowMessage" />
-      <DefaultTimeToggle @show-message="handleShowMessage" />
-      <UserLinkQueryToggle @show-message="handleShowMessage" />
-      <RowClickToCheckToggle @show-message="handleShowMessage" />
-      <ContentFilterToggle @show-message="handleShowMessage" />
-      <UserCloudDiskListToggle @show-message="handleShowMessage" />
+      <AvatarQueryToggle />
+      <QuickReplyToggle />
+      <AutoFillToggle />
+      <SelectAllToggle />
+      <TableSelectorToggle />
+      <DefaultTimeToggle />
+      <UserLinkQueryToggle />
+      <RowClickToCheckToggle />
+      <ContentFilterToggle />
+      <UserCloudDiskListToggle />
     </div>
   </div>
 </template>
@@ -32,13 +32,6 @@ defineOptions({
   name: 'AdminFeaturesToggle',
 })
 
-const emit = defineEmits<{
-  (e: 'show-message', text: string, type: 'success' | 'error'): void
-}>()
-
-const handleShowMessage = (text: string, type: 'success' | 'error' = 'success') => {
-  emit('show-message', text, type)
-}
 </script>
 
 <style scoped>
