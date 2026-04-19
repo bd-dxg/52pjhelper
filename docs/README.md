@@ -92,6 +92,7 @@ npx vue-tsc --noEmit
 - [导航菜单管理](features/navigation-management.md) - 自定义显示/隐藏导航菜单
 - [深色主题支持](features/dark-theme.md) - 自动主题检测和切换
 - [紧凑布局](features/compact-layout.md) - 优化组件布局
+- [通知系统](development/notification-system.md) - 统一的通知提示系统
 
 #### 后台管理功能
 
@@ -105,7 +106,7 @@ npx vue-tsc --noEmit
 - [勾选范围](features/row-click-to-check.md) - 点击表格行勾选复选框
 - [灌水筛选](features/content-filter.md) - 可拖动的过滤卡片
 - [重复发帖检测](features/duplicate-post-detection.md) - 高亮显示重复发帖
-- [用户黑名单](features/admin-features.md#10-用户黑名单) - 高亮显示黑名单用户并显示网盘信息
+- [用户网盘名单](features/admin-features.md#10-用户网盘名单) - 高亮显示网盘名单用户并显示网盘信息
 
 ### 开发文档
 
@@ -188,5 +189,5 @@ npx vue-tsc --noEmit
 
 ---
 
-_最后更新：2026-04-18_  
-_文档版本：1.0.1（更新用户黑名单模块化重构）_
+_最后更新：2026-04-19_  
+_文档版本：1.1.0（更新通知系统、用户网盘名单重构）_

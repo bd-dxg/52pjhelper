@@ -167,9 +167,9 @@
 - 支持动态添加/删除过滤条件
 - 支持启用/禁用功能切换
 
-### 10. 用户黑名单
+### 10. 用户网盘名单
 
-高亮显示黑名单用户，鼠标悬停时显示用户的网盘信息。
+高亮显示网盘名单用户，鼠标悬停时显示用户的网盘信息。
 
 **功能特点**：
 
@@ -177,10 +177,11 @@
 - 支持自动检查数据更新（默认 1 天）
 - 鼠标悬停显示详细信息弹窗
 - 支持动态加载内容的自动扫描
+- 集成通知系统，操作反馈更直观
 
 **数据管理**：
 
-- 支持手动更新黑名单数据
+- 支持手动更新网盘名单数据
 - 自动检查数据更新（默认 1 天）
 - 自动从表格数据提取器加载数据
 - 数据包含论坛ID、网盘记录、备注信息
@@ -255,7 +256,7 @@ src/components/
 ├── DuplicatePostDetectionToggle.vue # 重复发帖检测组件
 ├── RowClickToCheckToggle.vue    # 勾选范围组件
 ├── ContentFilterToggle.vue      # 灌水筛选组件
-├── UserCloudDiskListToggle.vue      # 用户黑名单组件
+├── UserCloudDiskListToggle.vue      # 用户网盘名单组件
 └── UpdateBanner.vue             # 版本更新提示组件
 ```
 
@@ -272,7 +273,7 @@ src/utils/
 ├── duplicatePostDetection.ts   # 重复发帖检测管理
 ├── rowClickToCheck.ts          # 勾选范围管理
 ├── contentFilter.ts            # 灌水筛选管理
-├── userCloudDiskList/              # 用户黑名单模块化实现
+├── userCloudDiskList/              # 用户网盘名单模块化实现
 │   ├── index.ts                # 统一导出
 │   ├── types.ts                # 类型定义
 │   ├── config.ts               # 配置常量
@@ -339,11 +340,11 @@ A: 在版本更新提示横幅上点击"忽略此版本"。
 
 A: 可以隐藏不常用的分表，或者调整浏览器窗口大小。
 
-### Q: 用户黑名单数据如何更新？
+### Q: 用户网盘名单数据如何更新？
 
 A: 支持手动更新和自动检查更新（默认1天），数据自动从表格数据提取器加载。
 
-### Q: 用户黑名单功能支持哪些网盘厂商？
+### Q: 用户网盘名单功能支持哪些网盘厂商？
 
 A: 支持百度、夸克、迅雷等多种网盘厂商，数据格式包含网盘ID和帖子链接。
 
@@ -351,11 +352,11 @@ A: 支持百度、夸克、迅雷等多种网盘厂商，数据格式包含网�
 
 - [自动填充详解](auto-fill.md)
 - [灌水筛选配置指南](content-filter.md)
-- [用户黑名单工具类参考](../reference/utils.md#用户黑名单工具类-userCloudDiskListts)
+- [用户网盘名单工具类参考](../reference/utils.md#用户网盘名单工具类-userCloudDiskListts)
 - [组件开发指南](../development/component-guide.md)
 - [可组合函数式架构](../development/composable-architecture.md)
 
 ---
 
 _最后更新：2026-04-18_  
-_文档版本：1.0.3（更新用户黑名单数据解析说明）_
+_文档版本：1.1.0（更新用户网盘名单重构、通知系统集成）_

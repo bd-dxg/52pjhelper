@@ -1088,11 +1088,11 @@ onMounted(() => {
 })
 ```
 
-## 用户黑名单工具类 (userCloudDiskList.ts)
+## 用户网盘名单工具类 (userCloudDiskList.ts)
 
 ### 概述
 
-用户黑名单工具类提供高亮显示黑名单用户的功能，鼠标悬停时显示用户的网盘信息。该模块已重构为模块化结构，遵循 `utils/contentFilter` 的模式。
+用户网盘名单工具类提供高亮显示网盘名单用户的功能，鼠标悬停时显示用户的网盘信息。该模块已重构为模块化结构，遵循 `utils/contentFilter` 的模式。
 
 ### 模块化结构
 
@@ -1112,7 +1112,7 @@ src/utils/userCloudDiskList/
 **各模块职责**：
 
 - **data.ts**：数据管理模块，负责从表格数据提取器加载数据、本地存储操作、自动更新检查
-- **types.ts**：类型定义，包括用户黑名单条目、网盘记录、表格提取数据结构
+- **types.ts**：类型定义，包括用户网盘名单条目、网盘记录、表格提取数据结构
 - **config.ts**：配置常量，包括存储键、默认数据、自动更新间隔等
 - **ui.ts**：用户界面模块，负责样式注入和弹窗显示
 - **processing.ts**：数据处理模块，负责用户名提取和扫描逻辑
@@ -1125,7 +1125,7 @@ src/utils/userCloudDiskList/
 
 #### `IUserCloudDiskList` 接口
 
-用户黑名单管理器接口，定义所有公共方法：
+用户网盘名单管理器接口，定义所有公共方法：
 
 ```typescript
 interface IUserCloudDiskList {
@@ -1152,7 +1152,7 @@ interface IUserCloudDiskList {
 
 #### `UserCloudDiskListItem`
 
-用户黑名单条目：
+用户网盘名单条目：
 
 ```typescript
 interface UserCloudDiskListItem {
@@ -1195,7 +1195,7 @@ interface TableExtractionData {
 
 #### `createUserCloudDiskList()`
 
-创建用户黑名单管理器实例：
+创建用户网盘名单管理器实例：
 
 ```typescript
 import { createUserCloudDiskList } from '@/utils/userCloudDiskList'
@@ -1361,7 +1361,7 @@ await CloudDiskListManager.reloadData()
 
 #### 与表格数据提取器集成
 
-用户黑名单模块会自动从表格数据提取器加载数据：
+用户网盘名单模块会自动从表格数据提取器加载数据：
 
 ```typescript
 // 自动从表格数据提取器加载黑名单数据
@@ -1397,7 +1397,7 @@ const storedData = await storageHelper.loadArray<UserCloudDiskListItem>(DATA_STO
 try {
   await CloudDiskListManager.enable()
 } catch (error) {
-  console.error('启用用户黑名单失败:', error)
+  console.error('启用用户网盘名单失败:', error)
   // 提供 fallback 行为
   showErrorMessage('无法启用黑名单功能')
 }
@@ -1420,4 +1420,4 @@ try {
 
 _文档版本：1.2.0_  
 _最后更新：2026-04-18_  
-_更新内容：添加用户黑名单数据模块详细文档，包括表格数据提取器集成、数据加载函数和配置常量_
+_更新内容：添加用户网盘名单数据模块详细文档，包括表格数据提取器集成、数据加载函数和配置常量_

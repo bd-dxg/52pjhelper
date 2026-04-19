@@ -55,6 +55,8 @@ const { enabled, toggleFeature, isToggling } = useFeatureToggle(
 | `toggleFeature()` | `() => Promise<void>` | 切换功能状态     |
 | `initialize()`    | `() => Promise<void>` | 初始化功能状态   |
 
+**注意**：这是传统方式，推荐使用新的 `useFeatureToggleWithNotification` 可组合函数，它集成了通知系统，无需手动处理消息事件。
+
 ## 核心工具类
 
 ### 功能管理器 (featureManager)

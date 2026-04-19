@@ -587,14 +587,101 @@ vi.mock('@/utils/storageHelper', () => ({
 }))
 ```
 
+## 通知系统最佳实践
+
+### 1. 统一使用通知系统
+
+**原则**：所有用户反馈都应使用统一的通知系统，而不是自定义的提示方式。
+
+**实现示例**：
+
+```typescript
+// 使用 useNotification 可组合函数
+import { useNotification } from '@/composables/useNotification'
+
+const { success, error, warning, info, update } = useNotification()
+
+// 显示成功通知
+success('操作成功完成', { title: '成功' })
+
+// 显示错误通知
+error('操作失败，请重试', { title: '错误' })
+
+// 显示更新通知
+update('发现新版本 v2.0.0', { title: '版本更新' })
+```
+
+### 2. 合理配置通知选项
+
+**持续时间**：
+- 成功通知：3000ms（3秒）
+- 错误通知：5000ms（5秒）
+- 警告通知：4000ms（4秒）
+- 信息通知：3000ms（3秒）
+- 更新通知：0ms（手动关闭）
+
+**位置选择**：
+- 操作反馈：`top-right`
+- 重要通知：`top-left`
+- 次要通知：`bottom-right`
+- 状态更新：`bottom-left`
+- 重要确认：`center`
+
+### 3. 避免通知轰炸
+
+**原则**：同一时间不要显示太多通知，避免干扰用户。
+
+**实现示例**：
+
+```typescript
+// 使用防抖避免频繁通知
+const debouncedSuccess = debounce((message: string) => {
+  success(message)
+}, 1000)
+
+// 在频繁操作中使用
+const handleMultipleOperations = () => {
+  operations.forEach(op => {
+    // 使用防抖版本
+    debouncedSuccess(`${op.name} 完成`)
+  })
+}
+```
+
+### 4. 提供可操作的通知
+
+**原则**：重要的确认操作应该提供操作按钮。
+
+**实现示例**：
+
+```typescript
+// 带操作按钮的通知
+update('发现新版本 v2.0.0', {
+  title: '版本更新',
+  actions: [
+    {
+      label: '立即更新',
+      type: 'primary',
+      handler: openUpdatePage,
+    },
+    {
+      label: '忽略',
+      handler: dismissUpdate,
+    },
+  ],
+})
+```
+
 ## 相关文档
 
 - [代码风格规范](../code-style.md) - 详细的代码规范要求
 - [组件开发指南](../component-guide.md) - 功能开关组件规范
 - [自动导入机制](../auto-import.md) - 无需显式导入的API
 - [可组合函数式架构](../composable-architecture.md) - Vue 3组合式API
+- [通知系统指南](../notification-system.md) - 统一的通知系统使用
+- [通知系统迁移指南](../notification-migration.md) - 从旧系统迁移到新系统
 
 ---
 
-_文档版本：1.0.0_  
-_最后更新：2026-04-17_
+_文档版本：1.1.0_  
+_最后更新：2026-04-19_

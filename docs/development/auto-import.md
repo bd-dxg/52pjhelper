@@ -145,12 +145,14 @@ const myRef: Ref<number> = ref(0)
 
 | 别名     | 对应路径          | 用途         |
 | -------- | ----------------- | ------------ |
-| `@`      | `src/`            | 源代码根目录 |
-| `@com`   | `src/components/` | Vue 组件目录 |
-| `@utils` | `src/utils/`      | 工具函数目录 |
-| `@ent`   | `src/entries/`    | 入口文件目录 |
-| `@pages` | `src/pages/`      | 页面组件目录 |
-| `@conf`  | `src/configs/`    | 配置文件目录 |
+| `@/*`    | `./src/*`         | 源代码根目录 |
+| `@com/*` | `./src/components/*` | Vue 组件目录 |
+| `@utils/*` | `./src/utils/*`   | 工具函数目录 |
+| `@ent/*` | `./src/entries/*` | 入口文件目录 |
+| `@pages/*` | `./src/pages/*`   | 页面组件目录 |
+| `@conf/*` | `./src/configs/*` | 配置文件目录 |
+
+**注意**：所有路径别名都使用 `./` 前缀，这是 TypeScript 的最新推荐做法，移除了弃用的 `baseUrl` 配置。
 
 ## 常见问题
 

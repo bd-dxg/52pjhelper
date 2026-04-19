@@ -2,7 +2,9 @@
 
 ## 概述
 
-功能开关组件是项目的核心 UI 组件，用于控制各个功能的启用/禁用状态。本指南介绍如何使用 `useFeatureToggle` 可组合函数简化功能开关组件的开发。
+功能开关组件是项目的核心 UI 组件，用于控制各个功能的启用/禁用状态。本指南介绍如何使用 `useFeatureToggle` 和 `useFeatureToggleWithNotification` 可组合函数简化功能开关组件的开发。
+
+**重要更新**：项目已引入统一的通知系统，推荐使用 `useFeatureToggleWithNotification` 替代原有的 `useFeatureToggle` + `show-message` 事件模式。
 
 ## 组件结构
 
@@ -39,7 +41,7 @@ const { enabled, toggleFeature, isToggling } = useFeatureToggle(
 </script>
 ```
 
-## 使用 useFeatureToggle 可组合函数
+## 使用 useFeatureToggle 可组合函数（传统方式）
 
 ### 优势
 
@@ -47,6 +49,18 @@ const { enabled, toggleFeature, isToggling } = useFeatureToggle(
 - **统一逻辑**：所有功能开关使用相同的逻辑
 - **错误处理**：内置错误处理和用户反馈
 - **易于维护**：修改一处即可影响所有组件
+
+**注意**：这是传统方式，需要手动处理 `show-message` 事件。推荐使用新的 `useFeatureToggleWithNotification`。
+
+## 使用 useFeatureToggleWithNotification 可组合函数（推荐）
+
+### 优势
+
+- **自动通知**：无需手动处理消息显示
+- **统一样式**：使用项目统一的通知系统
+- **多种类型**：支持 success、error、warning、info、update 等多种通知类型
+- **灵活配置**：可配置位置、持续时间、操作按钮
+- **向后兼容**：完全兼容现有代码
 
 ### API 参考
 
@@ -140,7 +154,9 @@ onMounted(async () => {
 
 ## 父子组件通信
 
-### 事件通信（子组件→父组件）
+### 传统方式：事件通信（子组件→父组件）
+
+**注意**：这是传统方式，推荐使用新的通知系统。
 
 **子组件（发送事件）**：
 
@@ -195,11 +211,13 @@ console.log(props.enabled)
 
 ## 消息提示机制
 
-### 统一处理原则
+### 传统方式：统一处理原则
 
 - 所有提示信息应由父组件 `SettingsPanel.vue` 统一处理
 - 子组件只负责发送事件，不处理具体的提示逻辑
 - 这样可以保持代码一致性，避免重复实现
+
+**注意**：这是传统方式，推荐使用新的通知系统。
 
 ### 实现示例（子组件中）
 
@@ -343,10 +361,56 @@ const { enabled, toggleFeature, isToggling } = useFeatureToggle(
 </script>
 ```
 
+## 使用通知系统（推荐方式）
+
+### 使用 useFeatureToggleWithNotification
+
+```vue
+<template>
+  <div class="toggle-container">
+    <label class="toggle-label" @click.stop="toggleFeature" title="鼠标悬停显示用户违规记录">
+      <span>头像查询</span>
+      <div class="toggle-switch">
+        <input type="checkbox" :checked="enabled" disabled aria-label="头像查询" />
+        <span class="slider"></span>
+      </div>
+    </label>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { useFeatureToggleWithNotification } from '@/composables/useFeatureToggleWithNotification'
+import config from '@/configs/avatarQuery.json'
+
+const { enabled, toggleFeature, isToggling } = useFeatureToggleWithNotification({
+  ...config,
+  messageType: 'TOGGLE_AVATAR_QUERY',
+})
+</script>
+```
+
+### 优势对比
+
+| 特性 | 传统方式 (`useFeatureToggle`) | 新方式 (`useFeatureToggleWithNotification`) |
+|------|-------------------------------|--------------------------------------------|
+| 代码复杂度 | 需要定义事件和处理函数 | 无需额外代码 |
+| 通知样式 | 自定义，不统一 | 统一的通知系统 |
+| 通知类型 | 仅 success/error | 支持多种类型 |
+| 配置选项 | 有限 | 丰富（位置、持续时间、操作按钮等） |
+| 向后兼容 | 是 | 完全兼容 |
+
+### 迁移建议
+
+1. **新组件**：直接使用 `useFeatureToggleWithNotification`
+2. **现有组件**：逐步迁移到新系统
+3. **混合使用**：两种方式可以共存，通知系统会自动处理
+
 ## 相关链接
 
 - [可组合函数式架构](composable-architecture.md)
 - [自动导入机制](auto-import.md)
 - [Popup 与 Content Script 通信](communication.md)
+- [通知系统指南](notification-system.md)
+- [通知系统迁移指南](notification-migration.md)
 - [存储键命名规范](../../config/storage-keys.md)
 - [所有功能配置文件](../../config/feature-configs.md)

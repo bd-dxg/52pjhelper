@@ -91,11 +91,15 @@ src/components/
 │   ├── Checkbox.vue     # 复选框组件
 │   ├── Switch.vue       # 开关组件
 │   ├── Input.vue        # 输入框组件
-│   └── Card.vue         # 卡片组件
+│   ├── Card.vue         # 卡片组件
+│   ├── Notification.vue # 通知组件
+│   └── NotificationContainer.vue # 通知容器组件
 ├── features/            # 功能相关组件
 │   ├── DarkThemeToggle.vue # 深色主题开关
 │   ├── CompactLayoutToggle.vue # 紧凑布局开关
-│   └── NavigationSettings.vue # 导航设置组件
+│   ├── NavigationSettings.vue # 导航设置组件
+│   ├── UserCloudDiskListToggle.vue # 用户网盘名单组件
+│   └── ...             # 其他功能开关组件
 └── layout/              # 布局组件
     ├── Header.vue       # 页头组件
     ├── Sidebar.vue      # 侧边栏组件
@@ -107,6 +111,8 @@ src/components/
 ```
 src/composables/
 ├── useFeatureToggle.ts  # 功能切换可组合函数
+├── useFeatureToggleWithNotification.ts # 带通知的功能切换可组合函数
+├── useNotification.ts   # 通知系统可组合函数
 ├── useStorage.ts        # 存储操作可组合函数
 ├── useMessage.ts        # 消息通信可组合函数
 ├── useTheme.ts          # 主题管理可组合函数
