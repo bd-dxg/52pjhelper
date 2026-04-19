@@ -9,21 +9,7 @@
     >
       <div class="notification-content">
         <div class="notification-icon">
-          <svg v-if="type === 'success'" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-          </svg>
-          <svg v-else-if="type === 'error'" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
-          </svg>
-          <svg v-else-if="type === 'warning'" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z" />
-          </svg>
-          <svg v-else-if="type === 'info'" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
-          </svg>
-          <svg v-else-if="type === 'update'" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M21 10.12h-6.78l2.74-2.82c-2.73-2.7-7.15-2.8-9.88-.1-2.73 2.71-2.73 7.08 0 9.79 2.73 2.71 7.15 2.71 9.88 0C18.32 15.65 19 14.08 19 12.1h2c0 1.98-.88 4.55-2.64 6.29-3.51 3.48-9.21 3.48-12.72 0-3.5-3.47-3.53-9.11-.02-12.58 3.51-3.47 9.14-3.47 12.65 0L21 3v7.12z" />
-          </svg>
+          <NotificationIcon :type="type" />
         </div>
         <div class="notification-body">
           <div class="notification-title" v-if="title">{{ title }}</div>
@@ -53,28 +39,32 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 
-export interface NotificationAction {
-  label: string
-  type?: 'primary' | 'secondary' | 'danger'
-  handler: () => void
-}
+import {
+  type NotificationAction,
+  type NotificationType,
+  type NotificationPosition,
+  NOTIFICATION_TYPES,
+  NOTIFICATION_POSITIONS,
+  DEFAULT_NOTIFICATION_CONFIG,
+} from '@/constants/notification'
+import NotificationIcon from '@com/NotificationIcon.vue'
 
 export interface NotificationProps {
-  type?: 'success' | 'error' | 'warning' | 'info' | 'update'
+  type?: NotificationType
   message: string
   title?: string
   duration?: number // 自动消失时间（毫秒），0 表示不自动消失
   dismissible?: boolean // 是否可手动关闭
-  position?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' | 'center'
+  position?: NotificationPosition
   actions?: NotificationAction[]
 }
 
 const props = withDefaults(defineProps<NotificationProps>(), {
-  type: 'info',
-  duration: 3000,
-  dismissible: true,
-  position: 'top-right',
-  actions: () => [],
+  type: NOTIFICATION_TYPES.INFO,
+  duration: DEFAULT_NOTIFICATION_CONFIG.duration,
+  dismissible: DEFAULT_NOTIFICATION_CONFIG.dismissible,
+  position: DEFAULT_NOTIFICATION_CONFIG.position,
+  actions: () => DEFAULT_NOTIFICATION_CONFIG.actions,
 })
 
 const emit = defineEmits<{

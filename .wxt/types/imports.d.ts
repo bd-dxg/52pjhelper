@@ -161,9 +161,6 @@ declare global {
   export type { VueFeatureConfig, UseFeatureToggleReturn } from 'D:/code/front-end/52pjhelper/src/composables/useFeatureToggle'
   import('D:/code/front-end/52pjhelper/src/composables/useFeatureToggle')
   // @ts-ignore
-  export type { NotificationAction, NotificationOptions, NotificationItem } from 'D:/code/front-end/52pjhelper/src/composables/useNotification'
-  import('D:/code/front-end/52pjhelper/src/composables/useNotification')
-  // @ts-ignore
   export type { IAvatarQuery } from 'D:/code/front-end/52pjhelper/src/utils/avatarQuery'
   import('D:/code/front-end/52pjhelper/src/utils/avatarQuery')
   // @ts-ignore

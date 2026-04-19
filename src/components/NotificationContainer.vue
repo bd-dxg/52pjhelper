@@ -6,7 +6,7 @@
       :type="notification.type"
       :message="notification.message"
       :title="notification.title"
-      :duration="0"
+      :duration="notification.duration"
       :dismissible="notification.dismissible"
       :position="notification.position"
       :actions="notification.actions"

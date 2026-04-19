@@ -1,47 +1,32 @@
 import { ref, reactive, computed, onUnmounted } from 'vue'
-
-export interface NotificationAction {
-  label: string
-  type?: 'primary' | 'secondary' | 'danger'
-  handler: () => void
-}
-
-export interface NotificationOptions {
-  type?: 'success' | 'error' | 'warning' | 'info' | 'update'
-  title?: string
-  duration?: number
-  dismissible?: boolean
-  position?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' | 'center'
-  actions?: NotificationAction[]
-}
-
-export interface NotificationItem {
-  id: number
-  message: string
-  type: 'success' | 'error' | 'warning' | 'info' | 'update'
-  title?: string
-  duration: number
-  dismissible: boolean
-  position: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' | 'center'
-  actions: NotificationAction[]
-  createdAt: number
-}
+import {
+  type NotificationAction,
+  type NotificationOptions,
+  type NotificationItem,
+  NOTIFICATION_TYPES,
+  NOTIFICATION_POSITIONS,
+  DEFAULT_NOTIFICATION_CONFIG,
+  DEFAULT_NOTIFICATION_TYPE_CONFIGS,
+} from '@/constants/notification'
 
 class NotificationManager {
   private notifications = reactive<NotificationItem[]>([])
   private nextId = 1
   private maxNotifications = 5
 
-  show(message: string, options: NotificationOptions = {}) {
+  show(message: string, options: Omit<NotificationOptions, 'message'> = {}) {
+    const type = options.type || NOTIFICATION_TYPES.INFO
+    const typeConfig = DEFAULT_NOTIFICATION_TYPE_CONFIGS[type]
+
     const notification: NotificationItem = {
       id: this.nextId++,
       message,
-      type: options.type || 'info',
+      type,
       title: options.title,
-      duration: options.duration ?? 3000,
-      dismissible: options.dismissible ?? true,
-      position: options.position || 'top-right',
-      actions: options.actions || [],
+      duration: options.duration ?? typeConfig.duration ?? DEFAULT_NOTIFICATION_CONFIG.duration,
+      dismissible: options.dismissible ?? typeConfig.dismissible ?? DEFAULT_NOTIFICATION_CONFIG.dismissible,
+      position: options.position ?? DEFAULT_NOTIFICATION_CONFIG.position,
+      actions: options.actions ?? DEFAULT_NOTIFICATION_CONFIG.actions,
       createdAt: Date.now(),
     }
 
@@ -63,24 +48,24 @@ class NotificationManager {
     return notification.id
   }
 
-  success(message: string, options: Omit<NotificationOptions, 'type'> = {}) {
-    return this.show(message, { ...options, type: 'success' })
+  success(message: string, options: Omit<NotificationOptions, 'type' | 'message'> = {}) {
+    return this.show(message, { ...options, type: NOTIFICATION_TYPES.SUCCESS })
   }
 
-  error(message: string, options: Omit<NotificationOptions, 'type'> = {}) {
-    return this.show(message, { ...options, type: 'error' })
+  error(message: string, options: Omit<NotificationOptions, 'type' | 'message'> = {}) {
+    return this.show(message, { ...options, type: NOTIFICATION_TYPES.ERROR })
   }
 
-  warning(message: string, options: Omit<NotificationOptions, 'type'> = {}) {
-    return this.show(message, { ...options, type: 'warning' })
+  warning(message: string, options: Omit<NotificationOptions, 'type' | 'message'> = {}) {
+    return this.show(message, { ...options, type: NOTIFICATION_TYPES.WARNING })
   }
 
-  info(message: string, options: Omit<NotificationOptions, 'type'> = {}) {
-    return this.show(message, { ...options, type: 'info' })
+  info(message: string, options: Omit<NotificationOptions, 'type' | 'message'> = {}) {
+    return this.show(message, { ...options, type: NOTIFICATION_TYPES.INFO })
   }
 
-  update(message: string, options: Omit<NotificationOptions, 'type'> = {}) {
-    return this.show(message, { ...options, type: 'update' })
+  update(message: string, options: Omit<NotificationOptions, 'type' | 'message'> = {}) {
+    return this.show(message, { ...options, type: NOTIFICATION_TYPES.UPDATE })
   }
 
   remove(id: number) {
@@ -110,27 +95,27 @@ export function useNotification() {
   const notifications = computed(() => globalNotificationManager.getNotifications())
   const notificationCount = computed(() => globalNotificationManager.getNotificationCount())
 
-  const show = (message: string, options: NotificationOptions = {}) => {
+  const show = (message: string, options: Omit<NotificationOptions, 'message'> = {}) => {
     return globalNotificationManager.show(message, options)
   }
 
-  const success = (message: string, options: Omit<NotificationOptions, 'type'> = {}) => {
+  const success = (message: string, options: Omit<NotificationOptions, 'type' | 'message'> = {}) => {
     return globalNotificationManager.success(message, options)
   }
 
-  const error = (message: string, options: Omit<NotificationOptions, 'type'> = {}) => {
+  const error = (message: string, options: Omit<NotificationOptions, 'type' | 'message'> = {}) => {
     return globalNotificationManager.error(message, options)
   }
 
-  const warning = (message: string, options: Omit<NotificationOptions, 'type'> = {}) => {
+  const warning = (message: string, options: Omit<NotificationOptions, 'type' | 'message'> = {}) => {
     return globalNotificationManager.warning(message, options)
   }
 
-  const info = (message: string, options: Omit<NotificationOptions, 'type'> = {}) => {
+  const info = (message: string, options: Omit<NotificationOptions, 'type' | 'message'> = {}) => {
     return globalNotificationManager.info(message, options)
   }
 
-  const update = (message: string, options: Omit<NotificationOptions, 'type'> = {}) => {
+  const update = (message: string, options: Omit<NotificationOptions, 'type' | 'message'> = {}) => {
     return globalNotificationManager.update(message, options)
   }
 
@@ -158,17 +143,17 @@ export function useNotification() {
 
 // 快捷函数，用于在非组件上下文中使用
 export const notification = {
-  show: (message: string, options: NotificationOptions = {}) =>
+  show: (message: string, options: Omit<NotificationOptions, 'message'> = {}) =>
     globalNotificationManager.show(message, options),
-  success: (message: string, options: Omit<NotificationOptions, 'type'> = {}) =>
+  success: (message: string, options: Omit<NotificationOptions, 'type' | 'message'> = {}) =>
     globalNotificationManager.success(message, options),
-  error: (message: string, options: Omit<NotificationOptions, 'type'> = {}) =>
+  error: (message: string, options: Omit<NotificationOptions, 'type' | 'message'> = {}) =>
     globalNotificationManager.error(message, options),
-  warning: (message: string, options: Omit<NotificationOptions, 'type'> = {}) =>
+  warning: (message: string, options: Omit<NotificationOptions, 'type' | 'message'> = {}) =>
     globalNotificationManager.warning(message, options),
-  info: (message: string, options: Omit<NotificationOptions, 'type'> = {}) =>
+  info: (message: string, options: Omit<NotificationOptions, 'type' | 'message'> = {}) =>
     globalNotificationManager.info(message, options),
-  update: (message: string, options: Omit<NotificationOptions, 'type'> = {}) =>
+  update: (message: string, options: Omit<NotificationOptions, 'type' | 'message'> = {}) =>
     globalNotificationManager.update(message, options),
   remove: (id: number) => globalNotificationManager.remove(id),
   clear: () => globalNotificationManager.clear(),

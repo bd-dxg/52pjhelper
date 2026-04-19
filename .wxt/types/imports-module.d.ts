@@ -20,7 +20,7 @@ declare module '#imports' {
   export { fakeBrowser } from 'wxt/testing';
   export { useFeatureToggle, VueFeatureConfig, UseFeatureToggleReturn } from '../src/composables/useFeatureToggle';
   export { useFeatureToggleWithNotification } from '../src/composables/useFeatureToggleWithNotification';
-  export { useNotification, notification, NotificationAction, NotificationOptions, NotificationItem } from '../src/composables/useNotification';
+  export { useNotification, notification } from '../src/composables/useNotification';
   export { createAvatarQuery, IAvatarQuery } from '../src/utils/avatarQuery';
   export { createDefaultTime, IDefaultTime } from '../src/utils/defaultTime';
   export { createDuplicatePostDetection, IDuplicatePostDetection } from '../src/utils/duplicatePostDetection';
