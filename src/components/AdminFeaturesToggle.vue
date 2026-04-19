@@ -11,7 +11,7 @@
       <UserLinkQueryToggle @show-message="handleShowMessage" />
       <RowClickToCheckToggle @show-message="handleShowMessage" />
       <ContentFilterToggle @show-message="handleShowMessage" />
-      <UserBlacklistToggle @show-message="handleShowMessage" />
+      <UserCloudDiskListToggle @show-message="handleShowMessage" />
     </div>
   </div>
 </template>
@@ -26,7 +26,7 @@ import DefaultTimeToggle from '@com/DefaultTimeToggle.vue'
 import UserLinkQueryToggle from '@com/UserLinkQueryToggle.vue'
 import RowClickToCheckToggle from '@com/RowClickToCheckToggle.vue'
 import ContentFilterToggle from '@com/ContentFilterToggle.vue'
-import UserBlacklistToggle from '@com/UserBlacklistToggle.vue'
+import UserCloudDiskListToggle from '@com/UserCloudDiskListToggle.vue'
 
 defineOptions({
   name: 'AdminFeaturesToggle',

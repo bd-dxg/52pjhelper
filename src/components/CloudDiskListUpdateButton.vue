@@ -1,41 +1,32 @@
 <template>
-  <div class="blacklist-update-container">
-    <button class="btn-update" @click="updateBlacklistData" :disabled="isUpdating">
-      {{ isUpdating ? '更新中...' : '更新黑名单' }}
+  <div class="CloudDiskList-update-container">
+    <button class="btn-update" @click="updateCloudDiskListData" :disabled="isUpdating">
+      {{ isUpdating ? '更新中...' : '更新网盘名单' }}
     </button>
-    <!-- 成功消息提示 -->
-    <div v-if="showSuccessMessage" class="update-status-message success">
-      <span>✓ 黑名单数据已更新</span>
-    </div>
-    <!-- 错误消息提示 -->
-    <div v-else-if="showErrorMessage" class="update-status-message error">
-      <span>✗ {{ errorMessage }}</span>
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useNotification } from '@/composables/useNotification'
 
 const emit = defineEmits<{
   update: []
 }>()
 
 const isUpdating = ref(false)
-const showSuccessMessage = ref(false)
-const showErrorMessage = ref(false)
 const errorMessage = ref('')
+
+const { success, error } = useNotification()
 
 // 数据源页面URL
 const DATA_SOURCE_URL = 'https://www.52pojie.cn/thread-2094795-1-1.html'
 
-// 更新黑名单数据
-const updateBlacklistData = async (): Promise<void> => {
+// 更新网盘名单数据
+const updateCloudDiskListData = async (): Promise<void> => {
   if (isUpdating.value) return
 
   isUpdating.value = true
-  showSuccessMessage.value = false
-  showErrorMessage.value = false
   errorMessage.value = ''
 
   try {
@@ -60,26 +51,18 @@ const updateBlacklistData = async (): Promise<void> => {
     // 关闭数据源标签页
     await browser.tabs.remove(dataSourceTab.id!)
 
-    // 显示成功消息
-    showSuccessMessage.value = true
+    // 显示成功通知
+    success('网盘名单数据已更新', { title: '数据更新' })
 
     // 触发更新事件
     emit('update')
+  } catch (err) {
+    console.error('更新网盘名单数据失败:', err)
+    const message = err instanceof Error ? err.message : '更新失败，请重试'
+    errorMessage.value = message
 
-    // 3秒后清除成功消息
-    setTimeout(() => {
-      showSuccessMessage.value = false
-    }, 3000)
-  } catch (error) {
-    console.error('更新黑名单数据失败:', error)
-    errorMessage.value = error instanceof Error ? error.message : '更新失败，请重试'
-    showErrorMessage.value = true
-
-    // 5秒后清除错误消息
-    setTimeout(() => {
-      showErrorMessage.value = false
-      errorMessage.value = ''
-    }, 5000)
+    // 显示错误通知
+    error(message, { title: '更新失败' })
   } finally {
     isUpdating.value = false
   }
@@ -87,7 +70,7 @@ const updateBlacklistData = async (): Promise<void> => {
 </script>
 
 <style scoped>
-.blacklist-update-container {
+.CloudDiskList-update-container {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -142,50 +125,5 @@ const updateBlacklistData = async (): Promise<void> => {
   opacity: 0.6;
   cursor: not-allowed;
   background: linear-gradient(135deg, #999 0%, #777 100%);
-}
-
-/* 更新状态消息提示 */
-.update-status-message {
-  position: absolute;
-  top: 0;
-  padding: 6px;
-  white-space: nowrap;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 500;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  animation: slideDown 0.3s ease-out;
-  text-align: center;
-  width: 100%;
-}
-
-.update-status-message span {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-}
-
-/* 成功消息 */
-.update-status-message.success {
-  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
-  color: white;
-}
-
-/* 错误消息 */
-.update-status-message.error {
-  background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
-  color: white;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 </style>

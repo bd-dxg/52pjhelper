@@ -1,4 +1,4 @@
-import type { UserBlacklistData, UserBlacklistItem } from './types'
+import type { UserCloudDiskListData, UserCloudDiskListItem } from './types'
 
 let styleElement: HTMLStyleElement | null = null
 let currentPopup: HTMLDivElement | null = null
@@ -12,14 +12,14 @@ export const injectStyles = (): void => {
 
   styleElement = document.createElement('style')
   styleElement.textContent = `
-    .user-blacklist-highlight {
+    .user-CloudDiskList-highlight {
       background-color: black !important;
       color: white !important;
       padding: 2px 4px !important;
       border-radius: 3px !important;
       cursor: help !important;
     }
-    .user-blacklist-popup {
+    .user-CloudDiskList-popup {
       position: fixed !important;
       width: 400px !important;
       max-height: 300px !important;
@@ -34,25 +34,25 @@ export const injectStyles = (): void => {
       padding: 10px !important;
       font-size: 12px !important;
     }
-    .user-blacklist-popup.show {
+    .user-CloudDiskList-popup.show {
       display: block !important;
     }
-    .user-blacklist-popup table {
+    .user-CloudDiskList-popup table {
       width: 100% !important;
       border-collapse: collapse !important;
       margin-top: 5px !important;
     }
-    .user-blacklist-popup table th,
-    .user-blacklist-popup table td {
+    .user-CloudDiskList-popup table th,
+    .user-CloudDiskList-popup table td {
       padding: 4px !important;
       border: 1px solid #e0e0e0 !important;
       text-align: left !important;
     }
-    .user-blacklist-popup table th {
+    .user-CloudDiskList-popup table th {
       background-color: #f5f5f5 !important;
       font-weight: bold !important;
     }
-    .user-blacklist-popup .no-data {
+    .user-CloudDiskList-popup .no-data {
       text-align: center !important;
       color: #666 !important;
       padding: 10px !important;
@@ -77,7 +77,7 @@ export const removeStyles = (): void => {
 export const getOrCreatePopup = (): HTMLDivElement => {
   if (!currentPopup) {
     currentPopup = document.createElement('div')
-    currentPopup.className = 'user-blacklist-popup'
+    currentPopup.className = 'user-CloudDiskList-popup'
     document.body.appendChild(currentPopup)
 
     // 鼠标进入弹窗时设置标志
@@ -100,14 +100,12 @@ export const getOrCreatePopup = (): HTMLDivElement => {
 export const showUserInfo = (
   usernameElement: HTMLAnchorElement,
   forumId: string,
-  blacklistData: UserBlacklistData
+  CloudDiskListData: UserCloudDiskListData,
 ): void => {
   const popup = getOrCreatePopup()
 
   // 查找用户数据
-  const userData = blacklistData.find(item =>
-    item.forumId.toLowerCase() === forumId.toLowerCase()
-  )
+  const userData = CloudDiskListData.find(item => item.forumId.toLowerCase() === forumId.toLowerCase())
 
   // 清空现有内容
   popup.innerHTML = ''

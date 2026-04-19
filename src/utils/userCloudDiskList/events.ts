@@ -1,4 +1,4 @@
-import type { UserBlacklistData } from './types'
+import type { UserCloudDiskListData } from './types'
 import { debouncedScan } from './processing'
 import { USERNAME_SELECTOR } from './config'
 
@@ -7,10 +7,7 @@ let observers: MutationObserver[] = []
 /**
  * 附加事件监听器
  */
-export const attachEventListeners = (
-  blacklistIds: Set<string>,
-  blacklistData: UserBlacklistData
-): void => {
+export const attachEventListeners = (CloudDiskListIds: Set<string>, CloudDiskListData: UserCloudDiskListData): void => {
   // 创建 MutationObserver 监听DOM变化
   const observer = new MutationObserver(mutations => {
     let hasUsernameChanges = false
@@ -37,14 +34,14 @@ export const attachEventListeners = (
 
     // 如果有用户名变化，进行防抖扫描
     if (hasUsernameChanges) {
-      debouncedScan(blacklistIds, blacklistData)
+      debouncedScan(CloudDiskListIds, CloudDiskListData)
     }
   })
 
   // 监听整个文档的变化
   observer.observe(document.body, {
     childList: true,
-    subtree: true
+    subtree: true,
   })
 
   observers.push(observer)

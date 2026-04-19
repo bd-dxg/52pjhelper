@@ -1,22 +1,22 @@
 import { storageHelper } from '../storageHelper'
-import type { UserBlacklistData } from './types'
-import { loadBlacklistData, saveBlacklistData, shouldAutoUpdate } from './data'
+import type { UserCloudDiskListData } from './types'
+import { loadCloudDiskListData, saveCloudDiskListData, shouldAutoUpdate } from './data'
 import { injectStyles, removeStyles, cleanupInjectedContent } from './ui'
 import { scanAndProcessUsernames, removeHighlights } from './processing'
 import { attachEventListeners, removeEventListeners } from './events'
 import { STORAGE_KEY } from './config'
 
-export class UserBlacklistManager {
+export class UserCloudDiskListManager {
   private isEnabled = false
-  private blacklistData: UserBlacklistData = []
-  private blacklistIds = new Set<string>() // 用于快速查找的Set
+  private CloudDiskListData: UserCloudDiskListData = []
+  private CloudDiskListIds = new Set<string>() // 用于快速查找的Set
 
   /**
    * 从存储加载配置
    */
   async loadConfig(defaultEnabled: boolean): Promise<void> {
     this.isEnabled = await storageHelper.loadBoolean(STORAGE_KEY, defaultEnabled)
-    await this.loadBlacklistData()
+    await this.loadCloudDiskListData()
   }
 
   /**
@@ -29,10 +29,10 @@ export class UserBlacklistManager {
   /**
    * 加载黑名单数据
    */
-  async loadBlacklistData(): Promise<void> {
-    this.blacklistData = await loadBlacklistData()
-    this.blacklistIds = new Set(this.blacklistData.map(item => item.forumId.toLowerCase()))
-    // console.log(`[用户黑名单] 加载完成，共 ${this.blacklistData.length} 个用户，ID列表:`, Array.from(this.blacklistIds))
+  async loadCloudDiskListData(): Promise<void> {
+    this.CloudDiskListData = await loadCloudDiskListData()
+    this.CloudDiskListIds = new Set(this.CloudDiskListData.map(item => item.forumId.toLowerCase()))
+    // console.log(`[用户黑名单] 加载完成，共 ${this.CloudDiskListData.length} 个用户，ID列表:`, Array.from(this.CloudDiskListIds))
   }
 
   /**
@@ -44,9 +44,9 @@ export class UserBlacklistManager {
     this.isEnabled = true
     await this.saveConfig()
     injectStyles()
-    attachEventListeners(this.blacklistIds, this.blacklistData)
+    attachEventListeners(this.CloudDiskListIds, this.CloudDiskListData)
     // 立即扫描现有的用户名元素
-    scanAndProcessUsernames(this.blacklistIds, this.blacklistData)
+    scanAndProcessUsernames(this.CloudDiskListIds, this.CloudDiskListData)
   }
 
   /**
@@ -85,23 +85,23 @@ export class UserBlacklistManager {
   /**
    * 手动更新黑名单数据
    */
-  async updateData(data: UserBlacklistData): Promise<void> {
-    await saveBlacklistData(data)
+  async updateData(data: UserCloudDiskListData): Promise<void> {
+    await saveCloudDiskListData(data)
 
     // 如果功能已启用，重新处理用户名元素
     if (this.isEnabled) {
       removeEventListeners()
-      await this.loadBlacklistData()
-      attachEventListeners(this.blacklistIds, this.blacklistData)
+      await this.loadCloudDiskListData()
+      attachEventListeners(this.CloudDiskListIds, this.CloudDiskListData)
     }
   }
 
   /**
    * 获取黑名单数据
    */
-  async getData(): Promise<UserBlacklistData> {
-    await this.loadBlacklistData()
-    return this.blacklistData
+  async getData(): Promise<UserCloudDiskListData> {
+    await this.loadCloudDiskListData()
+    return this.CloudDiskListData
   }
 
   /**
@@ -116,12 +116,12 @@ export class UserBlacklistManager {
    */
   async reloadData(): Promise<void> {
     console.log('[用户黑名单] 重新加载数据')
-    await this.loadBlacklistData()
+    await this.loadCloudDiskListData()
 
     // 如果功能已启用，重新处理用户名元素
     if (this.isEnabled) {
       removeEventListeners()
-      attachEventListeners(this.blacklistIds, this.blacklistData)
+      attachEventListeners(this.CloudDiskListIds, this.CloudDiskListData)
     }
   }
 
@@ -132,9 +132,9 @@ export class UserBlacklistManager {
     await this.loadConfig(defaultEnabled)
     if (this.isEnabled) {
       injectStyles()
-      attachEventListeners(this.blacklistIds, this.blacklistData)
+      attachEventListeners(this.CloudDiskListIds, this.CloudDiskListData)
       // 立即扫描现有的用户名元素
-      scanAndProcessUsernames(this.blacklistIds, this.blacklistData)
+      scanAndProcessUsernames(this.CloudDiskListIds, this.CloudDiskListData)
     }
   }
 }

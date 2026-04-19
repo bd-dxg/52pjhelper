@@ -1,11 +1,11 @@
 import { storageHelper } from '../storageHelper'
-import type { TableExtractionData, UserBlacklistData, UserBlacklistItem } from './types'
-import { DATA_STORAGE_KEY, DEFAULT_BLACKLIST_DATA, LAST_UPDATE_KEY, AUTO_UPDATE_INTERVAL } from './config'
+import type { TableExtractionData, UserCloudDiskListData, UserCloudDiskListItem } from './types'
+import { DATA_STORAGE_KEY, DEFAULT_CloudDiskList_DATA, LAST_UPDATE_KEY, AUTO_UPDATE_INTERVAL } from './config'
 
 /**
  * 从表格数据提取器加载黑名单数据
  */
-export const loadBlacklistDataFromTableExtractor = async (): Promise<UserBlacklistData> => {
+export const loadCloudDiskListDataFromTableExtractor = async (): Promise<UserCloudDiskListData> => {
   try {
     console.log('[用户黑名单] 尝试从表格数据提取器加载数据')
     const result = await browser.storage.local.get('tableDataExtractor_lastExtraction')
@@ -13,7 +13,7 @@ export const loadBlacklistDataFromTableExtractor = async (): Promise<UserBlackli
 
     if (!extractionData) {
       console.log('[用户黑名单] 未找到表格数据提取器数据，使用默认数据')
-      return DEFAULT_BLACKLIST_DATA
+      return DEFAULT_CloudDiskList_DATA
     }
 
     console.log('[用户黑名单] 找到表格数据提取器数据，结构:', Object.keys(extractionData))
@@ -48,15 +48,16 @@ export const loadBlacklistDataFromTableExtractor = async (): Promise<UserBlackli
     // 2. 同一用户的其他网盘记录行中，"序号"和"论坛ID"都是"-"
     // 3. 需要跟踪当前用户，将同一用户的所有网盘记录合并
 
-    const blacklistItems: UserBlacklistItem[] = []
+    const CloudDiskListItems: UserCloudDiskListItem[] = []
 
     if (extractionDataTyped.targetTable && extractionDataTyped.targetTable.rows) {
       let currentForumId = ''
       let currentNote = ''
 
-      extractionDataTyped.targetTable.rows.forEach((row) => {
+      extractionDataTyped.targetTable.rows.forEach(row => {
         const cells = row.cells
-        if (cells.length >= 7) { // 表格有7列
+        if (cells.length >= 7) {
+          // 表格有7列
           const serialNumber = cells[0]?.content?.trim() // 第1列：序号
           const forumId = cells[1]?.content?.trim() // 第2列：论坛ID
           const provider = cells[2]?.content?.trim() // 第3列：网盘厂商
@@ -71,16 +72,19 @@ export const loadBlacklistDataFromTableExtractor = async (): Promise<UserBlackli
           // 3. 无效行：所有关键字段都为空
           const isHeaderOrTemplateRow =
             // 表头行：序号列的表头关键词
-            serialNumber.includes('序号') || serialNumber.includes('编号') ||
+            serialNumber.includes('序号') ||
+            serialNumber.includes('编号') ||
             // 表头行：论坛ID列的表头关键词
-            forumId.includes('论坛id') || forumId.includes('论坛ID') ||
+            forumId.includes('论坛id') ||
+            forumId.includes('论坛ID') ||
             forumId.includes('72主题') ||
             // 模板行：序号为"0"且论坛ID为"示例用户"
             (serialNumber === '0' && forumId === '示例用户') ||
             // 模板行：论坛ID为"示例用户"（无论序号是什么）
             forumId === '示例用户' ||
             // 其他可能的表头关键词
-            serialNumber.includes('主题') || forumId.includes('主题') ||
+            serialNumber.includes('主题') ||
+            forumId.includes('主题') ||
             // 空行或无效数据
             (!serialNumber && !forumId && !provider && !cloudId)
 
@@ -95,36 +99,36 @@ export const loadBlacklistDataFromTableExtractor = async (): Promise<UserBlackli
             currentNote = note || ''
 
             // 查找是否已存在该用户的记录
-            let existingItem = blacklistItems.find(item => item.forumId === currentForumId)
+            let existingItem = CloudDiskListItems.find(item => item.forumId === currentForumId)
 
             if (!existingItem) {
               existingItem = {
                 forumId: currentForumId,
                 cloudStorages: [],
-                note: currentNote
+                note: currentNote,
               }
-              blacklistItems.push(existingItem)
+              CloudDiskListItems.push(existingItem)
             }
           }
 
           // 如果有当前用户且网盘厂商有值，添加网盘记录
           if (currentForumId && provider && provider.trim() !== '') {
-            const existingItem = blacklistItems.find(item => item.forumId === currentForumId)
+            const existingItem = CloudDiskListItems.find(item => item.forumId === currentForumId)
             if (existingItem) {
               // 检查是否已存在相同的网盘记录
               const existingStorage = existingItem.cloudStorages.find(
-                storage => storage.provider === provider && storage.id === cloudId
+                storage => storage.provider === provider && storage.id === cloudId,
               )
 
               if (!existingStorage) {
                 // 处理帖子链接：如果是"-"则保持为空
-                const processedPostLink = postLink === '-' ? '' : (postLink || '')
+                const processedPostLink = postLink === '-' ? '' : postLink || ''
 
                 existingItem.cloudStorages.push({
                   provider: provider || '未知',
                   id: cloudId || '',
                   postLink: processedPostLink,
-                  recorder: recorder || ''
+                  recorder: recorder || '',
                 })
               }
             }
@@ -133,23 +137,20 @@ export const loadBlacklistDataFromTableExtractor = async (): Promise<UserBlackli
       })
     }
 
-    // console.log(`[用户黑名单] 从表格解析出 ${blacklistItems.length} 个用户`)
-    return blacklistItems.length > 0 ? blacklistItems : DEFAULT_BLACKLIST_DATA
+    // console.log(`[用户黑名单] 从表格解析出 ${CloudDiskListItems.length} 个用户`)
+    return CloudDiskListItems.length > 0 ? CloudDiskListItems : DEFAULT_CloudDiskList_DATA
   } catch (error) {
     console.error('[用户黑名单] 从表格数据提取器加载数据失败:', error)
-    return DEFAULT_BLACKLIST_DATA
+    return DEFAULT_CloudDiskList_DATA
   }
 }
 
 /**
  * 加载黑名单数据
  */
-export const loadBlacklistData = async (): Promise<UserBlacklistData> => {
+export const loadCloudDiskListData = async (): Promise<UserCloudDiskListData> => {
   // 从本地存储加载数据
-  const storedData = await storageHelper.loadArray<UserBlacklistItem>(
-    DATA_STORAGE_KEY,
-    []
-  )
+  const storedData = await storageHelper.loadArray<UserCloudDiskListItem>(DATA_STORAGE_KEY, [])
 
   // 如果本地存储有数据，使用存储的数据
   if (storedData.length > 0) {
@@ -159,11 +160,11 @@ export const loadBlacklistData = async (): Promise<UserBlacklistData> => {
 
   // 如果本地存储没有数据，从表格数据提取器加载作为初始数据
   console.log('[用户黑名单] 本地存储无数据，从表格数据提取器加载初始数据')
-  const extractedData = await loadBlacklistDataFromTableExtractor()
+  const extractedData = await loadCloudDiskListDataFromTableExtractor()
 
   // 保存到本地存储供后续使用
   if (extractedData.length > 0) {
-    await saveBlacklistData(extractedData)
+    await saveCloudDiskListData(extractedData)
   }
 
   return extractedData
@@ -172,7 +173,7 @@ export const loadBlacklistData = async (): Promise<UserBlacklistData> => {
 /**
  * 保存黑名单数据
  */
-export const saveBlacklistData = async (data: UserBlacklistData): Promise<void> => {
+export const saveCloudDiskListData = async (data: UserCloudDiskListData): Promise<void> => {
   await storageHelper.saveArray(DATA_STORAGE_KEY, data)
 
   // 更新最后更新时间
@@ -186,5 +187,5 @@ export const shouldAutoUpdate = async (): Promise<boolean> => {
   const lastUpdate = await storageHelper.loadNumber(LAST_UPDATE_KEY, 0)
   const now = Date.now()
   // 使用配置文件中的自动更新间隔
-  return !lastUpdate || (now - lastUpdate) >= AUTO_UPDATE_INTERVAL
+  return !lastUpdate || now - lastUpdate >= AUTO_UPDATE_INTERVAL
 }

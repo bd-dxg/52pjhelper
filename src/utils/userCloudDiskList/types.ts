@@ -18,7 +18,7 @@ export interface CloudStorageRecord {
  * @property cloudStorages 网盘记录数组
  * @property note 备注信息（可选）
  */
-export interface UserBlacklistItem {
+export interface UserCloudDiskListItem {
   forumId: string
   cloudStorages: CloudStorageRecord[]
   note?: string
@@ -27,7 +27,7 @@ export interface UserBlacklistItem {
 /**
  * 黑名单数据类型
  */
-export type UserBlacklistData = UserBlacklistItem[]
+export type UserCloudDiskListData = UserCloudDiskListItem[]
 
 /**
  * 表格数据提取器数据结构
@@ -56,7 +56,7 @@ export interface TableExtractionData {
 /**
  * 用户黑名单管理器接口
  */
-export interface IUserBlacklist {
+export interface IUserCloudDiskList {
   /** 启用功能 */
   enable(): Promise<void>
   /** 禁用功能 */
@@ -66,9 +66,9 @@ export interface IUserBlacklist {
   /** 获取功能状态 */
   getStatus(): boolean
   /** 手动更新黑名单数据 */
-  updateData(data: UserBlacklistData): Promise<void>
+  updateData(data: UserCloudDiskListData): Promise<void>
   /** 获取黑名单数据 */
-  getData(): Promise<UserBlacklistData>
+  getData(): Promise<UserCloudDiskListData>
   /** 检查是否需要自动更新 */
   shouldAutoUpdate(): Promise<boolean>
   /** 重新加载数据并重新扫描 */

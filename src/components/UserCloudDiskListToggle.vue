@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import userBlacklistConfig from '@/configs/userBlacklist.json'
+import userCloudDiskListConfig from '@/configs/userCloudDiskList.json'
 import { useFeatureToggle } from '@/composables/useFeatureToggle'
 
 const emit = defineEmits<{
@@ -19,17 +19,16 @@ const emit = defineEmits<{
 }>()
 
 const config = {
-  name: userBlacklistConfig.name,
-  description: userBlacklistConfig.description,
-  storageKey: userBlacklistConfig.storageKey,
-  defaultEnabled: userBlacklistConfig.defaultEnabled,
-  messageType: 'TOGGLE_USER_BLACKLIST',
+  name: userCloudDiskListConfig.name,
+  description: userCloudDiskListConfig.description,
+  storageKey: userCloudDiskListConfig.storageKey,
+  defaultEnabled: userCloudDiskListConfig.defaultEnabled,
+  messageType: 'TOGGLE_USER_CloudDiskList',
 }
 
 const { enabled, toggleFeature, isToggling } = useFeatureToggle(config, (text, type) => {
   emit('show-message', text, type)
 })
-
 </script>
 
 <style scoped src="@/styles/toggle.css"></style>
