@@ -3,14 +3,21 @@
   "description": "在举报处理页面添加快捷回复短语下拉框",
   "storageKey": "quickReplyEnabled",
   "defaultEnabled": true,
-  "targetPages": ["forum.php?mod=modcp&action=report"],
+  "targetPages": [
+    "forum.php?mod=modcp&action=report"
+  ],
   "options": [
     {
       "value": "-1",
       "title": "请在投诉举报区发贴截图证据，有效举报会有额外的热心值奖励",
       "text": "去举报区"
     },
-    { "value": "0", "title": "", "selected": "selected", "text": "自定义" },
+    {
+      "value": "0",
+      "title": "",
+      "selected": "selected",
+      "text": ""
+    },
     {
       "value": "1",
       "title": "已经处理，感谢您对吾爱破解论坛的支持！",
@@ -28,7 +35,7 @@
     },
     {
       "value": "4",
-      "title": "举报木马病毒请将原文件上传微步、魔盾或者哈勃，再把对应诊断出的地址贴上来，并且把原始文件上传网盘提供地址，方便我们快速确认是否有问题。单纯反映某某杀毒报毒等，如既不能补充实质证据又无样本行为诊断地址，将不予受理并删帖。",
+      "title": "举报木马病毒请将原文件上传微步、魔盾，再把对应诊断出的地址贴上来，并且把原始文件上传网盘提供地址，方便我们快速确认是否有问题。单纯反映某某杀毒报毒等，如既不能补充实质证据又无样本行为诊断地址，将不予受理并删帖。",
       "text": "举报木马病毒..."
     },
     {
@@ -40,6 +47,11 @@
       "value": "6",
       "title": "【通告】关于『lanzous.com』跳转到非法网站问题的说明\nhttps://www.52pojie.cn/thread-1646967-1-1.html",
       "text": "蓝奏盘跳转问题"
+    },
+    {
+      "value": "7",
+      "title": "请准备好版权证明材料,发送至邮箱Service@52pojie.cn,会有专人处理",
+      "text": "侵权问题"
     }
   ]
 }

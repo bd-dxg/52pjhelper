@@ -27,7 +27,7 @@ function createSelectHtml(): string {
   const options = REPLY_OPTIONS.map(
     item => `<option value="${item.value}" title="${item.title}" ${item.selected ?? ''}>${item.text}</option>`,
   ).join('')
-  return `<select class="quick-reply-select" style="width:20px;height:23px; display: inline-block; vertical-align: middle;">${options}</select>`
+  return `<span class="quick-reply-wrapper"><svg class="quick-reply-arrow" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" stroke="#333" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><select class="quick-reply-select">${options}</select></span>`
 }
 
 // 初始化快捷回复功能
@@ -46,6 +46,32 @@ export function initQuickReply(): void {
     }
     @media screen and (min-width: 1100px) {
       #list_modcp_logs tbody tr td:nth-child(2) {width:600px}
+    }
+    .quick-reply-wrapper {
+      position: relative;
+      display: inline-block;
+      width: 20px;
+      height: 21px;
+      vertical-align: middle;
+      border: 1px solid;
+      border-color: #848484 #E0E0E0 #E0E0E0 #848484;
+
+    }
+    .quick-reply-arrow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .quick-reply-select {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
     }
     .quick-reply-select option {
       max-width: 200px !important;
@@ -71,7 +97,7 @@ export function initQuickReply(): void {
   inputs.forEach(input => {
     // 检查该输入框后面是否已经有下拉框
     const nextElement = input.nextElementSibling
-    if (nextElement?.classList.contains('quick-reply-select')) {
+    if (nextElement?.classList.contains('quick-reply-wrapper')) {
       return // 已存在，跳过
     }
     input.insertAdjacentHTML('afterend', createSelectHtml())
@@ -84,7 +110,7 @@ export function initQuickReply(): void {
 
     const selectedOption = target.options[target.selectedIndex]
     const tr = target.closest('tr')
-    const input = target.parentElement?.querySelector('input') as HTMLInputElement
+    const input = target.closest('.quick-reply-wrapper')?.previousElementSibling as HTMLInputElement
     if (!input) return
 
     if (selectedOption.textContent === '去举报区') {
@@ -98,5 +124,5 @@ export function initQuickReply(): void {
 
 // 清理快捷回复功能
 export function cleanupQuickReply(): void {
-  document.querySelectorAll('.quick-reply-select').forEach(el => el.remove())
+  document.querySelectorAll('.quick-reply-wrapper').forEach(el => el.remove())
 }
