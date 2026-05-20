@@ -105,7 +105,7 @@ npx vue-tsc --noEmit
 - [管理页面查询](features/user-link-query.md) - 用户链接违规查询
 - [勾选范围](features/row-click-to-check.md) - 点击表格行勾选复选框
 - [灌水筛选](features/content-filter.md) - 可拖动的过滤卡片
-- [重复发帖检测](features/duplicate-post-detection.md) - 高亮显示重复发帖
+- [重复回帖检测](features/duplicate-reply-detection.md) - 高亮显示当天内同一用户的多次回帖
 - [用户网盘名单](features/admin-features.md#10-用户网盘名单) - 高亮显示网盘名单用户并显示网盘信息
 
 ### 开发文档
@@ -189,5 +189,5 @@ npx vue-tsc --noEmit
 
 ---
 
-_最后更新：2026-04-19_  
-_文档版本：1.1.0（更新通知系统、用户网盘名单重构）_
+_最后更新：2026-05-20_  
+_文档版本：1.2.0（新增重复回帖检测功能，移除重复发帖检测功能）_

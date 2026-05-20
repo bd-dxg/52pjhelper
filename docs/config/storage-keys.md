@@ -86,11 +86,11 @@
 | `autoFillEnabled`  | `boolean` | `true` | 自动填充功能开关 |
 | `autoFillMessages` | `object`  | `{}`   | 自定义填充内容   |
 
-#### 重复发帖检测
+#### 重复回帖检测
 
-| 存储键                          | 数据类型  | 默认值 | 描述             |
-| ------------------------------- | --------- | ------ | ---------------- |
-| `duplicatePostDetectionEnabled` | `boolean` | `true` | 重复发帖检测开关 |
+| 存储键                           | 数据类型  | 默认值 | 描述             |
+| -------------------------------- | --------- | ------ | ---------------- |
+| `duplicateReplyDetectionEnabled` | `boolean` | `true` | 重复回帖检测开关 |
 
 #### 勾选范围
 

@@ -20,7 +20,7 @@
   - 处理表单（moderateform）：根据处理类型自动填充不同内容
   - 举报表单（reportform）：根据积分奖励自动填充
 - **勾选范围**: 在管理页面上点击表格行（tr）来勾选对应的复选框，提高操作效率
-- **重复发帖检测**: 在论坛列表页面检测当天发布的重复发帖，高亮显示重复发帖的行
+- **重复回帖检测**: 在帖子详情页面检测当天内同一用户的多次回帖，高亮显示重复回帖的楼层
 - **灌水筛选**: 在管理页面创建可拖动的过滤卡片，支持正则和简单匹配，高亮符合条件的行
 - **版本更新检查**: 定期检查新版本，通过通知和设置页面横幅提醒用户更新
 - **实时预览**: 点击按钮实时切换菜单显示/隐藏状态
@@ -84,7 +84,7 @@
 │   │   ├── AutoFillToggle.vue           # 自动填充功能开关组件
 │   │   ├── UserLinkQueryToggle.vue      # 管理页面查询功能开关组件
 │   │   ├── RowClickToCheckToggle.vue    # 勾选范围功能开关组件
-│   │   ├── DuplicatePostDetectionToggle.vue # 重复发帖检测功能开关组件
+│   │   ├── DuplicateReplyDetectionToggle.vue # 重复回帖检测功能开关组件
 │   │   └── ContentFilterToggle.vue      # 灌水筛选功能开关组件
 │   ├── composables/            # Vue 3 可组合函数目录
 │   │   └── useFeatureToggle.ts    # 功能切换可组合函数，提供统一的功能开关逻辑
@@ -98,7 +98,7 @@
 │   │   ├── autoFill.json       # 自动填充配置
 │   │   ├── userLinkQuery.json  # 管理页面查询配置
 │   │   ├── rowClickToCheck.json # 勾选范围功能配置
-│   │   ├── duplicatePostDetection.json # 重复发帖检测功能配置
+│   │   ├── duplicateReplyDetection.json # 重复回帖检测功能配置
 │   │   ├── contentFilter.json   # 灌水筛选功能配置
 │   │   └── versionCheck.json   # 版本更新检查配置
 │   ├── entries/                 # 入口文件目录
@@ -132,7 +132,7 @@
 │       ├── userLinkQuery.ts     # 管理页面查询管理工具
 │       ├── userViolationFetcher.ts # 用户违规信息获取公共工具
 │       ├── rowClickToCheck.ts   # 勾选范围功能管理工具
-│       ├── duplicatePostDetection.ts # 重复发帖检测管理工具
+│       ├── duplicateReplyDetection.ts # 重复回帖检测管理工具
 │       ├── contentFilter.ts     # 灌水筛选管理工具
 │       ├── featureManager.ts    # 功能管理器，提供统一的功能管理模式
 │       ├── storageHelper.ts     # 存储操作辅助工具，提供统一的浏览器存储操作接口
@@ -239,7 +239,6 @@
    - 头像查询
    - 楼层高亮
    - 原生楼层显示
-   - 重复发帖检测
 
 2. **后台管理功能组** (`AdminFeaturesToggle.vue`)
    - 快捷回复
@@ -249,6 +248,7 @@
    - 默认查询时间
    - 管理页面查询
    - 勾选范围
+   - 重复回帖检测
    - 灌水筛选
 
 **优势**：
@@ -345,17 +345,18 @@
 3. 点击表格行（tr）即可勾选对应的复选框
 4. 点击行内的超链接或按钮不会触发复选框勾选
 
-### 重复发帖检测
+### 重复回帖检测
 
-1. 在"更多设置"选项卡中，启用"重复发帖检测"开关
-2. 访问目标论坛列表页面（如 https://www.52pojie.cn/forum-15-1.html）
-3. 功能会自动检测当天发布的帖子
-4. 同一作者发布的重复帖子会以黄色高亮显示
+1. 在"更多设置"选项卡中，启用"重复回帖检测"开关
+2. 访问帖子详情页面（如 https://www.52pojie.cn/thread-*-*.html）
+3. 功能会自动检测当天内同一用户的多次回帖
+4. 重复回帖的楼层会以黄色高亮显示，楼层号变为红色加粗
 
 **配置说明**：
 
-- 目标页面配置在 `src/configs/duplicatePostDetection.json` 文件中
-- 支持精确匹配和简单的通配符匹配（如 `https://www.52pojie.cn/forum-*.html`）
+- 目标页面配置在 `src/configs/duplicateReplyDetection.json` 文件中
+- 默认对所有帖子详情页面生效
+- 功能默认启用
 
 ### 灌水筛选
 

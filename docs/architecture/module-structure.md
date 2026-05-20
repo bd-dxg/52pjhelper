@@ -27,7 +27,7 @@ src/
 │   ├── defaultTime.json       # 默认查询时间配置
 │   ├── autoFill.json          # 自动填充配置
 │   ├── rowClickToCheck.json   # 勾选范围功能配置
-│   ├── duplicatePostDetection.json # 重复发帖检测配置
+│   ├── duplicateReplyDetection.json # 重复回帖检测配置
 │   ├── contentFilter.json     # 灌水筛选配置
 │   └── versionCheck.json      # 版本更新检查配置
 │
@@ -46,7 +46,7 @@ src/
 │   ├── defaultTime.ts         # 默认查询时间管理工具类
 │   ├── autoFill.ts            # 自动填充管理工具类
 │   ├── rowClickToCheck.ts     # 勾选范围功能管理工具类
-│   ├── duplicatePostDetection.ts # 重复发帖检测管理工具类
+│   ├── duplicateReplyDetection.ts # 重复回帖检测管理工具类
 │   ├── contentFilter.ts       # 灌水筛选管理工具类
 │   ├── featureManager.ts      # 功能管理器
 │   ├── storageHelper.ts       # 存储操作辅助工具
@@ -68,7 +68,7 @@ src/
 │   ├── DefaultTimeToggle.vue         # 默认查询时间功能开关组件
 │   ├── AutoFillToggle.vue            # 自动填充功能开关组件
 │   ├── RowClickToCheckToggle.vue     # 勾选范围功能开关组件
-│   ├── DuplicatePostDetectionToggle.vue # 重复发帖检测功能开关组件
+│   ├── DuplicateReplyDetectionToggle.vue # 重复回帖检测功能开关组件
 │   └── ContentFilterToggle.vue       # 灌水筛选功能开关组件
 │
 └── styles/                    # 样式文件

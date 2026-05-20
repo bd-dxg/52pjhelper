@@ -109,20 +109,28 @@
 - 非侵入式显示方式
 - 支持启用/禁用功能切换
 
-### 7. 重复发帖检测
+### 7. 重复回帖检测
 
-在论坛列表页面检测当天发布的重复发帖，高亮显示重复发帖的行。
+在帖子详情页面检测当天内同一用户的多次回帖，高亮显示重复回帖的楼层。
 
 **检测规则**：
 
-- 支持精确匹配和模糊匹配目标页面
-- 自动检测日期格式（支持 2026-01-27 和 2026-1-27 两种格式）
-- 高亮显示重复发帖的行，使用黄色背景
+- 自动检测帖子详情页面（https://www.52pojie.cn/thread-*-*-*.html）
+- 检测当天内同一用户的多次回帖
+- 高亮显示重复回帖的楼层，使用黄色背景和左侧橙色边框
+- 楼层号变为红色加粗，更醒目
+
+**技术特点**：
+
+- 使用 UID 作为用户唯一标识，避免用户名重复
+- 精确匹配日期部分，避免日期误匹配
+- 集成通知系统，操作反馈更直观
 
 **配置支持**：
 
-- 配置文件支持动态修改目标页面
+- 配置文件：`src/configs/duplicateReplyDetection.json`
 - 支持启用/禁用功能切换
+- 默认启用
 
 ### 8. 勾选范围
 
@@ -230,7 +238,7 @@
 - `selectAllEnabled` - 全选功能开关
 - `tableSelectorEnabled` - 分表选择器开关
 - `userLinkQueryEnabled` - 管理页面查询开关
-- `duplicatePostDetectionEnabled` - 重复发帖检测开关
+- `duplicateReplyDetectionEnabled` - 重复回帖检测开关
 - `rowClickToCheckEnabled` - 勾选范围开关
 - `contentFilterEnabled` - 灌水筛选开关
 - `userCloudDiskListEnabled` - 网盘名单开关
@@ -253,7 +261,7 @@ src/components/
 ├── SelectAllToggle.vue          # 全选功能组件
 ├── TableSelectorToggle.vue      # 分表选择器组件
 ├── UserLinkQueryToggle.vue      # 管理页面查询组件
-├── DuplicatePostDetectionToggle.vue # 重复发帖检测组件
+├── DuplicateReplyDetectionToggle.vue # 重复回帖检测组件
 ├── RowClickToCheckToggle.vue    # 勾选范围组件
 ├── ContentFilterToggle.vue      # 灌水筛选组件
 ├── UserCloudDiskListToggle.vue      # 用户网盘名单组件
@@ -270,7 +278,7 @@ src/utils/
 ├── autoFill.ts                 # 自动填充管理
 ├── selectAll.ts                # 全选功能管理
 ├── tableSelector.ts            # 分表选择器管理
-├── duplicatePostDetection.ts   # 重复发帖检测管理
+├── duplicateReplyDetection.ts  # 重复回帖检测管理
 ├── rowClickToCheck.ts          # 勾选范围管理
 ├── contentFilter.ts            # 灌水筛选管理
 ├── userCloudDiskList/              # 用户网盘名单模块化实现
@@ -358,5 +366,5 @@ A: 支持百度、夸克、迅雷等多种网盘厂商，数据格式包含网�
 
 ---
 
-_最后更新：2026-04-18_  
-_文档版本：1.1.0（更新用户网盘名单重构、通知系统集成）_
+_最后更新：2026-05-20_  
+_文档版本：1.2.0（新增重复回帖检测功能，移除重复发帖检测功能）_

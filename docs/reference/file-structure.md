@@ -200,7 +200,7 @@ docs/
 │   ├── user-link-query.md        # 管理页面查询
 │   ├── row-click-to-check.md     # 勾选范围
 │   ├── content-filter.md         # 灌水筛选
-│   └── duplicate-post-detection.md # 重复发帖检测
+│   └── duplicate-reply-detection.md # 重复回帖检测
 ├── development/                   # 开发文档
 │   ├── getting-started.md        # 快速开始指南
 │   ├── commands.md               # 开发命令指南
