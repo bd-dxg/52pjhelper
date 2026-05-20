@@ -15,6 +15,7 @@ declare global {
   const createAvatarQuery: typeof import('D:/code/front-end/52pjhelper/src/utils/avatarQuery').createAvatarQuery
   const createDefaultTime: typeof import('D:/code/front-end/52pjhelper/src/utils/defaultTime').createDefaultTime
   const createDuplicatePostDetection: typeof import('D:/code/front-end/52pjhelper/src/utils/duplicatePostDetection').createDuplicatePostDetection
+  const createDuplicateReplyDetection: typeof import('D:/code/front-end/52pjhelper/src/utils/duplicateReplyDetection').createDuplicateReplyDetection
   const createFeatureManager: typeof import('D:/code/front-end/52pjhelper/src/utils/featureManager').createFeatureManager
   const createFloorHighlighter: typeof import('D:/code/front-end/52pjhelper/src/utils/floorHighlighter').createFloorHighlighter
   const createIframeUi: typeof import('wxt/utils/content-script-ui/iframe').createIframeUi
@@ -170,6 +171,9 @@ declare global {
   export type { IDuplicatePostDetection } from 'D:/code/front-end/52pjhelper/src/utils/duplicatePostDetection'
   import('D:/code/front-end/52pjhelper/src/utils/duplicatePostDetection')
   // @ts-ignore
+  export type { IDuplicateReplyDetection } from 'D:/code/front-end/52pjhelper/src/utils/duplicateReplyDetection'
+  import('D:/code/front-end/52pjhelper/src/utils/duplicateReplyDetection')
+  // @ts-ignore
   export type { FeatureConfig, IFeatureManager, CreateFeatureManagerOptions } from 'D:/code/front-end/52pjhelper/src/utils/featureManager'
   import('D:/code/front-end/52pjhelper/src/utils/featureManager')
   // @ts-ignore
@@ -227,6 +231,7 @@ declare module 'vue' {
     readonly createAvatarQuery: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/avatarQuery')['createAvatarQuery']>
     readonly createDefaultTime: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/defaultTime')['createDefaultTime']>
     readonly createDuplicatePostDetection: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/duplicatePostDetection')['createDuplicatePostDetection']>
+    readonly createDuplicateReplyDetection: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/duplicateReplyDetection')['createDuplicateReplyDetection']>
     readonly createFeatureManager: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/featureManager')['createFeatureManager']>
     readonly createFloorHighlighter: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/floorHighlighter')['createFloorHighlighter']>
     readonly createIframeUi: UnwrapRef<typeof import('wxt/utils/content-script-ui/iframe')['createIframeUi']>

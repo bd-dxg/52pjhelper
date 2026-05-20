@@ -12,7 +12,8 @@ import { createNativeFloorDisplay } from '@utils/nativeFloorDisplay'
 import { createSelectAll } from '@utils/selectAll'
 import { createTableSelector } from '@utils/tableSelector'
 import { createDefaultTime } from '@utils/defaultTime'
-import { createDuplicatePostDetection } from '@utils/duplicatePostDetection'
+// import { createDuplicatePostDetection } from '@utils/duplicatePostDetection'
+import { createDuplicateReplyDetection } from '@utils/duplicateReplyDetection'
 import { initializeRowClickToCheck } from '@utils/rowClickToCheck'
 import { createContentFilter } from '@utils/contentFilter'
 import { createTableDataExtractor } from '@utils/tableDataExtractor'
@@ -67,7 +68,10 @@ export async function initializeManagers(managers: ManagerInstances): Promise<vo
   })
 
   // 初始化重复发帖检测功能
-  managers.duplicatePostDetectionManager = createDuplicatePostDetection()
+  // managers.duplicatePostDetectionManager = createDuplicatePostDetection()
+
+  // 初始化重复回帖检测功能
+  managers.duplicateReplyDetectionManager = createDuplicateReplyDetection()
 
   // 初始化内容过滤功能
   managers.contentFilterManager = createContentFilter()

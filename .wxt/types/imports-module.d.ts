@@ -24,6 +24,7 @@ declare module '#imports' {
   export { createAvatarQuery, IAvatarQuery } from '../src/utils/avatarQuery';
   export { createDefaultTime, IDefaultTime } from '../src/utils/defaultTime';
   export { createDuplicatePostDetection, IDuplicatePostDetection } from '../src/utils/duplicatePostDetection';
+  export { createDuplicateReplyDetection, IDuplicateReplyDetection } from '../src/utils/duplicateReplyDetection';
   export { createFeatureManager, FeatureConfig, IFeatureManager, CreateFeatureManagerOptions } from '../src/utils/featureManager';
   export { createFloorHighlighter, IFloorHighlighter } from '../src/utils/floorHighlighter';
   export { createMessageHelper, messageHelper, MessageResponse, IMessageHelper } from '../src/utils/messageHelper';

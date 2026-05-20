@@ -1,0 +1,9 @@
+{
+  "name": "回帖检测",
+  "description": "在帖子详情页面检测当天内同一用户的多次回帖，高亮显示重复回帖的楼层",
+  "defaultEnabled": true,
+  "storageKey": "duplicateReplyDetectionEnabled",
+  "targetPages": [
+    "https://www.52pojie.cn/thread-2105755-1-1.html"
+  ]
+}

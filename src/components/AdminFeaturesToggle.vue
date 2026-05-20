@@ -10,6 +10,7 @@
       <DefaultTimeToggle />
       <UserLinkQueryToggle />
       <RowClickToCheckToggle />
+      <DuplicateReplyDetectionToggle />
       <ContentFilterToggle />
       <UserCloudDiskListToggle />
     </div>
@@ -25,13 +26,13 @@ import TableSelectorToggle from '@com/TableSelectorToggle.vue'
 import DefaultTimeToggle from '@com/DefaultTimeToggle.vue'
 import UserLinkQueryToggle from '@com/UserLinkQueryToggle.vue'
 import RowClickToCheckToggle from '@com/RowClickToCheckToggle.vue'
+import DuplicateReplyDetectionToggle from '@com/DuplicateReplyDetectionToggle.vue'
 import ContentFilterToggle from '@com/ContentFilterToggle.vue'
 import UserCloudDiskListToggle from '@com/UserCloudDiskListToggle.vue'
 
 defineOptions({
   name: 'AdminFeaturesToggle',
 })
-
 </script>
 
 <style scoped>

@@ -4,7 +4,7 @@
     <div class="toggle-grid">
       <FloorHighlighterToggle />
       <NativeFloorDisplayToggle />
-      <DuplicatePostDetectionToggle />
+      <!-- <DuplicatePostDetectionToggle /> -->
     </div>
   </div>
 </template>
@@ -12,12 +12,11 @@
 <script setup lang="ts">
 import FloorHighlighterToggle from '@com/FloorHighlighterToggle.vue'
 import NativeFloorDisplayToggle from '@com/NativeFloorDisplayToggle.vue'
-import DuplicatePostDetectionToggle from '@com/DuplicatePostDetectionToggle.vue'
+// import DuplicatePostDetectionToggle from '@com/DuplicatePostDetectionToggle.vue'
 
 defineOptions({
   name: 'GeneralFeaturesToggle',
 })
-
 </script>
 
 <style scoped>

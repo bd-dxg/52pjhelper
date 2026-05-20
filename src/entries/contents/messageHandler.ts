@@ -10,7 +10,8 @@ import type { INativeFloorDisplay } from '@utils/nativeFloorDisplay'
 import type { ISelectAll } from '@utils/selectAll'
 import type { ITableSelector } from '@utils/tableSelector'
 import type { IDefaultTime } from '@utils/defaultTime'
-import type { IDuplicatePostDetection } from '@utils/duplicatePostDetection'
+// import type { IDuplicatePostDetection } from '@utils/duplicatePostDetection'
+import type { IDuplicateReplyDetection } from '@utils/duplicateReplyDetection'
 import type { IContentFilter } from '@utils/contentFilter'
 import type { ITableDataExtractor } from '@utils/tableDataExtractor'
 import type { IUserCloudDiskList } from '@utils/userCloudDiskList/index'
@@ -32,7 +33,8 @@ export interface ManagerInstances {
   selectAllManager: ISelectAll | null
   tableSelectorManager: ITableSelector | null
   defaultTimeManager: IDefaultTime | null
-  duplicatePostDetectionManager: IDuplicatePostDetection | null
+  // duplicatePostDetectionManager: IDuplicatePostDetection | null
+  duplicateReplyDetectionManager: IDuplicateReplyDetection | null
   contentFilterManager: IContentFilter | null
   tableDataExtractorManager: ITableDataExtractor | null
   userCloudDiskListManager: IUserCloudDiskList | null
@@ -326,34 +328,34 @@ export function registerMessageListener(managers: ManagerInstances): void {
     }
 
     // 重复发帖检测功能切换
-    if (message.type === 'TOGGLE_DUPLICATE_POST_DETECTION') {
-      if (managers.duplicatePostDetectionManager) {
-        managers.duplicatePostDetectionManager
-          .toggle()
-          .then((enabled: boolean) => {
-            sendResponse({ success: true, enabled })
-          })
-          .catch((error: unknown) => {
-            console.error('Toggle duplicate post detection failed:', error)
-            sendResponse({ success: false, message: 'Toggle failed' })
-          })
-        return true
-      } else {
-        sendResponse({ success: false, message: 'DuplicatePostDetectionManager not initialized' })
-        return false
-      }
-    }
+    // if (message.type === 'TOGGLE_DUPLICATE_POST_DETECTION') {
+    //   if (managers.duplicatePostDetectionManager) {
+    //     managers.duplicatePostDetectionManager
+    //       .toggle()
+    //       .then((enabled: boolean) => {
+    //         sendResponse({ success: true, enabled })
+    //       })
+    //       .catch((error: unknown) => {
+    //         console.error('Toggle duplicate post detection failed:', error)
+    //         sendResponse({ success: false, message: 'Toggle failed' })
+    //       })
+    //     return true
+    //   } else {
+    //     sendResponse({ success: false, message: 'DuplicatePostDetectionManager not initialized' })
+    //     return false
+    //   }
+    // }
 
-    // 获取重复发帖检测状态
-    if (message.type === 'GET_DUPLICATE_POST_DETECTION_STATUS') {
-      if (managers.duplicatePostDetectionManager) {
-        const enabled = managers.duplicatePostDetectionManager.getStatus()
-        sendResponse({ success: true, enabled })
-      } else {
-        sendResponse({ success: false, message: 'DuplicatePostDetectionManager not initialized' })
-      }
-      return false
-    }
+    // // 获取重复发帖检测状态
+    // if (message.type === 'GET_DUPLICATE_POST_DETECTION_STATUS') {
+    //   if (managers.duplicatePostDetectionManager) {
+    //     const enabled = managers.duplicatePostDetectionManager.getStatus()
+    //     sendResponse({ success: true, enabled })
+    //   } else {
+    //     sendResponse({ success: false, message: 'DuplicatePostDetectionManager not initialized' })
+    //   }
+    //   return false
+    // }
 
     // 自动填充功能切换
     if (message.type === 'TOGGLE_AUTO_FILL') {
@@ -535,6 +537,36 @@ export function registerMessageListener(managers: ManagerInstances): void {
         sendResponse({ success: false, message: 'TableDataExtractorManager not initialized' })
         return false
       }
+    }
+
+    // 重复回帖检测功能切换
+    if (message.type === 'TOGGLE_DUPLICATE_REPLY_DETECTION') {
+      if (managers.duplicateReplyDetectionManager) {
+        managers.duplicateReplyDetectionManager
+          .toggle()
+          .then((enabled: boolean) => {
+            sendResponse({ success: true, enabled })
+          })
+          .catch((error: unknown) => {
+            console.error('Toggle duplicate reply detection failed:', error)
+            sendResponse({ success: false, message: 'Toggle failed' })
+          })
+        return true
+      } else {
+        sendResponse({ success: false, message: 'DuplicateReplyDetectionManager not initialized' })
+        return false
+      }
+    }
+
+    // 获取重复回帖检测状态
+    if (message.type === 'GET_DUPLICATE_REPLY_DETECTION_STATUS') {
+      if (managers.duplicateReplyDetectionManager) {
+        const enabled = managers.duplicateReplyDetectionManager.getStatus()
+        sendResponse({ success: true, enabled })
+      } else {
+        sendResponse({ success: false, message: 'DuplicateReplyDetectionManager not initialized' })
+      }
+      return false
     }
 
     return false

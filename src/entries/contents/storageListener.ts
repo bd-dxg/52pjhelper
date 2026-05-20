@@ -146,13 +146,25 @@ export function registerStorageListener(managers: ManagerInstances): void {
       }
 
       // 处理重复发帖检测配置变化
-      if (changes.duplicatePostDetectionEnabled) {
-        const newValue = changes.duplicatePostDetectionEnabled.newValue
-        if (managers.duplicatePostDetectionManager) {
+      // if (changes.duplicatePostDetectionEnabled) {
+      //   const newValue = changes.duplicatePostDetectionEnabled.newValue
+      //   if (managers.duplicatePostDetectionManager) {
+      //     if (newValue) {
+      //       managers.duplicatePostDetectionManager.enable()
+      //     } else {
+      //       managers.duplicatePostDetectionManager.disable()
+      //     }
+      //   }
+      // }
+
+      // 处理重复回帖检测配置变化
+      if (changes.duplicateReplyDetectionEnabled) {
+        const newValue = changes.duplicateReplyDetectionEnabled.newValue
+        if (managers.duplicateReplyDetectionManager) {
           if (newValue) {
-            managers.duplicatePostDetectionManager.enable()
+            managers.duplicateReplyDetectionManager.enable()
           } else {
-            managers.duplicatePostDetectionManager.disable()
+            managers.duplicateReplyDetectionManager.disable()
           }
         }
       }
