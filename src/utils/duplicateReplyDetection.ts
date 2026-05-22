@@ -8,11 +8,13 @@ import { urlMatcher } from './urlMatcher'
 import { storageHelper } from './storageHelper'
 
 const STORAGE_KEY = duplicateReplyDetectionConfig.storageKey
+const ADMIN_GROUPS = duplicateReplyDetectionConfig.adminGroups
 
 interface ReplyInfo {
   element: Element
   uid: string
   username: string
+  group: string
   floor: string
   time: string
 }
@@ -44,12 +46,18 @@ export function createDuplicateReplyDetection(): IDuplicateReplyDetection {
     styleElement.textContent = `
       .duplicate-reply-highlight {
         background-color: #fff3cd !important;
-        border-left: 4px solid #ffc107 !important;
       }
 
-      .duplicate-reply-highlight .plc .pi strong a {
-        color: #dc3545 !important;
-        font-weight: bold !important;
+      .plc .pi {
+        position: relative;
+      }
+
+      .duplicate-reply-notice {
+        position: absolute;
+        right: 1.6rem;
+        color: red;
+        user-select: none;
+        font: 13px/1.5 sans-serif
       }
     `
     document.head.appendChild(styleElement)
@@ -66,13 +74,16 @@ export function createDuplicateReplyDetection(): IDuplicateReplyDetection {
   }
 
   /**
-   * 移除所有高亮
+   * 移除所有高亮和提示
    */
   const removeHighlights = (): void => {
     const highlightedPosts = document.querySelectorAll('.duplicate-reply-highlight')
     highlightedPosts.forEach(post => {
       post.classList.remove('duplicate-reply-highlight')
     })
+
+    const notices = document.querySelectorAll('.duplicate-reply-notice')
+    notices.forEach(notice => notice.remove())
   }
 
   /**
@@ -106,8 +117,7 @@ export function createDuplicateReplyDetection(): IDuplicateReplyDetection {
    */
   const getAllReplies = (): ReplyInfo[] => {
     const posts = Array.from(document.querySelectorAll('[id^="post_"]')).filter(p => {
-      return !['post_reply', 'post_new', 'post_replytmp'].includes(p.id) &&
-        !p.id.includes('post_rate')
+      return !['post_reply', 'post_new', 'post_replytmp'].includes(p.id) && !p.id.includes('post_rate')
     })
 
     return posts.map(post => {
@@ -119,6 +129,10 @@ export function createDuplicateReplyDetection(): IDuplicateReplyDetection {
       const userLink = userEl?.getAttribute('href') ?? ''
       const uidMatch = userLink.match(/uid=(\d+)/)
       const uid = uidMatch?.[1] ?? 'N/A'
+
+      // 获取用户分组
+      const groupEl = post.querySelector('.side-group')
+      const group = groupEl?.textContent?.trim() ?? ''
 
       // 获取楼层号
       const floorEl = post.querySelector('.pi strong a')
@@ -132,8 +146,9 @@ export function createDuplicateReplyDetection(): IDuplicateReplyDetection {
         element: post,
         uid,
         username,
+        group,
         floor,
-        time
+        time,
       }
     })
   }
@@ -152,10 +167,10 @@ export function createDuplicateReplyDetection(): IDuplicateReplyDetection {
     const todayStr = getTodayString()
     const allReplies = getAllReplies()
 
-    // 筛选今天的回帖（精确匹配日期部分，避免 "5-2" 误匹配 "5-20"）
+    // 筛选今天的回帖，排除管理组用户（精确匹配日期部分，避免 "5-2" 误匹配 "5-20"）
     const todayReplies = allReplies.filter(reply => {
       const replyDate = extractDateFromTime(reply.time)
-      return replyDate === todayStr
+      return replyDate === todayStr && !ADMIN_GROUPS.includes(reply.group)
     })
 
     // 统计每个用户今天的回帖次数
@@ -171,11 +186,22 @@ export function createDuplicateReplyDetection(): IDuplicateReplyDetection {
       }
     })
 
-    // 找出今天回帖次数 > 1 的用户并高亮
+    // 找出今天回帖次数 > 1 的用户并高亮，同时添加提示
     Object.values(userReplyCount).forEach(userData => {
       if (userData.count > 1) {
         userData.replies.forEach(reply => {
           reply.element.classList.add('duplicate-reply-highlight')
+
+          // 添加提示元素
+          const notice = document.createElement('div')
+          notice.className = 'duplicate-reply-notice'
+          notice.textContent = `用户今日多次回帖（${userData.count} 次）`
+
+          // 插入到楼层信息区域（作为第一个子元素）
+          const floorInfoEl = reply.element.querySelector('.plc .pi')
+          if (floorInfoEl) {
+            floorInfoEl.insertBefore(notice, floorInfoEl.firstChild)
+          }
         })
       }
     })
@@ -254,6 +280,6 @@ export function createDuplicateReplyDetection(): IDuplicateReplyDetection {
     enable,
     disable,
     toggle,
-    getStatus
+    getStatus,
   }
 }

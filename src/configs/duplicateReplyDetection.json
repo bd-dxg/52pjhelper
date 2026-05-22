@@ -4,6 +4,13 @@
   "defaultEnabled": true,
   "storageKey": "duplicateReplyDetectionEnabled",
   "targetPages": [
-    "https://www.52pojie.cn/thread-2105755-1-1.html"
+    "https://www.52pojie.cn/thread-2105755-1-1.html",
+    "https://www.52pojie.cn/forum.php?mod=viewthread&tid=2105755*"
+  ],
+  "adminGroups": [
+    "人在江湖",
+    "仗剑天涯",
+    "踏雪无痕",
+    "独步武林"
   ]
 }
