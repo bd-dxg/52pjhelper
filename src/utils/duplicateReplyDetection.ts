@@ -17,6 +17,7 @@ interface ReplyInfo {
   group: string
   floor: string
   time: string
+  hasHotValue: boolean
 }
 
 /**
@@ -54,10 +55,13 @@ export function createDuplicateReplyDetection(): IDuplicateReplyDetection {
 
       .duplicate-reply-notice {
         position: absolute;
-        right: 1.6rem;
-        color: red;
+        right: 2.5rem;
+        background-color: lightgreen;
+        border-radius: 5px;
+        padding: 3px 5px;
         user-select: none;
-        font: 13px/1.5 sans-serif
+        font: 13px/1.5 sans-serif;
+        font-weight: bold;
       }
     `
     document.head.appendChild(styleElement)
@@ -142,6 +146,10 @@ export function createDuplicateReplyDetection(): IDuplicateReplyDetection {
       const timeEl = post.querySelector('em[id^="authorposton"]')
       const time = timeEl?.textContent?.replace('发表于', '').trim() ?? 'N/A'
 
+      // 检测是否已被管理给予热心值
+      const rateLogEl = post.querySelector('[id^="ratelog_"]')
+      const hasHotValue = rateLogEl?.textContent?.includes('热心值') ?? false
+
       return {
         element: post,
         uid,
@@ -149,6 +157,7 @@ export function createDuplicateReplyDetection(): IDuplicateReplyDetection {
         group,
         floor,
         time,
+        hasHotValue,
       }
     })
   }
@@ -174,33 +183,36 @@ export function createDuplicateReplyDetection(): IDuplicateReplyDetection {
     })
 
     // 统计每个用户今天的回帖次数
-    const userReplyCount: Record<string, { count: number; replies: ReplyInfo[] }> = {}
+    const userReplyCount: Record<string, ReplyInfo[]> = {}
 
     todayReplies.forEach(reply => {
       if (reply.uid !== 'N/A') {
         if (!userReplyCount[reply.uid]) {
-          userReplyCount[reply.uid] = { count: 0, replies: [] }
+          userReplyCount[reply.uid] = []
         }
-        userReplyCount[reply.uid].count++
-        userReplyCount[reply.uid].replies.push(reply)
+        userReplyCount[reply.uid].push(reply)
       }
     })
 
-    // 找出今天回帖次数 > 1 的用户并高亮，同时添加提示
-    Object.values(userReplyCount).forEach(userData => {
-      if (userData.count > 1) {
-        userData.replies.forEach(reply => {
+    // 找出今天回帖次数 > 1 的用户并高亮
+    Object.values(userReplyCount).forEach(replies => {
+      if (replies.length > 1) {
+        // 检查该用户今日是否有任意回帖获得了热心值
+        const userHasHotValue = replies.some(reply => reply.hasHotValue)
+
+        replies.forEach(reply => {
           reply.element.classList.add('duplicate-reply-highlight')
 
-          // 添加提示元素
-          const notice = document.createElement('div')
-          notice.className = 'duplicate-reply-notice'
-          notice.textContent = `用户今日多次回帖（${userData.count} 次）`
+          // 只有该用户今日已获热心值时，才在所有回帖上添加提示
+          if (userHasHotValue) {
+            const notice = document.createElement('div')
+            notice.className = 'duplicate-reply-notice'
+            notice.textContent = '今日已获热心值'
 
-          // 插入到楼层信息区域（作为第一个子元素）
-          const floorInfoEl = reply.element.querySelector('.plc .pi')
-          if (floorInfoEl) {
-            floorInfoEl.insertBefore(notice, floorInfoEl.firstChild)
+            const floorInfoEl = reply.element.querySelector('.plc .pi')
+            if (floorInfoEl) {
+              floorInfoEl.insertBefore(notice, floorInfoEl.firstChild)
+            }
           }
         })
       }
