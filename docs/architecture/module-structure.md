@@ -114,7 +114,7 @@ src/
 | `defaultTime.json`            | 默认查询时间 | `{"days": 7}`             |
 | `autoFill.json`               | 自动填充     | `{"enabled": true}`       |
 | `rowClickToCheck.json`        | 勾选范围     | `{"enabled": true}`       |
-| `duplicatePostDetection.json` | 重复发帖检测 | `{"enabled": true}`       |
+| `duplicateReplyDetection.json` | 重复回帖检测 | `{"enabled": true}`       |
 | `contentFilter.json`          | 灌水筛选     | `{"enabled": true}`       |
 | `versionCheck.json`           | 版本更新检查 | `{"interval": 24}`        |
 
@@ -140,7 +140,7 @@ src/
 | `defaultTime.ts`            | 默认查询时间     | `setDefaultTime()`, `getDefaultTime()`          |
 | `autoFill.ts`               | 自动填充         | `autoFillForm()`, `monitorForms()`              |
 | `rowClickToCheck.ts`        | 勾选范围         | `handleRowClick()`, `updateVisualFeedback()`    |
-| `duplicatePostDetection.ts` | 重复发帖检测     | `detectDuplicates()`, `highlightDuplicates()`   |
+| `duplicateReplyDetection.ts` | 重复回帖检测     | `detectDuplicateReplies()`, `highlightDuplicateReplies()`   |
 | `contentFilter.ts`          | 灌水筛选         | `filterContent()`, `createFilterCard()`         |
 
 ### 通用工具类 (`src/utils/`)
@@ -176,7 +176,7 @@ src/
 | `DefaultTimeToggle.vue`            | 默认查询时间功能开关组件 | 时间设置，状态保存     |
 | `AutoFillToggle.vue`               | 自动填充功能开关组件     | 表单监控，智能填充     |
 | `RowClickToCheckToggle.vue`        | 勾选范围功能开关组件     | 行点击，状态反馈       |
-| `DuplicatePostDetectionToggle.vue` | 重复发帖检测功能开关组件 | 重复检测，高亮显示     |
+| `DuplicateReplyDetectionToggle.vue` | 重复回帖检测功能开关组件 | 重复回帖检测，高亮显示     |
 | `ContentFilterToggle.vue`          | 灌水筛选功能开关组件     | 过滤规则，卡片界面     |
 
 ## 样式模块

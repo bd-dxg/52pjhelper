@@ -227,7 +227,7 @@ export class MatchingEngine {
 
 ## 相关功能
 
-- **[重复发帖检测](duplicate-post-detection.md)** - 高亮显示重复发帖
+- **[重复回帖检测](duplicate-reply-detection.md)** - 高亮显示当天内同一用户的多次回帖
 - **[勾选范围](row-click-to-check.md)** - 点击表格行勾选复选框
 - **[全选功能](select-all.md)** - 批量操作工具
 

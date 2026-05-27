@@ -195,14 +195,14 @@ src/configs/navigation.json
       "dependencies": ["user-link-query"]
     },
     {
-      "id": "duplicate-post-detection",
-      "title": "重复发帖检测",
-      "description": "高亮显示重复发帖内容",
+      "id": "duplicate-reply-detection",
+      "title": "重复回帖检测",
+      "description": "高亮显示当天内同一用户的多次回帖",
       "icon": "copy",
       "category": "content-moderation",
-      "defaultEnabled": false,
-      "requiresReload": true,
-      "storageKey": "duplicate_post_detection_enabled"
+      "defaultEnabled": true,
+      "requiresReload": false,
+      "storageKey": "duplicateReplyDetectionEnabled"
     }
   ]
 }
@@ -490,5 +490,5 @@ const migrateNavigationConfig = (oldConfig: any, targetVersion: string): any => 
 
 ---
 
-_文档版本：1.0.0_  
-_最后更新：2026-04-17_
+_文档版本：1.1.0_
+_最后更新：2026-05-20_
