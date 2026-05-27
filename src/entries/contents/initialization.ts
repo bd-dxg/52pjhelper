@@ -17,8 +17,8 @@ import { createDuplicateReplyDetection } from '@features/duplicateReplyDetection
 import { initializeRowClickToCheck } from '@features/rowClickToCheck/utils'
 import { createContentFilter } from '@features/contentFilter'
 import { createTableDataExtractor } from '@utils/tableDataExtractor'
-import { createUserCloudDiskList } from '@utils/userCloudDiskList/index'
-import * as autoFill from '@utils/autofills'
+import { createUserCloudDiskList } from '@features/userCloudDiskList'
+import * as autoFill from '@features/autofills'
 import type { ManagerInstances } from './messageHandler'
 
 /**

@@ -16,11 +16,8 @@ export const processUsernameElement = (
   const username = element.textContent?.trim()
   if (!username) return
 
-  // console.log(`[用户黑名单] 处理用户名: "${username}"`)
-
   // 检查是否在黑名单中
   if (CloudDiskListIds.has(username.toLowerCase())) {
-    // console.log(`[用户黑名单] 用户名 "${username}" 在黑名单中，添加高亮样式`)
     // 添加高亮样式
     element.classList.add('user-CloudDiskList-highlight')
 
@@ -47,9 +44,7 @@ export const scanAndProcessUsernames = (
   CloudDiskListIds: Set<string>,
   CloudDiskListData: UserCloudDiskListData,
 ): void => {
-  // console.log('[用户黑名单] 开始扫描用户名元素，选择器:', USERNAME_SELECTOR)
   const usernameElements = document.querySelectorAll<HTMLAnchorElement>(USERNAME_SELECTOR)
-  // console.log(`[用户黑名单] 找到 ${usernameElements.length} 个用户名元素`)
   usernameElements.forEach(element => {
     processUsernameElement(element, CloudDiskListIds, CloudDiskListData)
   })
@@ -75,6 +70,5 @@ export const removeHighlights = (): void => {
   const highlightedElements = document.querySelectorAll<HTMLAnchorElement>('.user-CloudDiskList-highlight')
   highlightedElements.forEach(element => {
     element.classList.remove('user-CloudDiskList-highlight')
-    // 注意：这里无法直接移除匿名事件监听器，但移除元素时会自动清理
   })
 }

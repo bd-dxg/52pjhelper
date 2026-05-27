@@ -14,12 +14,12 @@ import type { IDefaultTime } from '@features/defaultTime/utils'
 import type { IDuplicateReplyDetection } from '@features/duplicateReplyDetection/utils'
 import type { IContentFilter } from '@features/contentFilter'
 import type { ITableDataExtractor } from '@utils/tableDataExtractor'
-import type { IUserCloudDiskList } from '@utils/userCloudDiskList/index'
+import type { IUserCloudDiskList } from '@features/userCloudDiskList'
 import { applyNavConfig } from '@utils/navigationHider'
 import { saveQuickReplyConfig, initQuickReply, cleanupQuickReply } from '@features/quickReply/utils'
 import { getUserInfo, saveUserInfoToCache } from '@utils/userInfo'
 import { toggleRowClickToCheck, getRowClickToCheckStatus } from '@features/rowClickToCheck/utils'
-import * as autoFill from '@utils/autofills'
+import * as autoFill from '@features/autofills'
 
 /**
  * 管理器实例接口

@@ -1,4 +1,4 @@
-import { storageHelper } from '../storageHelper'
+import { storageHelper } from '@utils/storageHelper'
 import type { UserCloudDiskListData } from './types'
 import { loadCloudDiskListData, saveCloudDiskListData, shouldAutoUpdate } from './data'
 import { injectStyles, removeStyles, cleanupInjectedContent } from './ui'
@@ -32,7 +32,6 @@ export class UserCloudDiskListManager {
   async loadCloudDiskListData(): Promise<void> {
     this.CloudDiskListData = await loadCloudDiskListData()
     this.CloudDiskListIds = new Set(this.CloudDiskListData.map(item => item.forumId.toLowerCase()))
-    // console.log(`[用户黑名单] 加载完成，共 ${this.CloudDiskListData.length} 个用户，ID列表:`, Array.from(this.CloudDiskListIds))
   }
 
   /**

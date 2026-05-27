@@ -11,15 +11,15 @@
 </template>
 
 <script setup lang="ts">
-import autoFillConfig from '@/configs/autoFill.json'
+import userCloudDiskListConfig from './config.json'
 import { useFeatureToggleWithNotification } from '@/composables/useFeatureToggleWithNotification'
 
 const config = {
-  name: autoFillConfig.name,
-  description: autoFillConfig.description,
-  storageKey: autoFillConfig.storageKey,
-  defaultEnabled: autoFillConfig.defaultEnabled,
-  messageType: 'TOGGLE_AUTO_FILL',
+  name: userCloudDiskListConfig.name,
+  description: userCloudDiskListConfig.description,
+  storageKey: userCloudDiskListConfig.storageKey,
+  defaultEnabled: userCloudDiskListConfig.defaultEnabled,
+  messageType: 'TOGGLE_USER_CloudDiskList',
 }
 
 const { enabled, toggleFeature, isToggling } = useFeatureToggleWithNotification(config)

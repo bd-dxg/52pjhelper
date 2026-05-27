@@ -1,4 +1,4 @@
-import autoFillConfig from '@/configs/autoFill.json'
+import autoFillConfig from './config.json'
 
 const STORAGE_KEY = autoFillConfig.storageKey
 

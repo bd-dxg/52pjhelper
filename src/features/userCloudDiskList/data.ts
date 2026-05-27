@@ -1,4 +1,4 @@
-import { storageHelper } from '../storageHelper'
+import { storageHelper } from '@utils/storageHelper'
 import type { TableExtractionData, UserCloudDiskListData, UserCloudDiskListItem } from './types'
 import { DATA_STORAGE_KEY, DEFAULT_CloudDiskList_DATA, LAST_UPDATE_KEY, AUTO_UPDATE_INTERVAL } from './config'
 
@@ -67,29 +67,19 @@ export const loadCloudDiskListDataFromTableExtractor = async (): Promise<UserClo
           const note = cells[6]?.content?.trim() // 第7列：备注
 
           // 跳过表头行、模板行和无效行
-          // 1. 表头行特征：序号列包含"序号"、"编号"等关键词
-          // 2. 模板行特征：论坛ID为"示例用户"或序号为"0"的模板数据
-          // 3. 无效行：所有关键字段都为空
           const isHeaderOrTemplateRow =
-            // 表头行：序号列的表头关键词
             serialNumber.includes('序号') ||
             serialNumber.includes('编号') ||
-            // 表头行：论坛ID列的表头关键词
             forumId.includes('论坛id') ||
             forumId.includes('论坛ID') ||
             forumId.includes('72主题') ||
-            // 模板行：序号为"0"且论坛ID为"示例用户"
             (serialNumber === '0' && forumId === '示例用户') ||
-            // 模板行：论坛ID为"示例用户"（无论序号是什么）
             forumId === '示例用户' ||
-            // 其他可能的表头关键词
             serialNumber.includes('主题') ||
             forumId.includes('主题') ||
-            // 空行或无效数据
             (!serialNumber && !forumId && !provider && !cloudId)
 
           if (isHeaderOrTemplateRow) {
-            // console.log('[用户黑名单] 跳过行（表头/模板/无效）:', { serialNumber, forumId, provider, cloudId })
             return
           }
 

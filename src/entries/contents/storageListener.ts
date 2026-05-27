@@ -7,7 +7,7 @@ import type { UserNavConfig } from '@utils/navigationHider'
 import { applyNavConfig } from '@utils/navigationHider'
 import { initQuickReply, cleanupQuickReply } from '@features/quickReply/utils'
 import { enableRowClickToCheck, disableRowClickToCheck } from '@features/rowClickToCheck/utils'
-import * as autoFill from '@utils/autofills'
+import * as autoFill from '@features/autofills'
 import type { ManagerInstances } from './messageHandler'
 
 /**

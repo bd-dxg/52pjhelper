@@ -20,7 +20,7 @@
 <script setup lang="ts">
 import AvatarQueryToggle from '@features/avatarQuery/AvatarQueryToggle.vue'
 import QuickReplyToggle from '@features/quickReply/QuickReplyToggle.vue'
-import AutoFillToggle from '@com/AutoFillToggle.vue'
+import AutoFillToggle from '@features/autofills/AutoFillToggle.vue'
 import SelectAllToggle from '@features/selectAll/SelectAllToggle.vue'
 import TableSelectorToggle from '@features/tableSelector/TableSelectorToggle.vue'
 import DefaultTimeToggle from '@features/defaultTime/DefaultTimeToggle.vue'
@@ -28,7 +28,7 @@ import UserLinkQueryToggle from '@features/userLinkQuery/UserLinkQueryToggle.vue
 import RowClickToCheckToggle from '@features/rowClickToCheck/RowClickToCheckToggle.vue'
 import DuplicateReplyDetectionToggle from '@features/duplicateReplyDetection/DuplicateReplyDetectionToggle.vue'
 import ContentFilterToggle from '@features/contentFilter/ContentFilterToggle.vue'
-import UserCloudDiskListToggle from '@com/UserCloudDiskListToggle.vue'
+import UserCloudDiskListToggle from '@features/userCloudDiskList/UserCloudDiskListToggle.vue'
 
 defineOptions({
   name: 'AdminFeaturesToggle',

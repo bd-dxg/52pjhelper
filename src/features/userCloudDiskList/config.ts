@@ -1,4 +1,4 @@
-import userCloudDiskListConfig from '@/configs/userCloudDiskList.json'
+import userCloudDiskListConfig from './config.json'
 import type { UserCloudDiskListData } from './types'
 
 // 存储键常量

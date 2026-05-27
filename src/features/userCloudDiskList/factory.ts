@@ -1,6 +1,6 @@
 import type { IUserCloudDiskList } from './types'
 import { UserCloudDiskListManager } from './manager'
-import userCloudDiskListConfig from '@/configs/userCloudDiskList.json'
+import userCloudDiskListConfig from './config.json'
 
 /**
  * 创建用户黑名单管理器实例
