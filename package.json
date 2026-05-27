@@ -1,6 +1,6 @@
 {
   "name": "52pjhelper",
-  "version": "1.0.0",
+  "version": "3.0.0",
   "description": "提升论坛管理效率",
   "main": "index.js",
   "scripts": {
@@ -13,15 +13,15 @@
   "author": "",
   "license": "AGPL-3.0-only",
   "devDependencies": {
-    "@vitejs/plugin-vue": "^6.0.4",
+    "@vitejs/plugin-vue": "^6.0.7",
     "@wxt-dev/module-vue": "^1.0.3",
     "oxfmt": "^0.36.0",
     "typescript": "^5.9.3",
-    "vue-tsc": "^3.2.5",
-    "wxt": "^0.20.18"
+    "vue-tsc": "^3.3.2",
+    "wxt": "^0.20.26"
   },
   "dependencies": {
-    "vue": "^3.5.29"
+    "vue": "^3.5.35"
   },
   "packageManager": "pnpm@10.33.0"
 }
