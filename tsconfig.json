@@ -19,7 +19,8 @@
       "@utils/*": ["./src/utils/*"],
       "@ent/*": ["./src/entries/*"],
       "@pages/*": ["./src/pages/*"],
-      "@conf/*": ["./src/configs/*"]
+      "@conf/*": ["./src/configs/*"],
+      "@features/*": ["./src/features/*"]
     }
   },
   "exclude": ["packages", "templates", "node_modules"]

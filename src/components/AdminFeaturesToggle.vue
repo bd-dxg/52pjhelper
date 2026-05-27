@@ -27,7 +27,7 @@ import DefaultTimeToggle from '@com/DefaultTimeToggle.vue'
 import UserLinkQueryToggle from '@com/UserLinkQueryToggle.vue'
 import RowClickToCheckToggle from '@com/RowClickToCheckToggle.vue'
 import DuplicateReplyDetectionToggle from '@com/DuplicateReplyDetectionToggle.vue'
-import ContentFilterToggle from '@com/ContentFilterToggle.vue'
+import ContentFilterToggle from '@features/contentFilter/ContentFilterToggle.vue'
 import UserCloudDiskListToggle from '@com/UserCloudDiskListToggle.vue'
 
 defineOptions({

@@ -1,0 +1,21 @@
+{
+  "name": "灌水筛选",
+  "description": "在管理页面创建可拖动的过滤卡片，支持正则和简单匹配，高亮符合条件的行",
+  "defaultEnabled": true,
+  "storageKey": "contentFilterEnabled",
+  "filtersStorageKey": "contentFilterRules",
+  "maxTextLength": 12,
+  "targetPages": ["forum.php?mod=modcp&action=thread&op=post"],
+  "presets": [
+    {
+      "name": "常见灌水",
+      "pattern": "mark|推荐|好用|方便|需要|厉害|辛苦|东西|分享|试试|看看|牛逼|支持|给力|下载|收藏|学习|不错|备用|实用|经典|谢{1,2}",
+      "isRegex": true
+    },
+    {
+      "name": "标点数字灌水",
+      "pattern": "\\d{3,}|!{3,}|~{3,}[.。]{3,}",
+      "isRegex": true
+    }
+  ]
+}
