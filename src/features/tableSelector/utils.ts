@@ -3,9 +3,9 @@
  * 功能：将分表选择器替换为按钮式界面，支持隐藏特定分表
  */
 
-import tableSelectorConfig from '@/configs/tableSelector.json'
-import { urlMatcher } from './urlMatcher'
-import { storageHelper } from './storageHelper'
+import tableSelectorConfig from './config.json'
+import { urlMatcher } from '@/utils/urlMatcher'
+import { storageHelper } from '@/utils/storageHelper'
 
 const STORAGE_KEY = tableSelectorConfig.storageKey
 const HIDDEN_TABLE_INDEXES_KEY = tableSelectorConfig.hiddenTableIndexesKey

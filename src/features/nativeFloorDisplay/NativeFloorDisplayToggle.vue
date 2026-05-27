@@ -11,16 +11,16 @@
 </template>
 
 <script setup lang="ts">
-import selectAllConfig from '@/configs/selectAll.json'
+import nativeFloorDisplayConfig from './config.json'
 import { useFeatureToggle } from '@/composables/useFeatureToggle'
 
 
 const config = {
-  name: selectAllConfig.name,
-  description: selectAllConfig.description,
-  storageKey: selectAllConfig.storageKey,
-  defaultEnabled: selectAllConfig.defaultEnabled,
-  messageType: 'TOGGLE_SELECT_ALL',
+  name: nativeFloorDisplayConfig.name,
+  description: nativeFloorDisplayConfig.description,
+  storageKey: nativeFloorDisplayConfig.storageKey,
+  defaultEnabled: nativeFloorDisplayConfig.defaultEnabled,
+  messageType: 'TOGGLE_NATIVE_FLOOR_DISPLAY',
 }
 
 const { enabled, toggleFeature, isToggling } = useFeatureToggleWithNotification(config)

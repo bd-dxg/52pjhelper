@@ -11,16 +11,16 @@
 </template>
 
 <script setup lang="ts">
-import defaultTimeConfig from '@/configs/defaultTime.json'
-import { useFeatureToggleWithNotification } from '@/composables/useFeatureToggleWithNotification'
+import duplicatePostDetectionConfig from './config.json'
+import { useFeatureToggle } from '@/composables/useFeatureToggle'
 
 
 const config = {
-  name: defaultTimeConfig.name,
-  description: defaultTimeConfig.description,
-  storageKey: defaultTimeConfig.storageKey,
-  defaultEnabled: defaultTimeConfig.defaultEnabled,
-  messageType: 'TOGGLE_DEFAULT_TIME',
+  name: duplicatePostDetectionConfig.name,
+  description: duplicatePostDetectionConfig.description,
+  storageKey: duplicatePostDetectionConfig.storageKey,
+  defaultEnabled: duplicatePostDetectionConfig.defaultEnabled,
+  messageType: 'TOGGLE_DUPLICATE_POST_DETECTION',
 }
 
 const { enabled, toggleFeature, isToggling } = useFeatureToggleWithNotification(config)

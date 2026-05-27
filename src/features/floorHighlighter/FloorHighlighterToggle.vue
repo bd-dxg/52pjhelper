@@ -11,15 +11,16 @@
 </template>
 
 <script setup lang="ts">
-import avatarQueryConfig from '@/configs/avatarQuery.json'
-import { useFeatureToggleWithNotification } from '@/composables/useFeatureToggleWithNotification'
+import floorHighlighterConfig from './config.json'
+import { useFeatureToggle } from '@/composables/useFeatureToggle'
+
 
 const config = {
-  name: avatarQueryConfig.name,
-  description: avatarQueryConfig.description,
-  storageKey: avatarQueryConfig.storageKey,
-  defaultEnabled: avatarQueryConfig.defaultEnabled,
-  messageType: 'TOGGLE_AVATAR_QUERY',
+  name: floorHighlighterConfig.name,
+  description: floorHighlighterConfig.description,
+  storageKey: floorHighlighterConfig.storageKey,
+  defaultEnabled: floorHighlighterConfig.defaultEnabled,
+  messageType: 'TOGGLE_FLOOR_HIGHLIGHTER',
 }
 
 const { enabled, toggleFeature, isToggling } = useFeatureToggleWithNotification(config)

@@ -10,9 +10,9 @@
 </template>
 
 <script setup lang="ts">
-import FloorHighlighterToggle from '@com/FloorHighlighterToggle.vue'
-import NativeFloorDisplayToggle from '@com/NativeFloorDisplayToggle.vue'
-// import DuplicatePostDetectionToggle from '@com/DuplicatePostDetectionToggle.vue'
+import FloorHighlighterToggle from '@features/floorHighlighter/FloorHighlighterToggle.vue'
+import NativeFloorDisplayToggle from '@features/nativeFloorDisplay/NativeFloorDisplayToggle.vue'
+// import DuplicatePostDetectionToggle from '@features/duplicatePostDetection/DuplicatePostDetectionToggle.vue'
 
 defineOptions({
   name: 'GeneralFeaturesToggle',

@@ -11,16 +11,16 @@
 </template>
 
 <script setup lang="ts">
-import quickReplyConfig from '@/configs/quickReply.json'
+import rowClickToCheckConfig from './config.json'
 import { useFeatureToggle } from '@/composables/useFeatureToggle'
 
 
 const config = {
-  name: quickReplyConfig.name,
-  description: quickReplyConfig.description,
-  storageKey: quickReplyConfig.storageKey,
-  defaultEnabled: quickReplyConfig.defaultEnabled,
-  messageType: 'TOGGLE_QUICK_REPLY',
+  name: rowClickToCheckConfig.name,
+  description: rowClickToCheckConfig.description,
+  storageKey: rowClickToCheckConfig.storageKey,
+  defaultEnabled: rowClickToCheckConfig.defaultEnabled,
+  messageType: 'TOGGLE_ROW_CLICK_TO_CHECK',
 }
 
 const { enabled, toggleFeature, isToggling } = useFeatureToggleWithNotification(config)

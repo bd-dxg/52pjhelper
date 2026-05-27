@@ -11,16 +11,14 @@
 </template>
 
 <script setup lang="ts">
-import userLinkQueryConfig from '@/configs/userLinkQuery.json'
-import { useFeatureToggle } from '@/composables/useFeatureToggle'
-
+import duplicateReplyDetectionConfig from './config.json'
 
 const config = {
-  name: userLinkQueryConfig.name,
-  description: userLinkQueryConfig.description,
-  storageKey: userLinkQueryConfig.storageKey,
-  defaultEnabled: userLinkQueryConfig.defaultEnabled,
-  messageType: 'TOGGLE_USER_LINK_QUERY',
+  name: duplicateReplyDetectionConfig.name,
+  description: duplicateReplyDetectionConfig.description,
+  storageKey: duplicateReplyDetectionConfig.storageKey,
+  defaultEnabled: duplicateReplyDetectionConfig.defaultEnabled,
+  messageType: 'TOGGLE_DUPLICATE_REPLY_DETECTION',
 }
 
 const { enabled, toggleFeature, isToggling } = useFeatureToggleWithNotification(config)

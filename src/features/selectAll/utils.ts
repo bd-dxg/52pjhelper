@@ -5,8 +5,8 @@
  * 2. 将下方的分页组件复制到上方,提高工作效率
  */
 
-import selectAllConfig from '@/configs/selectAll.json'
-import { createFeatureManager, type IFeatureManager } from './featureManager'
+import selectAllConfig from './config.json'
+import { createFeatureManager, type IFeatureManager } from '@utils/featureManager'
 
 /**
  * 全选功能管理器接口

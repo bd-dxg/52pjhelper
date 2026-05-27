@@ -21,25 +21,14 @@ declare module '#imports' {
   export { useFeatureToggle, VueFeatureConfig, UseFeatureToggleReturn } from '../src/composables/useFeatureToggle';
   export { useFeatureToggleWithNotification } from '../src/composables/useFeatureToggleWithNotification';
   export { useNotification, notification } from '../src/composables/useNotification';
-  export { createAvatarQuery, IAvatarQuery } from '../src/utils/avatarQuery';
-  export { createDefaultTime, IDefaultTime } from '../src/utils/defaultTime';
-  export { createDuplicatePostDetection, IDuplicatePostDetection } from '../src/utils/duplicatePostDetection';
-  export { createDuplicateReplyDetection, IDuplicateReplyDetection } from '../src/utils/duplicateReplyDetection';
   export { createFeatureManager, FeatureConfig, IFeatureManager, CreateFeatureManagerOptions } from '../src/utils/featureManager';
-  export { createFloorHighlighter, IFloorHighlighter } from '../src/utils/floorHighlighter';
   export { createMessageHelper, messageHelper, MessageResponse, IMessageHelper } from '../src/utils/messageHelper';
-  export { createNativeFloorDisplay, INativeFloorDisplay } from '../src/utils/nativeFloorDisplay';
   export { DEFAULT_NAV_MENUS, saveNavConfig, loadNavConfig, hideMenu, showMenu, applyNavConfig, toggleMenu, initializeNavigationHider, NavMenuConfig, UserNavConfig } from '../src/utils/navigationHider';
-  export { loadQuickReplyConfig, saveQuickReplyConfig, initQuickReply, cleanupQuickReply } from '../src/utils/quickReply';
-  export { initializeRowClickToCheck, enableRowClickToCheck, disableRowClickToCheck, toggleRowClickToCheck, getRowClickToCheckStatus } from '../src/utils/rowClickToCheck';
-  export { createSelectAll, ISelectAll } from '../src/utils/selectAll';
   export { createStorageHelper, storageHelper, IStorageHelper } from '../src/utils/storageHelper';
   export { createTableDataExtractor, ITableDataExtractor, TableData, TableRow, TableCell } from '../src/utils/tableDataExtractor';
-  export { createTableSelector, ITableSelector } from '../src/utils/tableSelector';
   export { getCurrentTheme, applyTheme, watchThemeChange, initTheme, Theme } from '../src/utils/themeManager';
   export { createUrlMatcher, urlMatcher, UrlMatchMode, UrlMatchRule, IUrlMatcher } from '../src/utils/urlMatcher';
   export { saveUserInfoToCache, getUserInfoFromCache, getUserInfo, watchUserInfo, UserInfo } from '../src/utils/userInfo';
-  export { createUserLinkQuery, IUserLinkQuery } from '../src/utils/userLinkQuery';
   export { fetchUserViolation, extractUidFromHref } from '../src/utils/userViolationFetcher';
   export { versionChecker } from '../src/utils/versionChecker';
 }

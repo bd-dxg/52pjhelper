@@ -3,8 +3,8 @@
  * 功能：根据URL参数高亮指定楼层，提高管理效率
  */
 
-import floorHighlighterConfig from '@/configs/floorHighlighter.json'
-import { storageHelper } from './storageHelper'
+import floorHighlighterConfig from './config.json'
+import { storageHelper } from '@/utils/storageHelper'
 
 const FLOOR_HIGHLIGHTER_STORAGE_KEY = floorHighlighterConfig.storageKey
 

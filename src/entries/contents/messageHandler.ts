@@ -3,22 +3,22 @@
  * 处理来自 popup 的消息
  */
 
-import type { IAvatarQuery } from '@utils/avatarQuery'
-import type { IUserLinkQuery } from '@utils/userLinkQuery'
-import type { IFloorHighlighter } from '@utils/floorHighlighter'
-import type { INativeFloorDisplay } from '@utils/nativeFloorDisplay'
-import type { ISelectAll } from '@utils/selectAll'
-import type { ITableSelector } from '@utils/tableSelector'
-import type { IDefaultTime } from '@utils/defaultTime'
-// import type { IDuplicatePostDetection } from '@utils/duplicatePostDetection'
-import type { IDuplicateReplyDetection } from '@utils/duplicateReplyDetection'
+import type { IAvatarQuery } from '@features/avatarQuery/utils'
+import type { IUserLinkQuery } from '@features/userLinkQuery/utils'
+import type { IFloorHighlighter } from '@features/floorHighlighter/utils'
+import type { INativeFloorDisplay } from '@features/nativeFloorDisplay/utils'
+import type { ISelectAll } from '@features/selectAll/utils'
+import type { ITableSelector } from '@features/tableSelector/utils'
+import type { IDefaultTime } from '@features/defaultTime/utils'
+// import type { IDuplicatePostDetection } from '@features/duplicatePostDetection/utils'
+import type { IDuplicateReplyDetection } from '@features/duplicateReplyDetection/utils'
 import type { IContentFilter } from '@features/contentFilter'
 import type { ITableDataExtractor } from '@utils/tableDataExtractor'
 import type { IUserCloudDiskList } from '@utils/userCloudDiskList/index'
 import { applyNavConfig } from '@utils/navigationHider'
-import { saveQuickReplyConfig, initQuickReply, cleanupQuickReply } from '@utils/quickReply'
+import { saveQuickReplyConfig, initQuickReply, cleanupQuickReply } from '@features/quickReply/utils'
 import { getUserInfo, saveUserInfoToCache } from '@utils/userInfo'
-import { toggleRowClickToCheck, getRowClickToCheckStatus } from '@utils/rowClickToCheck'
+import { toggleRowClickToCheck, getRowClickToCheckStatus } from '@features/rowClickToCheck/utils'
 import * as autoFill from '@utils/autofills'
 
 /**

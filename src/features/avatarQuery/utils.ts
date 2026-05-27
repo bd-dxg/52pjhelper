@@ -3,9 +3,9 @@
  * 功能：鼠标移动到头像时显示用户违规记录
  */
 
-import avatarQueryConfig from '@/configs/avatarQuery.json'
-import { fetchUserViolation, extractUidFromHref } from './userViolationFetcher'
-import { storageHelper } from './storageHelper'
+import avatarQueryConfig from './config.json'
+import { fetchUserViolation, extractUidFromHref } from '@/utils/userViolationFetcher'
+import { storageHelper } from '@/utils/storageHelper'
 
 const STORAGE_KEY = avatarQueryConfig.storageKey
 

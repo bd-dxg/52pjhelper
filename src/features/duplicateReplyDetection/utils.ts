@@ -3,9 +3,9 @@
  * 功能：在帖子详情页面检测当天内同一用户的多次回帖，高亮显示重复回帖的楼层
  */
 
-import duplicateReplyDetectionConfig from '@/configs/duplicateReplyDetection.json'
-import { urlMatcher } from './urlMatcher'
-import { storageHelper } from './storageHelper'
+import duplicateReplyDetectionConfig from './config.json'
+import { urlMatcher } from '@/utils/urlMatcher'
+import { storageHelper } from '@/utils/storageHelper'
 
 const STORAGE_KEY = duplicateReplyDetectionConfig.storageKey
 const ADMIN_GROUPS = duplicateReplyDetectionConfig.adminGroups

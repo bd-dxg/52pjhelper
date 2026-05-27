@@ -11,16 +11,16 @@
 </template>
 
 <script setup lang="ts">
-import floorHighlighterConfig from '@/configs/floorHighlighter.json'
+import tableSelectorConfig from './config.json'
 import { useFeatureToggle } from '@/composables/useFeatureToggle'
 
 
 const config = {
-  name: floorHighlighterConfig.name,
-  description: floorHighlighterConfig.description,
-  storageKey: floorHighlighterConfig.storageKey,
-  defaultEnabled: floorHighlighterConfig.defaultEnabled,
-  messageType: 'TOGGLE_FLOOR_HIGHLIGHTER',
+  name: tableSelectorConfig.name,
+  description: tableSelectorConfig.description,
+  storageKey: tableSelectorConfig.storageKey,
+  defaultEnabled: tableSelectorConfig.defaultEnabled,
+  messageType: 'TOGGLE_TABLE_SELECTOR',
 }
 
 const { enabled, toggleFeature, isToggling } = useFeatureToggleWithNotification(config)

@@ -11,16 +11,16 @@
 </template>
 
 <script setup lang="ts">
-import tableSelectorConfig from '@/configs/tableSelector.json'
-import { useFeatureToggle } from '@/composables/useFeatureToggle'
+import defaultTimeConfig from './config.json'
+import { useFeatureToggleWithNotification } from '@/composables/useFeatureToggleWithNotification'
 
 
 const config = {
-  name: tableSelectorConfig.name,
-  description: tableSelectorConfig.description,
-  storageKey: tableSelectorConfig.storageKey,
-  defaultEnabled: tableSelectorConfig.defaultEnabled,
-  messageType: 'TOGGLE_TABLE_SELECTOR',
+  name: defaultTimeConfig.name,
+  description: defaultTimeConfig.description,
+  storageKey: defaultTimeConfig.storageKey,
+  defaultEnabled: defaultTimeConfig.defaultEnabled,
+  messageType: 'TOGGLE_DEFAULT_TIME',
 }
 
 const { enabled, toggleFeature, isToggling } = useFeatureToggleWithNotification(config)

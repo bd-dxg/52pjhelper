@@ -3,9 +3,9 @@
  * 功能：在论坛列表页面检测当天发布的重复发帖，高亮显示重复发帖的行
  */
 
-import duplicatePostDetectionConfig from '@/configs/duplicatePostDetection.json'
-import { urlMatcher } from './urlMatcher'
-import { storageHelper } from './storageHelper'
+import duplicatePostDetectionConfig from './config.json'
+import { urlMatcher } from '@/utils/urlMatcher'
+import { storageHelper } from '@/utils/storageHelper'
 
 const STORAGE_KEY = duplicatePostDetectionConfig.storageKey
 

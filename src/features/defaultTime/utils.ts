@@ -3,9 +3,9 @@
  * 功能：将查询开始时间默认设置为2008-03-13
  */
 
-import defaultTimeConfig from '@/configs/defaultTime.json'
-import { urlMatcher } from './urlMatcher'
-import { storageHelper } from './storageHelper'
+import defaultTimeConfig from './config.json'
+import { urlMatcher } from '@/utils/urlMatcher'
+import { storageHelper } from '@/utils/storageHelper'
 
 const STORAGE_KEY = defaultTimeConfig.storageKey
 const START_TIME_KEY = defaultTimeConfig.startTimeKey

@@ -1,6 +1,6 @@
-import rowClickToCheckConfig from '@/configs/rowClickToCheck.json'
-import { urlMatcher } from './urlMatcher'
-import { storageHelper } from './storageHelper'
+import rowClickToCheckConfig from './config.json'
+import { urlMatcher } from '@utils/urlMatcher'
+import { storageHelper } from '@utils/storageHelper'
 
 const STORAGE_KEY = rowClickToCheckConfig.storageKey
 

@@ -9,26 +9,16 @@ declare global {
   const applyNavConfig: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').applyNavConfig
   const applyTheme: typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager').applyTheme
   const browser: typeof import('wxt/browser').browser
-  const cleanupQuickReply: typeof import('D:/code/front-end/52pjhelper/src/utils/quickReply').cleanupQuickReply
   const computed: typeof import('vue').computed
   const createApp: typeof import('vue').createApp
-  const createAvatarQuery: typeof import('D:/code/front-end/52pjhelper/src/utils/avatarQuery').createAvatarQuery
-  const createDefaultTime: typeof import('D:/code/front-end/52pjhelper/src/utils/defaultTime').createDefaultTime
-  const createDuplicatePostDetection: typeof import('D:/code/front-end/52pjhelper/src/utils/duplicatePostDetection').createDuplicatePostDetection
-  const createDuplicateReplyDetection: typeof import('D:/code/front-end/52pjhelper/src/utils/duplicateReplyDetection').createDuplicateReplyDetection
   const createFeatureManager: typeof import('D:/code/front-end/52pjhelper/src/utils/featureManager').createFeatureManager
-  const createFloorHighlighter: typeof import('D:/code/front-end/52pjhelper/src/utils/floorHighlighter').createFloorHighlighter
   const createIframeUi: typeof import('wxt/utils/content-script-ui/iframe').createIframeUi
   const createIntegratedUi: typeof import('wxt/utils/content-script-ui/integrated').createIntegratedUi
   const createMessageHelper: typeof import('D:/code/front-end/52pjhelper/src/utils/messageHelper').createMessageHelper
-  const createNativeFloorDisplay: typeof import('D:/code/front-end/52pjhelper/src/utils/nativeFloorDisplay').createNativeFloorDisplay
-  const createSelectAll: typeof import('D:/code/front-end/52pjhelper/src/utils/selectAll').createSelectAll
   const createShadowRootUi: typeof import('wxt/utils/content-script-ui/shadow-root').createShadowRootUi
   const createStorageHelper: typeof import('D:/code/front-end/52pjhelper/src/utils/storageHelper').createStorageHelper
   const createTableDataExtractor: typeof import('D:/code/front-end/52pjhelper/src/utils/tableDataExtractor').createTableDataExtractor
-  const createTableSelector: typeof import('D:/code/front-end/52pjhelper/src/utils/tableSelector').createTableSelector
   const createUrlMatcher: typeof import('D:/code/front-end/52pjhelper/src/utils/urlMatcher').createUrlMatcher
-  const createUserLinkQuery: typeof import('D:/code/front-end/52pjhelper/src/utils/userLinkQuery').createUserLinkQuery
   const customRef: typeof import('vue').customRef
   const defineAppConfig: typeof import('wxt/utils/define-app-config').defineAppConfig
   const defineAsyncComponent: typeof import('vue').defineAsyncComponent
@@ -37,9 +27,7 @@ declare global {
   const defineContentScript: typeof import('wxt/utils/define-content-script').defineContentScript
   const defineUnlistedScript: typeof import('wxt/utils/define-unlisted-script').defineUnlistedScript
   const defineWxtPlugin: typeof import('wxt/utils/define-wxt-plugin').defineWxtPlugin
-  const disableRowClickToCheck: typeof import('D:/code/front-end/52pjhelper/src/utils/rowClickToCheck').disableRowClickToCheck
   const effectScope: typeof import('vue').effectScope
-  const enableRowClickToCheck: typeof import('D:/code/front-end/52pjhelper/src/utils/rowClickToCheck').enableRowClickToCheck
   const extractUidFromHref: typeof import('D:/code/front-end/52pjhelper/src/utils/userViolationFetcher').extractUidFromHref
   const fakeBrowser: typeof import('wxt/testing').fakeBrowser
   const fetchUserViolation: typeof import('D:/code/front-end/52pjhelper/src/utils/userViolationFetcher').fetchUserViolation
@@ -48,15 +36,12 @@ declare global {
   const getCurrentScope: typeof import('vue').getCurrentScope
   const getCurrentTheme: typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager').getCurrentTheme
   const getCurrentWatcher: typeof import('vue').getCurrentWatcher
-  const getRowClickToCheckStatus: typeof import('D:/code/front-end/52pjhelper/src/utils/rowClickToCheck').getRowClickToCheckStatus
   const getUserInfo: typeof import('D:/code/front-end/52pjhelper/src/utils/userInfo').getUserInfo
   const getUserInfoFromCache: typeof import('D:/code/front-end/52pjhelper/src/utils/userInfo').getUserInfoFromCache
   const h: typeof import('vue').h
   const hideMenu: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').hideMenu
-  const initQuickReply: typeof import('D:/code/front-end/52pjhelper/src/utils/quickReply').initQuickReply
   const initTheme: typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager').initTheme
   const initializeNavigationHider: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').initializeNavigationHider
-  const initializeRowClickToCheck: typeof import('D:/code/front-end/52pjhelper/src/utils/rowClickToCheck').initializeRowClickToCheck
   const inject: typeof import('vue').inject
   const injectScript: typeof import('wxt/utils/inject-script').injectScript
   const isProxy: typeof import('vue').isProxy
@@ -65,7 +50,6 @@ declare global {
   const isRef: typeof import('vue').isRef
   const isShallow: typeof import('vue').isShallow
   const loadNavConfig: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').loadNavConfig
-  const loadQuickReplyConfig: typeof import('D:/code/front-end/52pjhelper/src/utils/quickReply').loadQuickReplyConfig
   const markRaw: typeof import('vue').markRaw
   const messageHelper: typeof import('D:/code/front-end/52pjhelper/src/utils/messageHelper').messageHelper
   const nextTick: typeof import('vue').nextTick
@@ -90,7 +74,6 @@ declare global {
   const ref: typeof import('vue').ref
   const resolveComponent: typeof import('vue').resolveComponent
   const saveNavConfig: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').saveNavConfig
-  const saveQuickReplyConfig: typeof import('D:/code/front-end/52pjhelper/src/utils/quickReply').saveQuickReplyConfig
   const saveUserInfoToCache: typeof import('D:/code/front-end/52pjhelper/src/utils/userInfo').saveUserInfoToCache
   const shallowReactive: typeof import('vue').shallowReactive
   const shallowReadonly: typeof import('vue').shallowReadonly
@@ -103,7 +86,6 @@ declare global {
   const toRefs: typeof import('vue').toRefs
   const toValue: typeof import('vue').toValue
   const toggleMenu: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').toggleMenu
-  const toggleRowClickToCheck: typeof import('D:/code/front-end/52pjhelper/src/utils/rowClickToCheck').toggleRowClickToCheck
   const triggerRef: typeof import('vue').triggerRef
   const unref: typeof import('vue').unref
   const urlMatcher: typeof import('D:/code/front-end/52pjhelper/src/utils/urlMatcher').urlMatcher
@@ -162,44 +144,20 @@ declare global {
   export type { VueFeatureConfig, UseFeatureToggleReturn } from 'D:/code/front-end/52pjhelper/src/composables/useFeatureToggle'
   import('D:/code/front-end/52pjhelper/src/composables/useFeatureToggle')
   // @ts-ignore
-  export type { IAvatarQuery } from 'D:/code/front-end/52pjhelper/src/utils/avatarQuery'
-  import('D:/code/front-end/52pjhelper/src/utils/avatarQuery')
-  // @ts-ignore
-  export type { IDefaultTime } from 'D:/code/front-end/52pjhelper/src/utils/defaultTime'
-  import('D:/code/front-end/52pjhelper/src/utils/defaultTime')
-  // @ts-ignore
-  export type { IDuplicatePostDetection } from 'D:/code/front-end/52pjhelper/src/utils/duplicatePostDetection'
-  import('D:/code/front-end/52pjhelper/src/utils/duplicatePostDetection')
-  // @ts-ignore
-  export type { IDuplicateReplyDetection } from 'D:/code/front-end/52pjhelper/src/utils/duplicateReplyDetection'
-  import('D:/code/front-end/52pjhelper/src/utils/duplicateReplyDetection')
-  // @ts-ignore
   export type { FeatureConfig, IFeatureManager, CreateFeatureManagerOptions } from 'D:/code/front-end/52pjhelper/src/utils/featureManager'
   import('D:/code/front-end/52pjhelper/src/utils/featureManager')
-  // @ts-ignore
-  export type { IFloorHighlighter } from 'D:/code/front-end/52pjhelper/src/utils/floorHighlighter'
-  import('D:/code/front-end/52pjhelper/src/utils/floorHighlighter')
   // @ts-ignore
   export type { MessageResponse, IMessageHelper } from 'D:/code/front-end/52pjhelper/src/utils/messageHelper'
   import('D:/code/front-end/52pjhelper/src/utils/messageHelper')
   // @ts-ignore
-  export type { INativeFloorDisplay } from 'D:/code/front-end/52pjhelper/src/utils/nativeFloorDisplay'
-  import('D:/code/front-end/52pjhelper/src/utils/nativeFloorDisplay')
-  // @ts-ignore
   export type { NavMenuConfig, UserNavConfig } from 'D:/code/front-end/52pjhelper/src/utils/navigationHider'
   import('D:/code/front-end/52pjhelper/src/utils/navigationHider')
-  // @ts-ignore
-  export type { ISelectAll } from 'D:/code/front-end/52pjhelper/src/utils/selectAll'
-  import('D:/code/front-end/52pjhelper/src/utils/selectAll')
   // @ts-ignore
   export type { IStorageHelper } from 'D:/code/front-end/52pjhelper/src/utils/storageHelper'
   import('D:/code/front-end/52pjhelper/src/utils/storageHelper')
   // @ts-ignore
   export type { ITableDataExtractor, TableData, TableRow, TableCell } from 'D:/code/front-end/52pjhelper/src/utils/tableDataExtractor'
   import('D:/code/front-end/52pjhelper/src/utils/tableDataExtractor')
-  // @ts-ignore
-  export type { ITableSelector } from 'D:/code/front-end/52pjhelper/src/utils/tableSelector'
-  import('D:/code/front-end/52pjhelper/src/utils/tableSelector')
   // @ts-ignore
   export type { Theme } from 'D:/code/front-end/52pjhelper/src/utils/themeManager'
   import('D:/code/front-end/52pjhelper/src/utils/themeManager')
@@ -209,9 +167,6 @@ declare global {
   // @ts-ignore
   export type { UserInfo } from 'D:/code/front-end/52pjhelper/src/utils/userInfo'
   import('D:/code/front-end/52pjhelper/src/utils/userInfo')
-  // @ts-ignore
-  export type { IUserLinkQuery } from 'D:/code/front-end/52pjhelper/src/utils/userLinkQuery'
-  import('D:/code/front-end/52pjhelper/src/utils/userLinkQuery')
 }
 // for vue template auto import
 import { UnwrapRef } from 'vue'
@@ -225,26 +180,16 @@ declare module 'vue' {
     readonly applyNavConfig: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['applyNavConfig']>
     readonly applyTheme: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager')['applyTheme']>
     readonly browser: UnwrapRef<typeof import('wxt/browser')['browser']>
-    readonly cleanupQuickReply: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/quickReply')['cleanupQuickReply']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
     readonly createApp: UnwrapRef<typeof import('vue')['createApp']>
-    readonly createAvatarQuery: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/avatarQuery')['createAvatarQuery']>
-    readonly createDefaultTime: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/defaultTime')['createDefaultTime']>
-    readonly createDuplicatePostDetection: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/duplicatePostDetection')['createDuplicatePostDetection']>
-    readonly createDuplicateReplyDetection: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/duplicateReplyDetection')['createDuplicateReplyDetection']>
     readonly createFeatureManager: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/featureManager')['createFeatureManager']>
-    readonly createFloorHighlighter: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/floorHighlighter')['createFloorHighlighter']>
     readonly createIframeUi: UnwrapRef<typeof import('wxt/utils/content-script-ui/iframe')['createIframeUi']>
     readonly createIntegratedUi: UnwrapRef<typeof import('wxt/utils/content-script-ui/integrated')['createIntegratedUi']>
     readonly createMessageHelper: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/messageHelper')['createMessageHelper']>
-    readonly createNativeFloorDisplay: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/nativeFloorDisplay')['createNativeFloorDisplay']>
-    readonly createSelectAll: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/selectAll')['createSelectAll']>
     readonly createShadowRootUi: UnwrapRef<typeof import('wxt/utils/content-script-ui/shadow-root')['createShadowRootUi']>
     readonly createStorageHelper: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/storageHelper')['createStorageHelper']>
     readonly createTableDataExtractor: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/tableDataExtractor')['createTableDataExtractor']>
-    readonly createTableSelector: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/tableSelector')['createTableSelector']>
     readonly createUrlMatcher: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/urlMatcher')['createUrlMatcher']>
-    readonly createUserLinkQuery: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userLinkQuery')['createUserLinkQuery']>
     readonly customRef: UnwrapRef<typeof import('vue')['customRef']>
     readonly defineAppConfig: UnwrapRef<typeof import('wxt/utils/define-app-config')['defineAppConfig']>
     readonly defineAsyncComponent: UnwrapRef<typeof import('vue')['defineAsyncComponent']>
@@ -253,9 +198,7 @@ declare module 'vue' {
     readonly defineContentScript: UnwrapRef<typeof import('wxt/utils/define-content-script')['defineContentScript']>
     readonly defineUnlistedScript: UnwrapRef<typeof import('wxt/utils/define-unlisted-script')['defineUnlistedScript']>
     readonly defineWxtPlugin: UnwrapRef<typeof import('wxt/utils/define-wxt-plugin')['defineWxtPlugin']>
-    readonly disableRowClickToCheck: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/rowClickToCheck')['disableRowClickToCheck']>
     readonly effectScope: UnwrapRef<typeof import('vue')['effectScope']>
-    readonly enableRowClickToCheck: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/rowClickToCheck')['enableRowClickToCheck']>
     readonly extractUidFromHref: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userViolationFetcher')['extractUidFromHref']>
     readonly fakeBrowser: UnwrapRef<typeof import('wxt/testing')['fakeBrowser']>
     readonly fetchUserViolation: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userViolationFetcher')['fetchUserViolation']>
@@ -264,15 +207,12 @@ declare module 'vue' {
     readonly getCurrentScope: UnwrapRef<typeof import('vue')['getCurrentScope']>
     readonly getCurrentTheme: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager')['getCurrentTheme']>
     readonly getCurrentWatcher: UnwrapRef<typeof import('vue')['getCurrentWatcher']>
-    readonly getRowClickToCheckStatus: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/rowClickToCheck')['getRowClickToCheckStatus']>
     readonly getUserInfo: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userInfo')['getUserInfo']>
     readonly getUserInfoFromCache: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userInfo')['getUserInfoFromCache']>
     readonly h: UnwrapRef<typeof import('vue')['h']>
     readonly hideMenu: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['hideMenu']>
-    readonly initQuickReply: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/quickReply')['initQuickReply']>
     readonly initTheme: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager')['initTheme']>
     readonly initializeNavigationHider: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['initializeNavigationHider']>
-    readonly initializeRowClickToCheck: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/rowClickToCheck')['initializeRowClickToCheck']>
     readonly inject: UnwrapRef<typeof import('vue')['inject']>
     readonly injectScript: UnwrapRef<typeof import('wxt/utils/inject-script')['injectScript']>
     readonly isProxy: UnwrapRef<typeof import('vue')['isProxy']>
@@ -281,7 +221,6 @@ declare module 'vue' {
     readonly isRef: UnwrapRef<typeof import('vue')['isRef']>
     readonly isShallow: UnwrapRef<typeof import('vue')['isShallow']>
     readonly loadNavConfig: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['loadNavConfig']>
-    readonly loadQuickReplyConfig: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/quickReply')['loadQuickReplyConfig']>
     readonly markRaw: UnwrapRef<typeof import('vue')['markRaw']>
     readonly messageHelper: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/messageHelper')['messageHelper']>
     readonly nextTick: UnwrapRef<typeof import('vue')['nextTick']>
@@ -306,7 +245,6 @@ declare module 'vue' {
     readonly ref: UnwrapRef<typeof import('vue')['ref']>
     readonly resolveComponent: UnwrapRef<typeof import('vue')['resolveComponent']>
     readonly saveNavConfig: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['saveNavConfig']>
-    readonly saveQuickReplyConfig: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/quickReply')['saveQuickReplyConfig']>
     readonly saveUserInfoToCache: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userInfo')['saveUserInfoToCache']>
     readonly shallowReactive: UnwrapRef<typeof import('vue')['shallowReactive']>
     readonly shallowReadonly: UnwrapRef<typeof import('vue')['shallowReadonly']>
@@ -319,7 +257,6 @@ declare module 'vue' {
     readonly toRefs: UnwrapRef<typeof import('vue')['toRefs']>
     readonly toValue: UnwrapRef<typeof import('vue')['toValue']>
     readonly toggleMenu: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['toggleMenu']>
-    readonly toggleRowClickToCheck: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/rowClickToCheck')['toggleRowClickToCheck']>
     readonly triggerRef: UnwrapRef<typeof import('vue')['triggerRef']>
     readonly unref: UnwrapRef<typeof import('vue')['unref']>
     readonly urlMatcher: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/urlMatcher')['urlMatcher']>

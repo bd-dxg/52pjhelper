@@ -11,16 +11,16 @@
 </template>
 
 <script setup lang="ts">
-import duplicatePostDetectionConfig from '@/configs/duplicatePostDetection.json'
+import selectAllConfig from './config.json'
 import { useFeatureToggle } from '@/composables/useFeatureToggle'
 
 
 const config = {
-  name: duplicatePostDetectionConfig.name,
-  description: duplicatePostDetectionConfig.description,
-  storageKey: duplicatePostDetectionConfig.storageKey,
-  defaultEnabled: duplicatePostDetectionConfig.defaultEnabled,
-  messageType: 'TOGGLE_DUPLICATE_POST_DETECTION',
+  name: selectAllConfig.name,
+  description: selectAllConfig.description,
+  storageKey: selectAllConfig.storageKey,
+  defaultEnabled: selectAllConfig.defaultEnabled,
+  messageType: 'TOGGLE_SELECT_ALL',
 }
 
 const { enabled, toggleFeature, isToggling } = useFeatureToggleWithNotification(config)

@@ -1,6 +1,6 @@
-import quickReplyConfig from '@/configs/quickReply.json'
-import { urlMatcher } from './urlMatcher'
-import { storageHelper } from './storageHelper'
+import quickReplyConfig from './config.json'
+import { urlMatcher } from '@utils/urlMatcher'
+import { storageHelper } from '@utils/storageHelper'
 
 interface ReplyOption {
   value: string

@@ -11,16 +11,15 @@
 </template>
 
 <script setup lang="ts">
-import nativeFloorDisplayConfig from '@/configs/nativeFloorDisplay.json'
-import { useFeatureToggle } from '@/composables/useFeatureToggle'
-
+import avatarQueryConfig from './config.json'
+import { useFeatureToggleWithNotification } from '@/composables/useFeatureToggleWithNotification'
 
 const config = {
-  name: nativeFloorDisplayConfig.name,
-  description: nativeFloorDisplayConfig.description,
-  storageKey: nativeFloorDisplayConfig.storageKey,
-  defaultEnabled: nativeFloorDisplayConfig.defaultEnabled,
-  messageType: 'TOGGLE_NATIVE_FLOOR_DISPLAY',
+  name: avatarQueryConfig.name,
+  description: avatarQueryConfig.description,
+  storageKey: avatarQueryConfig.storageKey,
+  defaultEnabled: avatarQueryConfig.defaultEnabled,
+  messageType: 'TOGGLE_AVATAR_QUERY',
 }
 
 const { enabled, toggleFeature, isToggling } = useFeatureToggleWithNotification(config)

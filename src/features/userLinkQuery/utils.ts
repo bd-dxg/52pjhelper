@@ -3,10 +3,10 @@
  * 功能：在管理页面鼠标移动到用户名链接时显示用户违规记录（悬浮形式）
  */
 
-import userLinkQueryConfig from '@/configs/userLinkQuery.json'
-import { fetchUserViolation, extractUidFromHref } from './userViolationFetcher'
-import { urlMatcher } from './urlMatcher'
-import { storageHelper } from './storageHelper'
+import userLinkQueryConfig from './config.json'
+import { fetchUserViolation, extractUidFromHref } from '@/utils/userViolationFetcher'
+import { urlMatcher } from '@/utils/urlMatcher'
+import { storageHelper } from '@/utils/storageHelper'
 
 const STORAGE_KEY = userLinkQueryConfig.storageKey
 

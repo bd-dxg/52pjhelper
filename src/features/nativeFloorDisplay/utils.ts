@@ -3,8 +3,8 @@
  * 显示已结帖的原生楼层，方便管理悬赏贴
  */
 
-import nativeFloorDisplayConfig from '@/configs/nativeFloorDisplay.json'
-import { storageHelper } from './storageHelper'
+import nativeFloorDisplayConfig from './config.json'
+import { storageHelper } from '@/utils/storageHelper'
 
 const STORAGE_KEY = nativeFloorDisplayConfig.storageKey
 
