@@ -3,7 +3,7 @@
  * 用于管理和控制论坛导航菜单的显示/隐藏
  */
 
-import navConfig from '@/configs/navigation.json'
+import navConfig from './config.json'
 
 export interface NavMenuConfig {
   id: string

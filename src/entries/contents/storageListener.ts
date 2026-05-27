@@ -3,8 +3,8 @@
  * 监听浏览器存储变化，实现跨页面状态同步
  */
 
-import type { UserNavConfig } from '@utils/navigationHider'
-import { applyNavConfig } from '@utils/navigationHider'
+import type { UserNavConfig } from '@features/navigation/navigationHider'
+import { applyNavConfig } from '@features/navigation/navigationHider'
 import { initQuickReply, cleanupQuickReply } from '@features/quickReply/utils'
 import { enableRowClickToCheck, disableRowClickToCheck } from '@features/rowClickToCheck/utils'
 import * as autoFill from '@features/autofills'

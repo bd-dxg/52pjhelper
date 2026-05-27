@@ -70,10 +70,10 @@
 </template>
 
 <script setup lang="ts">
-import NavigationSettings from '@com/NavigationSettings.vue'
+import NavigationSettings from '@features/navigation/NavigationSettings.vue'
 import GeneralFeaturesToggle from '@com/GeneralFeaturesToggle.vue'
 import AdminFeaturesToggle from '@com/AdminFeaturesToggle.vue'
-import VersionCheck from '@com/VersionCheck.vue'
+import VersionCheck from '@features/versionCheck/VersionCheck.vue'
 import CloudDiskListUpdateButton from '@features/userCloudDiskList/CloudDiskListUpdateButton.vue'
 import NotificationContainer from '@com/NotificationContainer.vue'
 import { getUserInfoFromCache, type UserInfo } from '@utils/userInfo'

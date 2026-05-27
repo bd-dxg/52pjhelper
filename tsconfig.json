@@ -19,7 +19,6 @@
       "@utils/*": ["./src/utils/*"],
       "@ent/*": ["./src/entries/*"],
       "@pages/*": ["./src/pages/*"],
-      "@conf/*": ["./src/configs/*"],
       "@features/*": ["./src/features/*"]
     }
   },

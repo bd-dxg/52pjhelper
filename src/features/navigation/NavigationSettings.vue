@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { DEFAULT_NAV_MENUS, loadNavConfig, saveNavConfig, toggleMenu as toggleMenuUtil } from '@utils/navigationHider'
+import { DEFAULT_NAV_MENUS, loadNavConfig, saveNavConfig, toggleMenu as toggleMenuUtil } from './navigationHider'
 import { useNotification } from '@/composables/useNotification'
 
 const navMenus = DEFAULT_NAV_MENUS

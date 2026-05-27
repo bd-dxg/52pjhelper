@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import config from '@conf/versionCheck.json'
+import config from './config.json'
 import { useNotification } from '@/composables/useNotification'
 
 const showBanner = ref(false)

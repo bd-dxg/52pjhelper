@@ -3,7 +3,7 @@
  * 负责初始化所有功能管理器
  */
 
-import { initializeNavigationHider } from '@utils/navigationHider'
+import { initializeNavigationHider } from '@features/navigation/navigationHider'
 import { createAvatarQuery } from '@features/avatarQuery/utils'
 import { createUserLinkQuery } from '@features/userLinkQuery/utils'
 import { loadQuickReplyConfig, initQuickReply } from '@features/quickReply/utils'
@@ -16,7 +16,7 @@ import { createDefaultTime } from '@features/defaultTime/utils'
 import { createDuplicateReplyDetection } from '@features/duplicateReplyDetection/utils'
 import { initializeRowClickToCheck } from '@features/rowClickToCheck/utils'
 import { createContentFilter } from '@features/contentFilter'
-import { createTableDataExtractor } from '@utils/tableDataExtractor'
+import { createTableDataExtractor } from '@features/tableDataExtractor/tableDataExtractor'
 import { createUserCloudDiskList } from '@features/userCloudDiskList'
 import * as autoFill from '@features/autofills'
 import type { ManagerInstances } from './messageHandler'

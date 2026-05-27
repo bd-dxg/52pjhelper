@@ -3,8 +3,8 @@
  * 功能：在特定页面查找指定表格并提取子表格数据
  */
 
-import tableDataExtractorConfig from '@/configs/tableDataExtractor.json'
-import { createFeatureManager, type IFeatureManager } from './featureManager'
+import tableDataExtractorConfig from './config.json'
+import { createFeatureManager, type IFeatureManager } from '@utils/featureManager'
 
 /**
  * 表格数据提取管理器接口

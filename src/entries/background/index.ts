@@ -3,7 +3,7 @@
  * 负责定期检查版本更新并发送通知
  */
 
-import { versionChecker } from '@utils/versionChecker'
+import { versionChecker } from '@features/versionCheck/versionChecker'
 
 export default defineBackground(() => {
   // 定时器名称

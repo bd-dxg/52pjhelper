@@ -3,8 +3,8 @@
  * 通过爬取帖子标题获取最新版本号
  */
 
-import config from '@conf/versionCheck.json'
-import { storageHelper } from './storageHelper'
+import config from './config.json'
+import { storageHelper } from '@utils/storageHelper'
 
 /**
  * 从帖子标题中提取版本号
