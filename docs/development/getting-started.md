@@ -98,11 +98,11 @@ pnpm build
 │   │   ├── contents/      # Content Script
 │   │   ├── popup/         # Popup 页面
 │   │   └── background/    # Background Script
-│   ├── components/        # Vue 组件
-│   ├── pages/            # Vue 页面
-│   ├── composables/      # 可组合函数
-│   ├── utils/            # 工具类
-│   └── configs/          # 配置文件
+│   ├── features/          # 功能模块（每个功能独立目录）
+│   ├── components/        # 共享 Vue 组件
+│   ├── composables/       # 可组合函数
+│   ├── utils/             # 共享工具类
+│   └── pages/             # Vue 页面
 ├── docs/                  # 项目文档
 ├── public/               # 静态资源
 └── dist/                 # 构建输出
@@ -306,5 +306,5 @@ pnpm update package-name
 
 ---
 
-_最后更新：2026-04-17_  
-_文档版本：1.0.0_
+_最后更新：2026-05-28_  
+_文档版本：1.1.0_

@@ -47,13 +47,10 @@
 ### 代码结构
 
 ```
-src/
-├── utils/
-│   └── duplicateReplyDetection.ts    # 核心逻辑
-├── components/
-│   └── DuplicateReplyDetectionToggle.vue # 功能开关组件
-└── configs/
-    └── duplicateReplyDetection.json   # 配置文件
+src/features/duplicateReplyDetection/
+├── config.json                   # 配置文件
+├── utils.ts                      # 核心逻辑
+└── DuplicateReplyDetectionToggle.vue # 功能开关组件
 ```
 
 ### 核心逻辑
@@ -114,7 +111,7 @@ export function createDuplicateReplyDetection(): IDuplicateReplyDetection {
 
 ### 配置文件
 
-配置文件位于 `src/configs/duplicateReplyDetection.json`：
+配置文件位于 `src/features/duplicateReplyDetection/config.json`：
 
 ```json
 {

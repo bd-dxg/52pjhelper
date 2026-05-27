@@ -105,7 +105,7 @@ const handleShowMessage = (text, type) => {
 </template>
 
 <script setup lang="ts">
-import userCloudDiskListConfig from '@/configs/userCloudDiskList.json'
+import userCloudDiskListConfig from '@features/userCloudDiskList/config.json'
 import { useFeatureToggle } from '@/composables/useFeatureToggle'
 
 const emit = defineEmits<{
@@ -142,7 +142,7 @@ const { enabled, toggleFeature, isToggling } = useFeatureToggle(config, (text, t
 </template>
 
 <script setup lang="ts">
-import userCloudDiskListConfig from '@/configs/userCloudDiskList.json'
+import userCloudDiskListConfig from '@features/userCloudDiskList/config.json'
 import { useFeatureToggleWithNotification } from '@/composables/useFeatureToggleWithNotification'
 
 const config = {
@@ -282,3 +282,9 @@ const showMessage = (text: string, type: 'success' | 'error' = 'success') => {
 - [通知系统指南](notification-system.md)
 - [组件开发指南](component-guide.md)
 - [可组合函数式架构](composable-architecture.md)
+
+---
+
+_文档版本：1.1.0_  
+_最后更新：2026-05-28_  
+_更新内容：修正配置文件导入路径_

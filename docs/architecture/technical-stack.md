@@ -76,7 +76,12 @@ export default defineConfig({
     "noEmit": true,
     "jsx": "preserve",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@com/*": ["./src/components/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@ent/*": ["./src/entries/*"],
+      "@pages/*": ["./src/pages/*"],
+      "@features/*": ["./src/features/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"]
@@ -360,3 +365,9 @@ export default defineConfig({
 - [Content Script 架构](content-script.md)
 - [模块结构](module-structure.md)
 - [开发文档](../development/getting-started.md)
+
+---
+
+_文档版本：1.1.0_
+_最后更新：2026-05-28_
+_更新内容：更新 tsconfig.json 路径别名配置_

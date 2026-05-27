@@ -35,14 +35,11 @@
 ### 代码结构
 
 ```
-src/
-├── entries/
-│   └── content/
-│       └── features/
-│           └── select-all/
-│               ├── index.ts          # 功能入口文件
-│               ├── select-all.ts     # 全选功能实现
-│               └── config.ts         # 配置管理
+src/features/selectAll/
+├── config.json             # 配置文件
+├── utils.ts                # 全选功能管理
+├── selectAll.ts            # 全选逻辑实现
+└── SelectAllToggle.vue     # 功能开关组件
 ```
 
 ### 核心逻辑

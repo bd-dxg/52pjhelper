@@ -131,7 +131,7 @@ notification.update('发现新版本')
 </template>
 
 <script setup lang="ts">
-import userCloudDiskListConfig from '@/configs/userCloudDiskList.json'
+import userCloudDiskListConfig from '@features/userCloudDiskList/config.json'
 import { useFeatureToggleWithNotification } from '@/composables/useFeatureToggleWithNotification'
 
 const config = {
@@ -259,3 +259,9 @@ warning('确定要删除这个项目吗？此操作不可撤销。', {
 2. **重要通知优先**：使用不同的位置和持续时间区分重要性
 3. **用户可操作**：重要的确认操作应该提供按钮
 4. **可访问性**：通知支持屏幕阅读器，使用正确的 ARIA 属性
+
+---
+
+_文档版本：1.1.0_  
+_最后更新：2026-05-28_  
+_更新内容：修正配置文件导入路径_

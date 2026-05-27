@@ -69,84 +69,67 @@
 ```
 52pjhelper/
 ├── src/
-│   ├── components/              # Vue 3 组件目录
-│   │   ├── NavigationSettings.vue     # 导航菜单设置组件
-│   │   ├── UpdateBanner.vue          # 版本更新提示横幅组件
-│   │   ├── GeneralFeaturesToggle.vue  # 通用功能组（头像查询、楼层高亮、原生楼层、重贴检测）
-│   │   ├── AdminFeaturesToggle.vue    # 后台管理功能组（快捷回复、自动填充、全选、分表选择等）
-│   │   ├── AvatarQueryToggle.vue      # 头像查询功能开关组件
-│   │   ├── QuickReplyToggle.vue       # 快捷回复功能开关组件
-│   │   ├── FloorHighlighterToggle.vue # 楼层高亮功能开关组件
-│   │   ├── NativeFloorDisplayToggle.vue # 原生楼层显示功能开关组件
-│   │   ├── SelectAllToggle.vue          # 全选功能开关组件
-│   │   ├── TableSelectorToggle.vue      # 分表选择器功能开关组件
-│   │   ├── DefaultTimeToggle.vue        # 默认查询时间功能开关组件
-│   │   ├── AutoFillToggle.vue           # 自动填充功能开关组件
-│   │   ├── UserLinkQueryToggle.vue      # 管理页面查询功能开关组件
-│   │   ├── RowClickToCheckToggle.vue    # 勾选范围功能开关组件
-│   │   ├── DuplicateReplyDetectionToggle.vue # 重复回帖检测功能开关组件
-│   │   └── ContentFilterToggle.vue      # 灌水筛选功能开关组件
-│   ├── composables/            # Vue 3 可组合函数目录
-│   │   └── useFeatureToggle.ts    # 功能切换可组合函数，提供统一的功能开关逻辑
-│   ├── configs/                 # 配置文件目录
-│   │   ├── navigation.json     # 导航菜单配置
-│   │   ├── quickReply.json     # 快捷回复配置
-│   │   ├── avatarQuery.json    # 头像查询配置
-│   │   ├── selectAll.json      # 全选功能配置
-│   │   ├── tableSelector.json  # 分表选择器配置
-│   │   ├── defaultTime.json    # 默认查询时间配置
-│   │   ├── autoFill.json       # 自动填充配置
-│   │   ├── userLinkQuery.json  # 管理页面查询配置
-│   │   ├── rowClickToCheck.json # 勾选范围功能配置
-│   │   ├── duplicateReplyDetection.json # 重复回帖检测功能配置
-│   │   ├── contentFilter.json   # 灌水筛选功能配置
-│   │   └── versionCheck.json   # 版本更新检查配置
-│   ├── entries/                 # 入口文件目录
-│   │   ├── contents/            # Content Script 模块化入口
-│   │   │   ├── index.ts         # 主入口文件
+│   ├── features/                 # 功能模块目录（按功能聚合）
+│   │   ├── contentFilter/        # 灌水筛选（8 个 TS + config + Toggle）
+│   │   ├── autofills/            # 自动填充（5 个 TS + config + Toggle）
+│   │   ├── userCloudDiskList/    # 用户网盘名单（9 个 TS + config + Toggle + UpdateButton）
+│   │   ├── navigation/           # 导航菜单（navigationHider + config + Settings）
+│   │   ├── versionCheck/         # 版本检查（versionChecker + config + Toggle）
+│   │   ├── tableDataExtractor/   # 表格数据提取（utils + config）
+│   │   ├── avatarQuery/          # 头像查询（utils + config + Toggle）
+│   │   ├── floorHighlighter/     # 楼层高亮（utils + config + Toggle）
+│   │   ├── nativeFloorDisplay/   # 原生楼层显示（utils + config + Toggle）
+│   │   ├── quickReply/           # 快捷回复（utils + config + Toggle）
+│   │   ├── selectAll/            # 全选（utils + config + Toggle）
+│   │   ├── tableSelector/        # 分表选择器（utils + config + Toggle）
+│   │   ├── defaultTime/          # 默认时间（utils + config + Toggle）
+│   │   ├── userLinkQuery/        # 管理页面查询（utils + config + Toggle）
+│   │   ├── rowClickToCheck/      # 勾选范围（utils + config + Toggle）
+│   │   ├── duplicatePostDetection/    # 重复发帖检测（utils + config + Toggle）
+│   │   └── duplicateReplyDetection/   # 重复回帖检测（utils + config + Toggle）
+│   ├── components/               # 共享 UI 组件
+│   │   ├── AdminFeaturesToggle.vue    # 后台管理功能组开关
+│   │   ├── GeneralFeaturesToggle.vue  # 通用功能组开关
+│   │   ├── Notification.vue           # 通知组件
+│   │   ├── NotificationContainer.vue  # 通知容器
+│   │   └── NotificationIcon.vue       # 通知图标
+│   ├── composables/              # Vue 3 可组合函数
+│   │   ├── useFeatureToggle.ts         # 功能切换可组合函数
+│   │   ├── useFeatureToggleWithNotification.ts # 带通知的功能切换
+│   │   └── useNotification.ts          # 通知系统可组合函数
+│   ├── entries/                  # 入口文件目录（WXT 框架约束）
+│   │   ├── contents/             # Content Script 入口
+│   │   │   ├── index.ts          # 主入口（防重复初始化）
 │   │   │   ├── initialization.ts # 功能初始化模块
-│   │   │   ├── messageHandler.ts # 消息处理器模块
-│   │   │   └── storageListener.ts # 存储监听器模块
-│   │   ├── background/          # Background Script 入口
-│   │   │   └── index.ts        # 后台脚本，负责版本检查
-│   │   └── popup/              # Popup 页面入口
-│   │       ├── App.vue         # 根组件
-│   │       ├── main.ts         # 入口文件
-│   │       └── index.html      # HTML 模板（含全局 CSS 变量）
-│   ├── pages/                  # 页面组件目录
-│   │   └── SettingsPanel.vue   # 设置面板主组件（容器）
-│   ├── styles/                 # 样式文件目录
-│   │   └── toggle.css          # Toggle 组件共享样式
-│   └── utils/                  # 工具类目录
-│       ├── navigationHider.ts  # 导航菜单管理工具
-│       ├── avatarQuery.ts       # 头像查询管理工具
-│       ├── quickReply.ts        # 快捷回复管理工具
-│       ├── floorHighlighter.ts  # 楼层高亮管理工具
-│       ├── userInfo.ts          # 用户信息获取和缓存工具
-│       ├── themeManager.ts      # 主题管理工具
-│       ├── nativeFloorDisplay.ts # 原生楼层显示工具
-│       ├── selectAll.ts         # 全选功能管理工具
-│       ├── tableSelector.ts     # 分表选择器管理工具
-│       ├── defaultTime.ts       # 默认查询时间管理工具
-│       ├── autoFill.ts          # 自动填充管理工具
-│       ├── userLinkQuery.ts     # 管理页面查询管理工具
-│       ├── userViolationFetcher.ts # 用户违规信息获取公共工具
-│       ├── rowClickToCheck.ts   # 勾选范围功能管理工具
-│       ├── duplicateReplyDetection.ts # 重复回帖检测管理工具
-│       ├── contentFilter.ts     # 灌水筛选管理工具
-│       ├── featureManager.ts    # 功能管理器，提供统一的功能管理模式
-│       ├── storageHelper.ts     # 存储操作辅助工具，提供统一的浏览器存储操作接口
-│       ├── messageHelper.ts     # 消息通信辅助工具，提供统一的浏览器消息通信接口
-│       ├── urlMatcher.ts        # URL 匹配工具，提供统一的 URL 匹配功能
-│       ├── versionChecker.ts    # 版本更新检查工具
-│       └── autofills/           # 自动填充规则目录
-├── public/                     # 静态资源
-│   └── images/                 # 扩展图标
-├── dist/                       # 编译输出目录
-├── wxt.config.ts               # WXT 框架配置（含路径别名）
-├── prettier.config.ts          # Prettier 配置
-├── tsconfig.json               # TypeScript 配置
-└── package.json                # 项目依赖
+│   │   │   ├── messageHandler.ts # 消息处理器
+│   │   │   └── storageListener.ts # 存储监听器
+│   │   ├── background/           # Background Script 入口
+│   │   │   └── index.ts         # 后台脚本（版本检查）
+│   │   └── popup/               # Popup 页面入口
+│   │       ├── App.vue          # 根组件
+│   │       ├── main.ts          # 入口文件
+│   │       └── index.html       # HTML 模板（含全局 CSS 变量）
+│   ├── pages/                    # 页面组件
+│   │   └── SettingsPanel.vue    # 设置面板主组件
+│   ├── styles/                   # 共享样式
+│   │   ├── toggle.css           # Toggle 组件共享样式
+│   │   ├── buttons.css          # 按钮共享样式
+│   │   ├── common.css           # 通用样式
+│   │   └── messages.css         # 消息样式
+│   └── utils/                    # 共享工具函数
+│       ├── storageHelper.ts     # 存储操作辅助（18+ 消费者）
+│       ├── urlMatcher.ts        # URL 匹配工具（9 消费者）
+│       ├── messageHelper.ts     # 消息通信辅助
+│       ├── featureManager.ts    # 功能管理器基类
+│       ├── userInfo.ts          # 用户信息获取
+│       ├── userViolationFetcher.ts # 用户违规信息获取
+│       └── themeManager.ts      # 主题管理
+├── public/                       # 静态资源
+│   └── images/                  # 扩展图标
+├── Task/                         # 重构规划文件（开发辅助）
+├── wxt.config.ts                 # WXT 框架配置（含路径别名）
+├── tsconfig.json                 # TypeScript 配置
+└── package.json                  # 项目依赖
 ```
 
 ## 路径别名
@@ -158,7 +141,7 @@
 - `@utils` → `src/utils/`
 - `@ent` → `src/entries/`
 - `@pages` → `src/pages/`
-- `@conf` → `src/configs/`
+- `@features` → `src/features/`
 
 ## 技术栈
 

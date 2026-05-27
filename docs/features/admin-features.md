@@ -128,7 +128,7 @@
 
 **配置支持**：
 
-- 配置文件：`src/configs/duplicateReplyDetection.json`
+- 配置文件：`src/features/duplicateReplyDetection/config.json`
 - 支持启用/禁用功能切换
 - 默认启用
 
@@ -255,43 +255,128 @@
 ```
 src/components/
 ├── AdminFeaturesToggle.vue      # 后台管理功能组组件
-├── AvatarQueryToggle.vue        # 头像查询组件
-├── QuickReplyToggle.vue         # 快捷回复组件
-├── AutoFillToggle.vue           # 自动填充组件
-├── SelectAllToggle.vue          # 全选功能组件
-├── TableSelectorToggle.vue      # 分表选择器组件
-├── UserLinkQueryToggle.vue      # 管理页面查询组件
-├── DuplicateReplyDetectionToggle.vue # 重复回帖检测组件
-├── RowClickToCheckToggle.vue    # 勾选范围组件
-├── ContentFilterToggle.vue      # 灌水筛选组件
-├── UserCloudDiskListToggle.vue      # 用户网盘名单组件
-└── UpdateBanner.vue             # 版本更新提示组件
+└── （各功能的 Toggle 组件已迁移至对应 features 目录）
+
+src/features/
+├── avatarQuery/
+│   ├── config.json
+│   ├── utils.ts
+│   └── AvatarQueryToggle.vue
+├── quickReply/
+│   ├── config.json
+│   ├── utils.ts
+│   └── QuickReplyToggle.vue
+├── autofills/
+│   ├── config.json
+│   ├── base.ts
+│   ├── rateForm.ts
+│   ├── moderateForm.ts
+│   ├── reportForm.ts
+│   ├── index.ts
+│   └── AutoFillToggle.vue
+├── selectAll/
+│   ├── config.json
+│   ├── utils.ts
+│   └── SelectAllToggle.vue
+├── tableSelector/
+│   ├── config.json
+│   ├── utils.ts
+│   └── TableSelectorToggle.vue
+├── userLinkQuery/
+│   ├── config.json
+│   ├── utils.ts
+│   └── UserLinkQueryToggle.vue
+├── duplicateReplyDetection/
+│   ├── config.json
+│   ├── utils.ts
+│   └── DuplicateReplyDetectionToggle.vue
+├── rowClickToCheck/
+│   ├── config.json
+│   ├── utils.ts
+│   └── RowClickToCheckToggle.vue
+├── contentFilter/
+│   ├── config.json
+│   ├── types.ts
+│   ├── config.ts
+│   ├── state.ts
+│   ├── filtering.ts
+│   ├── matcher.ts
+│   ├── storage.ts
+│   ├── ui.ts
+│   ├── index.ts
+│   └── ContentFilterToggle.vue
+├── userCloudDiskList/
+│   ├── config.json
+│   ├── types.ts
+│   ├── config.ts
+│   ├── data.ts
+│   ├── factory.ts
+│   ├── manager.ts
+│   ├── ui.ts
+│   ├── processing.ts
+│   ├── events.ts
+│   ├── index.ts
+│   ├── UserCloudDiskListToggle.vue
+│   └── CloudDiskListUpdateButton.vue
+└── versionCheck/
+    ├── config.json
+    ├── versionChecker.ts
+    └── VersionCheck.vue
 ```
 
 ### 工具类支持
 
 ```
-src/utils/
-├── avatarQuery.ts              # 头像查询管理
-├── userLinkQuery.ts            # 管理页面查询管理
-├── quickReply.ts               # 快捷回复管理
-├── autoFill.ts                 # 自动填充管理
-├── selectAll.ts                # 全选功能管理
-├── tableSelector.ts            # 分表选择器管理
-├── duplicateReplyDetection.ts  # 重复回帖检测管理
-├── rowClickToCheck.ts          # 勾选范围管理
-├── contentFilter.ts            # 灌水筛选管理
-├── userCloudDiskList/              # 用户网盘名单模块化实现
-│   ├── index.ts                # 统一导出
-│   ├── types.ts                # 类型定义
-│   ├── config.ts               # 配置常量
-│   ├── data.ts                 # 数据加载和保存
-│   ├── ui.ts                   # 样式和弹窗UI
-│   ├── processing.ts           # 用户名处理和扫描
-│   ├── events.ts               # 事件监听
-│   ├── manager.ts              # 核心管理器逻辑
-│   └── factory.ts              # 工厂函数
-└── versionChecker.ts           # 版本更新检查
+src/features/
+├── avatarQuery/
+│   ├── utils.ts                  # 头像查询管理
+│   └── ...
+├── userLinkQuery/
+│   ├── utils.ts                  # 管理页面查询管理
+│   └── ...
+├── quickReply/
+│   ├── utils.ts                  # 快捷回复管理
+│   └── ...
+├── autofills/                    # 自动填充模块化实现
+│   ├── base.ts                   # 基础设施
+│   ├── rateForm.ts               # 评分表单
+│   ├── moderateForm.ts           # 处理表单
+│   ├── reportForm.ts             # 举报表单
+│   └── index.ts                  # 统一导出
+├── selectAll/
+│   ├── utils.ts                  # 全选功能管理
+│   └── ...
+├── tableSelector/
+│   ├── utils.ts                  # 分表选择器管理
+│   └── ...
+├── duplicateReplyDetection/
+│   ├── utils.ts                  # 重复回帖检测管理
+│   └── ...
+├── rowClickToCheck/
+│   ├── utils.ts                  # 勾选范围管理
+│   └── ...
+├── contentFilter/                # 灌水筛选模块化实现
+│   ├── types.ts                  # 类型定义
+│   ├── config.ts                 # 配置常量
+│   ├── state.ts                  # 状态管理
+│   ├── filtering.ts              # 过滤逻辑
+│   ├── matcher.ts                # 匹配引擎
+│   ├── storage.ts                # 存储管理
+│   ├── ui.ts                     # UI 实现
+│   └── index.ts                  # 统一导出
+├── userCloudDiskList/            # 用户网盘名单模块化实现
+│   ├── types.ts                  # 类型定义
+│   ├── config.ts                 # 配置常量
+│   ├── data.ts                   # 数据加载和保存
+│   ├── ui.ts                     # 样式和弹窗UI
+│   ├── processing.ts             # 用户名处理和扫描
+│   ├── events.ts                 # 事件监听
+│   ├── manager.ts                # 核心管理器逻辑
+│   ├── factory.ts                # 工厂函数
+│   └── index.ts                  # 统一导出
+└── versionCheck/
+    ├── versionChecker.ts         # 版本更新检查
+    └── ...
 ```
 
 ## 使用指南

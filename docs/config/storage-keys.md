@@ -4,6 +4,8 @@
 
 存储键用于在浏览器存储中保存用户配置和功能状态。统一的命名规范有助于代码维护和调试。
 
+> **注意**：旧版项目中的集中式 `src/configs/storage-keys.json` 已不存在。重构后，各功能的存储键分散定义在各自的 `src/features/<name>/config.json` 中，通过 `storageKey` 字段指定。
+
 ## 命名规则
 
 ### 基本规则
@@ -113,6 +115,27 @@
 | `versionCheckEnabled` | `boolean`       | `true` | 版本更新检查开关 |
 | `lastVersionCheck`    | `number`        | `0`    | 最后检查时间戳   |
 | `ignoredVersions`     | `Array<string>` | `[]`   | 忽略的版本列表   |
+
+### 导航配置存储键
+
+| 存储键                  | 数据类型        | 默认值 | 描述                 |
+| ----------------------- | --------------- | ------ | -------------------- |
+| `52pjhelper_nav_config` | `Array<string>` | `[]`   | 隐藏的导航菜单 ID 列表 |
+
+## 存储键与配置文件的对应关系
+
+重构后，每个功能的主存储键在对应 `config.json` 中定义：
+
+| 功能             | 配置文件路径                                | storageKey                  |
+| ---------------- | ------------------------------------------- | --------------------------- |
+| 头像查询         | `src/features/avatarQuery/config.json`      | `avatarQueryEnabled`        |
+| 快捷回复         | `src/features/quickReply/config.json`       | `quickReplyEnabled`         |
+| 楼层高亮         | `src/features/floorHighlighter/config.json` | `floorHighlighterEnabled`   |
+| 灌水筛选         | `src/features/contentFilter/config.json`    | `contentFilterEnabled`      |
+| 版本更新检查     | `src/features/versionCheck/config.json`     | `versionCheckEnabled`       |
+| 自动填充         | `src/features/autofills/config.json`        | `autoFillEnabled`           |
+| 重复回帖检测     | `src/features/duplicateReplyDetection/config.json` | `duplicateReplyDetectionEnabled` |
+| 导航菜单         | `src/features/navigation/config.json`       | `52pjhelper_nav_config`     |
 
 ## 存储操作
 

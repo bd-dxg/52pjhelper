@@ -6,25 +6,16 @@
 
 ```
 src/utils/
-├── featureManager.ts    # 功能管理器
-├── storageHelper.ts     # 存储操作辅助工具
-├── messageHelper.ts     # 消息通信辅助工具
-├── urlMatcher.ts        # URL 匹配工具
-├── domHelper.ts         # DOM 操作辅助工具
-├── validationHelper.ts  # 数据验证工具
-├── userCloudDiskList.ts     # 网盘名单工具类（模块化重构版本）
-├── userCloudDiskList/       # 网盘名单模块化实现
-│   ├── index.ts         # 统一导出
-│   ├── types.ts         # 类型定义
-│   ├── config.ts        # 配置常量
-│   ├── data.ts          # 数据加载、保存和自动更新检查
-│   ├── ui.ts            # 样式和弹窗UI
-│   ├── processing.ts    # 用户名处理和扫描
-│   ├── events.ts        # 事件监听
-│   ├── manager.ts       # 核心管理器逻辑
-│   └── factory.ts       # 工厂函数
-└── index.ts             # 统一导出文件
+├── featureManager.ts        # 功能管理器
+├── storageHelper.ts         # 存储操作辅助工具
+├── messageHelper.ts         # 消息通信辅助工具
+├── urlMatcher.ts            # URL 匹配工具
+├── userInfo.ts              # 用户信息获取工具
+├── userViolationFetcher.ts  # 用户违规信息获取工具
+└── themeManager.ts          # 主题管理工具
 ```
+
+> **注意**：功能特定的工具已迁移到各自的功能模块目录（`src/features/<name>/`），如 `userCloudDiskList`、`autofills` 等。`src/utils/` 仅保留跨功能共享的工具。
 
 ## 功能管理器 (featureManager.ts)
 
@@ -643,395 +634,173 @@ setTargetPatterns(['https://www.52pojie.cn/*', 'https://bbs.52pojie.cn/*'])
 function addTargetPattern(pattern: string): void
 ```
 
-## DOM 操作辅助工具 (domHelper.ts)
+## 用户信息获取工具 (userInfo.ts)
 
 ### 概述
 
-提供常用的 DOM 操作功能，简化 DOM 操作。
+提供从页面中获取当前登录用户信息的功能。
 
 ### 主要函数
 
-#### `waitForElement(selector, timeout)`
+#### `getUserInfo()`
 
-等待元素出现。
-
-```typescript
-/**
- * 等待元素出现
- * @param selector - CSS 选择器
- * @param timeout - 超时时间（毫秒）
- * @returns Promise<Element | null> - 找到的元素
- */
-async function waitForElement(selector: string, timeout?: number): Promise<Element | null>
-```
+从页面 DOM 中获取当前登录用户的信息，包括用户名、等级、头像、权限等。
 
 **使用示例**:
 
 ```typescript
-import { waitForElement } from '@/utils/domHelper'
+import { getUserInfo } from '@/utils/userInfo'
 
-// 等待帖子内容加载
-const postContent = await waitForElement('.post-content', 5000)
-if (postContent) {
-  // 处理帖子内容
-  processPostContent(postContent)
+const userInfo = getUserInfo()
+if (userInfo.isLoggedIn) {
+  console.log('当前用户:', userInfo.username)
+  console.log('是否管理员:', userInfo.permissions.isAdmin)
 }
 ```
 
-#### `observeElement(selector, callback, options)`
-
-观察元素变化。
-
-```typescript
-/**
- * 观察元素变化
- * @param selector - CSS 选择器
- * @param callback - 变化回调
- * @param options - MutationObserver 选项
- * @returns Function - 停止观察函数
- */
-function observeElement(
-  selector: string,
-  callback: (element: Element) => void,
-  options?: MutationObserverInit,
-): () => void
-```
-
-**使用示例**:
-
-```typescript
-import { observeElement } from '@/utils/domHelper'
-
-// 观察动态加载的内容
-const stopObserving = observeElement(
-  '.dynamic-content',
-  element => {
-    console.log('内容已更新:', element)
-    processNewContent(element)
-  },
-  { childList: true, subtree: true },
-)
-
-// 停止观察
-// stopObserving()
-```
-
-#### `injectStyle(css)`
-
-注入 CSS 样式。
-
-```typescript
-/**
- * 注入 CSS 样式
- * @param css - CSS 样式字符串
- * @returns string - 样式 ID（用于移除）
- */
-function injectStyle(css: string): string
-```
-
-**使用示例**:
-
-```typescript
-import { injectStyle } from '@/utils/domHelper'
-
-// 注入深色主题样式
-const styleId = injectStyle(`
-  body {
-    background-color: #1a1a1a;
-    color: #ffffff;
-  }
-  
-  .post {
-    border-color: #333;
-  }
-`)
-
-// 移除样式
-// removeStyle(styleId)
-```
-
-#### `removeStyle(styleId)`
-
-移除注入的样式。
-
-```typescript
-/**
- * 移除注入的样式
- * @param styleId - 样式 ID
- */
-function removeStyle(styleId: string): void
-```
-
-### 高级功能
-
-#### `createElement(tag, attributes, children)`
-
-创建 DOM 元素。
-
-```typescript
-/**
- * 创建 DOM 元素
- * @param tag - 标签名
- * @param attributes - 属性对象
- * @param children - 子元素
- * @returns HTMLElement
- */
-function createElement(tag: string, attributes?: Record<string, string>, children?: (string | Node)[]): HTMLElement
-```
-
-#### `debounce(func, wait)`
-
-防抖函数。
-
-```typescript
-/**
- * 防抖函数
- * @param func - 要执行的函数
- * @param wait - 等待时间（毫秒）
- * @returns 防抖后的函数
- */
-function debounce<T extends (...args: any[]) => any>(func: T, wait: number): (...args: Parameters<T>) => void
-```
-
-#### `throttle(func, limit)`
-
-节流函数。
-
-```typescript
-/**
- * 节流函数
- * @param func - 要执行的函数
- * @param limit - 时间限制（毫秒）
- * @returns 节流后的函数
- */
-function throttle<T extends (...args: any[]) => any>(func: T, limit: number): (...args: Parameters<T>) => void
-```
-
-## 数据验证工具 (validationHelper.ts)
+## 用户违规信息获取工具 (userViolationFetcher.ts)
 
 ### 概述
 
-提供数据验证功能，包括表单验证、数据格式检查等。
+提供公共的用户违规记录查询功能，用于头像查询等管理功能。
 
 ### 主要函数
 
-#### `validateEmail(email)`
+#### `fetchUserViolation(userId)`
 
-验证邮箱格式。
-
-```typescript
-/**
- * 验证邮箱格式
- * @param email - 邮箱地址
- * @returns boolean - 是否有效
- */
-function validateEmail(email: string): boolean
-```
-
-#### `validateUrl(url)`
-
-验证 URL 格式。
-
-```typescript
-/**
- * 验证 URL 格式
- * @param url - URL 地址
- * @returns boolean - 是否有效
- */
-function validateUrl(url: string): boolean
-```
-
-#### `validateRequired(value)`
-
-验证必填字段。
-
-```typescript
-/**
- * 验证必填字段
- * @param value - 字段值
- * @returns boolean - 是否有效
- */
-function validateRequired(value: any): boolean
-```
-
-#### `validateLength(value, min, max)`
-
-验证长度范围。
-
-```typescript
-/**
- * 验证长度范围
- * @param value - 字段值
- * @param min - 最小长度
- * @param max - 最大长度
- * @returns boolean - 是否有效
- */
-function validateLength(value: string, min?: number, max?: number): boolean
-```
-
-### 验证器组合
-
-#### `createValidator(rules)`
-
-创建验证器。
-
-```typescript
-/**
- * 创建验证器
- * @param rules - 验证规则
- * @returns 验证函数
- */
-function createValidator(rules: ValidationRule[]): ValidatorFunction
-```
+查询指定用户的违规记录，带超时控制。
 
 **使用示例**:
 
 ```typescript
-import { createValidator } from '@/utils/validationHelper'
+import { fetchUserViolation } from '@/utils/userViolationFetcher'
 
-// 创建用户表单验证器
-const validateUser = createValidator([
-  { field: 'username', rules: ['required', { minLength: 3 }, { maxLength: 20 }] },
-  { field: 'email', rules: ['required', 'email'] },
-  { field: 'password', rules: ['required', { minLength: 6 }] },
-])
-
-// 验证数据
-const errors = validateUser({
-  username: 'test',
-  email: 'test@example.com',
-  password: '123456',
-})
-
-if (Object.keys(errors).length === 0) {
-  console.log('验证通过')
-} else {
-  console.log('验证错误:', errors)
+const violation = await fetchUserViolation(userId)
+if (violation) {
+  console.log('违规记录:', violation)
 }
 ```
 
-## 工具函数统一导出
+## 主题管理工具 (themeManager.ts)
 
-所有工具函数通过 `src/utils/index.ts` 统一导出：
+### 概述
+
+提供系统主题检测和切换功能，支持深色/浅色模式。
+
+### 主要函数
+
+#### `getCurrentTheme()`
+
+获取当前系统主题。
 
 ```typescript
-// 功能管理
-export {
-  initializeFeatures,
-  getFeatureState,
-  setFeatureState,
-  checkFeatureDependencies,
-  resolveFeatureConflicts,
-} from './featureManager'
+import { getCurrentTheme } from '@/utils/themeManager'
 
-// 存储操作
-export { set, get, remove, clear, getAll, setMultiple, getMultiple, watch } from './storageHelper'
-
-// 消息通信
-export { sendMessage, onMessage, sendToContentScript, broadcastToAllTabs, MESSAGE_TYPES } from './messageHelper'
-
-// URL 匹配
-export { matchesPattern, getCurrentUrl, isTargetPage, setTargetPatterns, addTargetPattern } from './urlMatcher'
-
-// DOM 操作
-export {
-  waitForElement,
-  observeElement,
-  injectStyle,
-  removeStyle,
-  createElement,
-  debounce,
-  throttle,
-} from './domHelper'
-
-// 数据验证
-export { validateEmail, validateUrl, validateRequired, validateLength, createValidator } from './validationHelper'
+const theme = getCurrentTheme() // 'light' | 'dark'
 ```
 
-## 使用示例
+#### `applyTheme(theme)`
 
-### 1. 完整的功能管理示例
+应用主题到 HTML 根元素。
 
 ```typescript
-import { initializeFeatures, getFeatureState, setFeatureState, checkFeatureDependencies } from '@/utils'
+import { applyTheme } from '@/utils/themeManager'
 
-// 初始化功能
-await initializeFeatures()
-
-// 检查并启用功能
-const featureId = 'dark-theme'
-
-// 检查依赖
-const unmetDeps = await checkFeatureDependencies(featureId)
-if (unmetDeps.length === 0) {
-  // 启用功能
-  const success = await setFeatureState(featureId, true)
-  if (success) {
-    console.log(`功能 ${featureId} 已启用`)
-  }
-}
-
-// 获取功能状态
-const isEnabled = await getFeatureState(featureId)
-console.log(`功能状态: ${isEnabled}`)
+applyTheme('dark')
 ```
 
-### 2. 存储和消息通信示例
+#### `watchThemeChange(callback)`
+
+监听系统主题变化，返回清理函数。
 
 ```typescript
-import { set, get, sendMessage, onMessage } from '@/utils'
+import { watchThemeChange } from '@/utils/themeManager'
 
-// 存储用户设置
-await set('user_settings', {
-  theme: 'dark',
-  notifications: true,
+const unwatch = watchThemeChange((newTheme) => {
+  console.log('主题变化:', newTheme)
+  applyTheme(newTheme)
 })
 
-// 获取用户设置
-const settings = await get('user_settings')
-
-// 发送消息到 content script
-const response = await sendMessage('APPLY_THEME', {
-  theme: settings.theme,
-})
-
-// 监听消息
-const unsubscribe = onMessage('THEME_CHANGED', data => {
-  console.log('主题已更改:', data.theme)
-  updateUI(data.theme)
-})
+// 取消监听
+// unwatch()
 ```
 
-### 3. DOM 操作和验证示例
+## 用户网盘名单功能模块 (userCloudDiskList)
+
+### 概述
+
+用户网盘名单功能已迁移到独立的功能模块目录。该功能提供高亮显示网盘名单用户的功能，鼠标悬停时显示用户的网盘信息。
+
+### 模块位置
+
+```
+src/features/userCloudDiskList/
+├── index.ts                     # 统一导出所有公共API
+├── types.ts                     # 类型定义（接口和类型别名）
+├── config.ts                    # 配置常量和默认数据
+├── config.json                  # 功能配置（名称、描述、存储键等）
+├── data.ts                      # 数据加载、保存和自动更新检查
+├── ui.ts                        # 样式注入、弹窗创建和显示逻辑
+├── processing.ts                # 用户名处理、扫描和防抖逻辑
+├── events.ts                    # DOM 变化监听和事件管理
+├── manager.ts                   # 核心管理器逻辑
+├── factory.ts                   # 工厂函数，创建管理器实例
+├── UserCloudDiskListToggle.vue  # 功能开关组件
+└── CloudDiskListUpdateButton.vue # 数据更新按钮组件
+```
+
+### 导入方式
 
 ```typescript
-import { waitForElement, injectStyle, validateEmail, debounce } from '@/utils'
+// 从功能模块导入
+import { createUserCloudDiskList } from '@features/userCloudDiskList'
 
-// 等待表单加载
-const form = await waitForElement('#user-form', 3000)
-if (form) {
-  // 注入样式
-  const styleId = injectStyle(`
-    #user-form {
-      border: 1px solid #ccc;
-      padding: 20px;
-    }
-  `)
+// 或使用相对路径（功能内部）
+import { createUserCloudDiskList } from './factory'
+```
 
-  // 验证邮箱
-  const emailInput = form.querySelector('#email')
-  if (emailInput) {
-    emailInput.addEventListener(
-      'input',
-      debounce(e => {
-        const email = e.target.value
-        if (!validateEmail(email)) {
-          showError('邮箱格式不正确')
-        }
-      }, 300),
-    )
-  }
-}
+### 主要函数
+
+#### `createUserCloudDiskList()`
+
+创建用户网盘名单管理器实例：
+
+```typescript
+import { createUserCloudDiskList } from '@features/userCloudDiskList'
+
+const manager = createUserCloudDiskList()
+await manager.enable()
+const isEnabled = manager.getStatus()
+```
+
+#### `loadCloudDiskListDataFromTableExtractor()`
+
+从表格数据提取器加载黑名单数据：
+
+```typescript
+import { loadCloudDiskListDataFromTableExtractor } from '@features/userCloudDiskList'
+
+const data = await loadCloudDiskListDataFromTableExtractor()
+console.log(`从表格解析出 ${data.length} 个用户`)
+```
+
+#### `loadCloudDiskListData()`
+
+加载黑名单数据（优先从本地存储加载，无数据时从表格提取器加载）：
+
+```typescript
+import { loadCloudDiskListData } from '@features/userCloudDiskList'
+
+const data = await loadCloudDiskListData()
+```
+
+### 配置常量
+
+```typescript
+export const STORAGE_KEY = 'userCloudDiskList_enabled'
+export const DATA_STORAGE_KEY = 'userCloudDiskList_data'
+export const LAST_UPDATE_KEY = 'userCloudDiskList_lastUpdate'
+export const AUTO_UPDATE_INTERVAL = 24 * 60 * 60 * 1000 // 1天
 ```
 
 ## 最佳实践
@@ -1039,7 +808,7 @@ if (form) {
 ### 1. 错误处理
 
 ```typescript
-import { getFeatureState } from '@/utils'
+import { getFeatureState } from '@/utils/featureManager'
 
 try {
   const state = await getFeatureState('dark-theme')
@@ -1054,361 +823,28 @@ try {
 ### 2. 性能优化
 
 ```typescript
-import { debounce, throttle } from '@/utils'
+import { debounce } from '@/utils/urlMatcher' // 如有需要
 
 // 使用防抖处理频繁触发的事件
 const handleSearch = debounce(query => {
   performSearch(query)
 }, 300)
-
-// 使用节流处理滚动事件
-const handleScroll = throttle(() => {
-  checkScrollPosition()
-}, 100)
 ```
 
 ### 3. 资源清理
 
 ```typescript
-import { onMessage, observeElement } from '@/utils'
+import { watchThemeChange } from '@/utils/themeManager'
 
 // 在组件卸载时清理资源
 onMounted(() => {
-  // 监听消息
-  const unsubscribeMessage = onMessage('UPDATE', handleUpdate)
+  const unwatch = watchThemeChange(handleThemeChange)
 
-  // 观察元素
-  const stopObserving = observeElement('.content', handleContentChange)
-
-  // 清理函数
   onUnmounted(() => {
-    unsubscribeMessage()
-    stopObserving()
+    unwatch()
   })
 })
 ```
-
-## 用户网盘名单工具类 (userCloudDiskList.ts)
-
-### 概述
-
-用户网盘名单工具类提供高亮显示网盘名单用户的功能，鼠标悬停时显示用户的网盘信息。该模块已重构为模块化结构，遵循 `utils/contentFilter` 的模式。
-
-### 模块化结构
-
-```
-src/utils/userCloudDiskList/
-├── index.ts         # 统一导出所有公共API
-├── types.ts         # 类型定义（接口和类型别名）
-├── config.ts        # 配置常量和默认数据
-├── data.ts          # 数据加载、保存和自动更新检查
-├── ui.ts            # 样式注入、弹窗创建和显示逻辑
-├── processing.ts    # 用户名处理、扫描和防抖逻辑
-├── events.ts        # DOM 变化监听和事件管理
-├── manager.ts       # 核心管理器类，封装所有业务逻辑
-└── factory.ts       # 工厂函数，创建管理器实例
-```
-
-**各模块职责**：
-
-- **data.ts**：数据管理模块，负责从表格数据提取器加载数据、本地存储操作、自动更新检查
-- **types.ts**：类型定义，包括用户网盘名单条目、网盘记录、表格提取数据结构
-- **config.ts**：配置常量，包括存储键、默认数据、自动更新间隔等
-- **ui.ts**：用户界面模块，负责样式注入和弹窗显示
-- **processing.ts**：数据处理模块，负责用户名提取和扫描逻辑
-- **events.ts**：事件管理模块，负责DOM变化监听
-- **manager.ts**：核心业务逻辑，封装所有功能方法
-- **factory.ts**：工厂函数，创建管理器实例
-- **index.ts**：统一导出，提供简洁的公共API
-
-### 主要接口
-
-#### `IUserCloudDiskList` 接口
-
-用户网盘名单管理器接口，定义所有公共方法：
-
-```typescript
-interface IUserCloudDiskList {
-  /** 启用功能 */
-  enable(): Promise<void>
-  /** 禁用功能 */
-  disable(): Promise<void>
-  /** 切换功能状态 */
-  toggle(): Promise<boolean>
-  /** 获取功能状态 */
-  getStatus(): boolean
-  /** 手动更新黑名单数据 */
-  updateData(data: UserCloudDiskListData): Promise<void>
-  /** 获取黑名单数据 */
-  getData(): Promise<UserCloudDiskListData>
-  /** 检查是否需要自动更新 */
-  shouldAutoUpdate(): Promise<boolean>
-  /** 重新加载数据并重新扫描 */
-  reloadData(): Promise<void>
-}
-```
-
-### 数据类型
-
-#### `UserCloudDiskListItem`
-
-用户网盘名单条目：
-
-```typescript
-interface UserCloudDiskListItem {
-  forumId: string // 论坛ID（唯一标识）
-  cloudStorages: CloudStorageRecord[] // 网盘记录数组
-  note?: string // 备注信息（可选）
-}
-```
-
-#### `CloudStorageRecord`
-
-网盘记录：
-
-```typescript
-interface CloudStorageRecord {
-  provider: string // 网盘厂商（如"百度"、"夸克"、"迅雷"等）
-  id: string // 网盘ID（可能包含*号隐藏部分）
-  postLink: string // 帖子链接（可能为空）
-  recorder: string // 记录者（管理员用户名）
-}
-```
-
-#### `TableExtractionData`
-
-表格数据提取器数据结构：
-
-```typescript
-interface TableExtractionData {
-  targetTable?: {
-    rows: Array<{
-      cells: Array<{
-        content?: string
-      }>
-    }>
-  }
-}
-```
-
-### 主要函数
-
-#### `createUserCloudDiskList()`
-
-创建用户网盘名单管理器实例：
-
-```typescript
-import { createUserCloudDiskList } from '@/utils/userCloudDiskList'
-
-// 创建管理器实例
-const userCloudDiskList = createUserCloudDiskList()
-
-// 启用功能
-await userCloudDiskList.enable()
-
-// 获取功能状态
-const isEnabled = userCloudDiskList.getStatus()
-
-// 切换功能状态
-const newState = await userCloudDiskList.toggle()
-```
-
-#### `loadCloudDiskListDataFromTableExtractor()`
-
-从表格数据提取器加载黑名单数据：
-
-```typescript
-import { loadCloudDiskListDataFromTableExtractor } from '@/utils/userCloudDiskList'
-
-// 从表格数据提取器加载数据
-const CloudDiskListData = await loadCloudDiskListDataFromTableExtractor()
-console.log(`从表格解析出 ${CloudDiskListData.length} 个用户`)
-```
-
-#### `loadCloudDiskListData()`
-
-加载黑名单数据（优先从本地存储加载，无数据时从表格提取器加载）：
-
-```typescript
-import { loadCloudDiskListData } from '@/utils/userCloudDiskList'
-
-// 加载黑名单数据
-const CloudDiskListData = await loadCloudDiskListData()
-console.log(`加载了 ${CloudDiskListData.length} 条黑名单数据`)
-```
-
-#### `saveCloudDiskListData()`
-
-保存黑名单数据到本地存储：
-
-```typescript
-import { saveCloudDiskListData } from '@/utils/userCloudDiskList'
-
-// 保存黑名单数据
-await saveCloudDiskListData(CloudDiskListData)
-console.log('黑名单数据已保存')
-```
-
-#### `shouldAutoUpdate()`
-
-检查是否需要自动更新黑名单数据：
-
-```typescript
-import { shouldAutoUpdate } from '@/utils/userCloudDiskList'
-
-// 检查是否需要自动更新
-const needsUpdate = await shouldAutoUpdate()
-if (needsUpdate) {
-  console.log('需要更新黑名单数据')
-}
-```
-
-### 配置常量
-
-```typescript
-// 存储键常量
-export const STORAGE_KEY = 'userCloudDiskList_enabled'
-export const DATA_STORAGE_KEY = 'userCloudDiskList_data'
-export const LAST_UPDATE_KEY = 'userCloudDiskList_lastUpdate'
-export const AUTO_UPDATE_INTERVAL = 24 * 60 * 60 * 1000 // 1天
-export const USERNAME_SELECTOR = 'a[href*="home.php?mod=space&uid="]'
-
-// 默认黑名单数据（空数组）
-export const DEFAULT_CloudDiskList_DATA: UserCloudDiskListData = []
-```
-
-### 使用示例
-
-#### 1. 基本使用
-
-```typescript
-import { createUserCloudDiskList } from '@/utils/userCloudDiskList'
-
-// 创建并初始化
-const CloudDiskListManager = createUserCloudDiskList()
-
-// 在需要时启用
-await CloudDiskListManager.enable()
-
-// 获取当前数据
-const data = await CloudDiskListManager.getData()
-console.log(`当前有 ${data.length} 个黑名单用户`)
-
-// 手动更新数据
-await CloudDiskListManager.updateData(newData)
-```
-
-#### 2. 在 Vue 组件中使用
-
-```vue
-<script setup lang="ts">
-import { createUserCloudDiskList } from '@/utils/userCloudDiskList'
-import { onMounted, ref } from 'vue'
-
-const CloudDiskListManager = createUserCloudDiskList()
-const isEnabled = ref(false)
-
-onMounted(() => {
-  isEnabled.value = CloudDiskListManager.getStatus()
-})
-
-const toggleCloudDiskList = async () => {
-  const newState = await CloudDiskListManager.toggle()
-  isEnabled.value = newState
-}
-</script>
-
-<template>
-  <div>
-    <button @click="toggleCloudDiskList">
-      {{ isEnabled ? '禁用黑名单' : '启用黑名单' }}
-    </button>
-    <p>当前状态: {{ isEnabled ? '已启用' : '已禁用' }}</p>
-  </div>
-</template>
-```
-
-#### 3. 数据管理
-
-```typescript
-import { createUserCloudDiskList } from '@/utils/userCloudDiskList'
-
-const CloudDiskListManager = createUserCloudDiskList()
-
-// 检查是否需要自动更新
-const needsUpdate = await CloudDiskListManager.shouldAutoUpdate()
-if (needsUpdate) {
-  console.log('需要更新黑名单数据')
-  // 从服务器获取最新数据并更新
-  const newData = await fetchCloudDiskListData()
-  await CloudDiskListManager.updateData(newData)
-}
-
-// 重新加载数据（例如在数据源变化后）
-await CloudDiskListManager.reloadData()
-```
-
-### 功能特点
-
-1. **模块化设计**：代码按功能职责分离，便于维护和测试
-2. **向后兼容**：保持原有接口不变，现有代码无需修改
-3. **性能优化**：使用防抖扫描和快速查找 Set 提高性能
-4. **自动更新**：支持检查数据是否需要自动更新（默认1天）
-5. **响应式 UI**：鼠标悬停显示详细信息弹窗
-6. **DOM 监听**：自动监听页面变化，处理动态加载的内容
-
-### 与其他模块的集成
-
-#### 与表格数据提取器集成
-
-用户网盘名单模块会自动从表格数据提取器加载数据：
-
-```typescript
-// 自动从表格数据提取器加载黑名单数据
-const extractedData = await loadCloudDiskListDataFromTableExtractor()
-```
-
-**表格结构解析规则**：
-
-- 表格结构：序号 | 论坛ID | 网盘厂商 | 网盘ID | 帖子链接 | 记录者 | 备注
-- 每个用户的第一行有"序号"和"论坛ID"
-- 同一用户的其他网盘记录行中，"序号"和"论坛ID"都是"-"
-- 自动跟踪当前用户，将同一用户的所有网盘记录合并
-- 支持多种网盘厂商：百度、夸克、迅雷等
-- 自动处理帖子链接：如果是"-"则保持为空
-
-#### 与存储助手集成
-
-使用统一的存储接口管理配置和数据：
-
-```typescript
-import { storageHelper } from '@/utils/storageHelper'
-
-// 保存配置
-await storageHelper.saveBoolean(STORAGE_KEY, isEnabled)
-
-// 加载数据
-const storedData = await storageHelper.loadArray<UserCloudDiskListItem>(DATA_STORAGE_KEY, [])
-```
-
-### 错误处理
-
-```typescript
-try {
-  await CloudDiskListManager.enable()
-} catch (error) {
-  console.error('启用用户网盘名单失败:', error)
-  // 提供 fallback 行为
-  showErrorMessage('无法启用黑名单功能')
-}
-```
-
-### 最佳实践
-
-1. **延迟初始化**：工厂函数内部使用异步初始化，不阻塞构造
-2. **资源清理**：禁用功能时会清理所有注入的样式和事件监听器
-3. **防抖处理**：DOM 扫描使用防抖避免频繁操作
-4. **类型安全**：使用 TypeScript 接口确保类型安全
 
 ## 相关文档
 
@@ -1418,6 +854,6 @@ try {
 
 ---
 
-_文档版本：1.2.0_  
-_最后更新：2026-04-18_  
-_更新内容：添加用户网盘名单数据模块详细文档，包括表格数据提取器集成、数据加载函数和配置常量_
+_文档版本：2.0.0_
+_最后更新：2026-05-28_
+_更新内容：反映功能模块化重构后的工具目录结构，移除不存在的工具模块，新增共享工具文档_

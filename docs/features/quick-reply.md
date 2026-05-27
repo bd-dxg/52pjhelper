@@ -119,7 +119,7 @@ const toggleFeature = async () => {
 </script>
 ```
 
-#### 2. 短语管理工具类 (`src/utils/quickReply.ts`)
+#### 2. 短语管理工具类 (`src/features/quickReply/utils.ts`)
 
 ```typescript
 /**
@@ -213,7 +213,7 @@ interface QuickReplyPhrase {
 }
 ```
 
-#### 3. 默认短语配置文件 (`src/configs/quick-reply-phrases.json`)
+#### 3. 默认短语配置文件 (`src/features/quickReply/config.json`)
 
 ```json
 {

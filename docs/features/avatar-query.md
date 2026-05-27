@@ -76,7 +76,7 @@ const toggleFeature = async () => {
 </script>
 ```
 
-#### 2. 头像查询工具类 (`src/utils/avatarQuery.ts`)
+#### 2. 头像查询工具类 (`src/features/avatarQuery/utils.ts`)
 
 ```typescript
 /**
@@ -136,7 +136,7 @@ export class AvatarQueryManager {
 }
 ```
 
-#### 3. 配置文件 (`src/configs/avatarQuery.json`)
+#### 3. 配置文件 (`src/features/avatarQuery/config.json`)
 
 ```json
 {

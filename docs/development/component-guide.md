@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 import { useFeatureToggle } from '@/composables/useFeatureToggle'
-import featureConfig from '@/configs/feature.json'
+import featureConfig from '@features/feature/config.json'
 
 const emit = defineEmits(['show-message'])
 
@@ -75,7 +75,7 @@ const { enabled, toggleFeature, isToggling } = useFeatureToggle(
 
 ```typescript
 import { useFeatureToggle } from '@/composables/useFeatureToggle'
-import config from '@/configs/avatarQuery.json'
+import config from '@features/avatarQuery/config.json'
 
 const { enabled, toggleFeature, isToggling } = useFeatureToggle(
   {
@@ -126,7 +126,7 @@ const { enabled, toggleFeature, isToggling } = useFeatureToggle(
 
 ```typescript
 import { useFeatureToggle } from '@/composables/useFeatureToggle'
-import featureConfig from '@/configs/feature.json'
+import featureConfig from '@features/feature/config.json'
 
 const { enabled, toggleFeature, isToggling } = useFeatureToggle(
   {
@@ -292,11 +292,11 @@ const toggleFeature = async () => {
 
 ### 步骤 1：创建配置文件
 
-在 `src/configs/` 目录下创建 JSON 配置文件。
+在 `src/features/<featureName>/` 目录下创建 `config.json` 配置文件。
 
 ### 步骤 2：创建组件文件
 
-在 `src/components/` 目录下创建 Vue 组件文件。
+在 `src/features/<featureName>/` 目录下创建 Toggle Vue 组件文件。
 
 ### 步骤 3：使用 useFeatureToggle
 
@@ -308,13 +308,13 @@ const toggleFeature = async () => {
 
 ### 步骤 5：添加到设置页面
 
-在 `src/pages/settings/SettingsPanel.vue` 中添加组件引用。
+在 `src/pages/SettingsPanel.vue` 中添加组件引用。
 
 ## 示例：创建头像查询功能开关
 
 ### 1. 创建配置文件
 
-`src/configs/avatarQuery.json`:
+`src/features/avatarQuery/config.json`:
 
 ```json
 {
@@ -328,7 +328,7 @@ const toggleFeature = async () => {
 
 ### 2. 创建组件文件
 
-`src/components/AvatarQueryToggle.vue`:
+`src/features/avatarQuery/AvatarQueryToggle.vue`:
 
 ```vue
 <template>
@@ -345,7 +345,7 @@ const toggleFeature = async () => {
 
 <script setup lang="ts">
 import { useFeatureToggle } from '@/composables/useFeatureToggle'
-import config from '@/configs/avatarQuery.json'
+import config from '@features/avatarQuery/config.json'
 
 const emit = defineEmits(['show-message'])
 
@@ -380,7 +380,7 @@ const { enabled, toggleFeature, isToggling } = useFeatureToggle(
 
 <script setup lang="ts">
 import { useFeatureToggleWithNotification } from '@/composables/useFeatureToggleWithNotification'
-import config from '@/configs/avatarQuery.json'
+import config from '@features/avatarQuery/config.json'
 
 const { enabled, toggleFeature, isToggling } = useFeatureToggleWithNotification({
   ...config,

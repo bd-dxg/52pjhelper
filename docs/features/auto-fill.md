@@ -138,7 +138,7 @@ function bindFormEvents(form: HTMLFormElement) {
 
 ### 配置文件
 
-自动填充的配置存储在 `src/configs/autoFill.json`：
+自动填充的配置存储在 `src/features/autofills/config.json`：
 
 ```json
 {
@@ -246,8 +246,8 @@ A: 当前使用预设内容，未来版本计划支持自定义。
 
 ### 添加新的表单类型
 
-1. 在 `src/configs/autoFill.json` 中添加目标页面
-2. 在 `src/utils/autoFill.ts` 中添加表单配置
+1. 在 `src/features/autofills/config.json` 中添加目标页面
+2. 在 `src/features/autofills/` 目录下添加对应的表单处理模块（如 `rateForm.ts`）
 3. 实现表单检测和事件绑定逻辑
 4. 添加测试用例
 

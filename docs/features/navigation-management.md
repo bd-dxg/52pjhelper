@@ -125,7 +125,7 @@ function setupContextMenu(): void {
 
 ### 配置文件
 
-`src/configs/navigation.json`:
+`src/features/navigation/config.json`:
 
 ```json
 {

@@ -60,17 +60,17 @@
 ### 代码结构
 
 ```
-src/
-├── entries/
-│   └── content/
-│       └── features/
-│           └── content-filter/
-│               ├── index.ts          # 功能入口文件
-│               ├── filter-card.ts    # 过滤卡片组件
-│               ├── matching-engine.ts # 匹配引擎实现
-│               ├── rule-manager.ts   # 规则管理
-│               ├── drag-handler.ts   # 拖拽处理
-│               └── config.ts         # 配置管理
+src/features/contentFilter/
+├── config.json              # 配置文件
+├── types.ts                 # 类型定义
+├── config.ts                # 配置常量
+├── state.ts                 # 状态管理
+├── filtering.ts             # 过滤逻辑
+├── matcher.ts               # 匹配引擎
+├── storage.ts               # 存储管理
+├── ui.ts                    # UI 实现
+├── index.ts                 # 统一导出
+└── ContentFilterToggle.vue  # 功能开关组件
 ```
 
 ### 核心逻辑

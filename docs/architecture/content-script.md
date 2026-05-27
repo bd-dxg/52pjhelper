@@ -198,41 +198,31 @@ export class StorageListener {
 
 ## 功能管理器模式
 
-### 管理器基类
+### 管理器工厂函数
+
+项目使用函数式风格创建功能管理器（禁止使用 `class`）：
 
 ```typescript
-export abstract class FeatureManager {
-  protected enabled = false
-  protected config: FeatureConfig
+export const createFeatureManager = (config: FeatureConfig) => {
+  let enabled = false
 
-  constructor(config: FeatureConfig) {
-    this.config = config
+  const enable = async () => {
+    enabled = true
+    await onEnable()
   }
 
-  // 初始化功能
-  abstract initialize(): Promise<void>
-
-  // 启用功能
-  async enable(): Promise<void> {
-    this.enabled = true
-    await this.onEnable()
+  const disable = async () => {
+    enabled = false
+    await onDisable()
   }
 
-  // 禁用功能
-  async disable(): Promise<void> {
-    this.enabled = false
-    await this.onDisable()
-  }
+  const isEnabled = () => enabled
 
-  // 功能启用时的回调
-  protected abstract onEnable(): Promise<void>
-
-  // 功能禁用时的回调
-  protected abstract onDisable(): Promise<void>
-
-  // 获取功能状态
-  isEnabled(): boolean {
-    return this.enabled
+  return {
+    enable,
+    disable,
+    isEnabled,
+    config,
   }
 }
 ```
@@ -240,24 +230,36 @@ export abstract class FeatureManager {
 ### 功能管理器实现示例
 
 ```typescript
-export class NavigationManager extends FeatureManager {
-  private navigationElement: HTMLElement | null = null
+import { createFeatureManager } from '@/utils/featureManager'
 
-  async initialize(): Promise<void> {
-    // 初始化逻辑
-    this.navigationElement = document.querySelector('#navigation')
-  }
+export const createNavigationManager = () => {
+  let navigationElement: HTMLElement | null = null
 
-  protected async onEnable(): Promise<void> {
-    if (this.navigationElement) {
-      this.navigationElement.style.display = 'block'
+  const onEnable = async () => {
+    if (navigationElement) {
+      navigationElement.style.display = 'block'
     }
   }
 
-  protected async onDisable(): Promise<void> {
-    if (this.navigationElement) {
-      this.navigationElement.style.display = 'none'
+  const onDisable = async () => {
+    if (navigationElement) {
+      navigationElement.style.display = 'none'
     }
+  }
+
+  const initialize = async () => {
+    navigationElement = document.querySelector('#navigation')
+  }
+
+  const manager = createFeatureManager({
+    name: 'navigation',
+    onEnable,
+    onDisable,
+  })
+
+  return {
+    ...manager,
+    initialize,
   }
 }
 ```
@@ -385,3 +387,9 @@ export class NavigationManager extends FeatureManager {
 - [技术栈详解](technical-stack.md)
 - [模块结构](module-structure.md)
 - [开发文档](../development/composable-architecture.md)
+
+---
+
+_文档版本：1.1.0_
+_最后更新：2026-05-28_
+_更新内容：更新功能管理器示例为函数式风格_

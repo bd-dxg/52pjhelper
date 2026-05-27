@@ -64,7 +64,7 @@ npx vue-tsc --noEmit # vue3+ts 类型检查
 ## 开发指南
 
 ### 项目架构
-项目采用 WXT 框架的模块化架构，引入了现代化的可组合函数式编程模式。详细架构文档请查看 [docs/architecture/](docs/architecture/)。
+项目采用 WXT 框架的模块化架构，按功能聚合组织代码。每个功能的配置、逻辑、UI 组件位于 `src/features/<name>/` 目录下。共享基础设施保留在 `src/utils/` 和 `src/components/`。详细架构文档请查看 [docs/architecture/](docs/architecture/)。
 
 ### 自动导入机制
 项目使用 WXT 框架集成的 `unplugin-auto-import` 插件，自动导入常用的 API 和工具函数。详情请查看 [docs/development/auto-import.md](docs/development/auto-import.md)。
@@ -119,4 +119,4 @@ docs/
 ---
 
 *本文档最后更新：2026-05-28*
-*文档版本：2.2.1（更新附属文档，清理重复发帖检测遗留引用）*
+*文档版本：3.0.0（功能模块化重构完成，更新架构描述）*

@@ -55,17 +55,10 @@
 ### 代码结构
 
 ```
-src/
-├── entries/
-│   └── content/
-│       └── features/
-│           └── duplicate-post-detection/
-│               ├── index.ts          # 功能入口文件
-│               ├── detection-engine.ts # 检测引擎实现
-│               ├── content-analyzer.ts # 内容分析器
-│               ├── date-parser.ts    # 日期解析器
-│               ├── highlight-manager.ts # 高亮管理器
-│               └── config.ts         # 配置管理
+src/features/duplicatePostDetection/
+├── config.json                          # 配置文件
+├── utils.ts                             # 重复发帖检测逻辑
+└── DuplicatePostDetectionToggle.vue     # 功能开关组件
 ```
 
 ### 核心逻辑

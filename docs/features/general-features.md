@@ -102,7 +102,17 @@
 ```
 src/components/
 ├── GeneralFeaturesToggle.vue    # 通用功能组组件
-└── 各个独立功能组件
+└── （楼层高亮、原生楼层等 Toggle 组件已迁移至对应 features 目录）
+
+src/features/
+├── floorHighlighter/
+│   ├── config.json
+│   ├── utils.ts
+│   └── FloorHighlighterToggle.vue
+└── nativeFloorDisplay/
+    ├── config.json
+    ├── utils.ts
+    └── NativeFloorDisplayToggle.vue
 ```
 
 ### 样式管理

@@ -52,16 +52,10 @@
 ### 代码结构
 
 ```
-src/
-├── entries/
-│   └── content/
-│       └── features/
-│           └── row-click-to-check/
-│               ├── index.ts          # 功能入口文件
-│               ├── row-click.ts      # 行点击勾选实现
-│               ├── selection.ts      # 选择逻辑管理
-│               ├── visual-feedback.ts # 视觉反馈实现
-│               └── config.ts         # 配置管理
+src/features/rowClickToCheck/
+├── config.json                # 配置文件
+├── utils.ts                   # 勾选范围管理
+└── RowClickToCheckToggle.vue  # 功能开关组件
 ```
 
 ### 核心逻辑

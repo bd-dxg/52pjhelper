@@ -32,7 +32,7 @@
 
 ```typescript
 import { useFeatureToggle } from '@/composables/useFeatureToggle'
-import config from '@/configs/avatarQuery.json'
+import config from '@features/avatarQuery/config.json'
 
 const { enabled, toggleFeature, isToggling } = useFeatureToggle(
   {
@@ -75,7 +75,7 @@ const { enabled, toggleFeature, isToggling } = useFeatureToggle(
 
 ```typescript
 import { createFeatureManager, type CreateFeatureManagerOptions } from '@/utils/featureManager'
-import config from '@/configs/avatarQuery.json'
+import config from '@features/avatarQuery/config.json'
 
 const options: CreateFeatureManagerOptions = {
   config,

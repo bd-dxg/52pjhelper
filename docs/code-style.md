@@ -331,13 +331,17 @@ enum UserRole {
 ```
 // ✅ 推荐：
 src/
-├── components/
-│   ├── UserCard.vue      # PascalCase
-│   └── user-list/        # kebab-case
+├── features/            # 功能模块（每个功能独立目录）
+│   └── avatarQuery/
+│       ├── AvatarQueryToggle.vue  # PascalCase
+│       ├── config.json            # 配置文件
+│       └── utils.ts               # camelCase
+├── components/          # 共享组件
+│   └── Notification.vue  # PascalCase
 ├── utils/
 │   └── storageHelper.ts  # camelCase
-└── configs/
-    └── navigation.json   # kebab-case
+└── composables/
+    └── useFeatureToggle.ts  # camelCase
 ```
 
 ## 格式规范
@@ -629,5 +633,5 @@ const typedResult = result as SpecificType
 
 ---
 
-_最后更新：2026-04-17_  
-_文档版本：1.0.0_
+_最后更新：2026-05-28_  
+_文档版本：1.1.0_

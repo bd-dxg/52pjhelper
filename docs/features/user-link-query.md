@@ -44,16 +44,10 @@
 ### 代码结构
 
 ```
-src/
-├── entries/
-│   └── content/
-│       └── features/
-│           └── user-link-query/
-│               ├── index.ts          # 功能入口文件
-│               ├── query-engine.ts   # 查询引擎实现
-│               ├── display-panel.ts  # 显示面板组件
-│               ├── cache-manager.ts  # 缓存管理
-│               └── config.ts         # 配置管理
+src/features/userLinkQuery/
+├── config.json               # 配置文件
+├── utils.ts                  # 查询引擎和工具函数
+└── UserLinkQueryToggle.vue   # 功能开关组件
 ```
 
 ### 核心逻辑

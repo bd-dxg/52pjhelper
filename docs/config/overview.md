@@ -4,166 +4,121 @@
 
 ## 配置文件结构
 
-项目采用模块化的配置文件结构，所有配置文件都位于 `src/configs/` 目录下：
+项目采用功能模块化的配置文件结构，每个功能模块的配置文件位于其对应的 `src/features/<name>/config.json`：
 
 ```
-src/configs/
-├── navigation.json          # 导航菜单配置
-├── features/               # 功能配置文件目录
-│   ├── general.json       # 通用功能配置
-│   ├── admin.json         # 后台管理功能配置
-│   └── auto-fill.json     # 自动填充功能配置
-└── storage-keys.json      # 存储键命名规范
+src/features/
+├── navigation/config.json           # 导航菜单配置
+├── versionCheck/config.json         # 版本更新检查配置
+├── contentFilter/config.json        # 灌水筛选配置
+├── avatarQuery/config.json          # 头像查询配置
+├── quickReply/config.json           # 快捷回复配置
+├── floorHighlighter/config.json     # 楼层高亮配置
+├── nativeFloorDisplay/config.json   # 原生楼层显示配置
+├── selectAll/config.json            # 全选功能配置
+├── tableSelector/config.json        # 分表选择器配置
+├── userLinkQuery/config.json        # 管理页面查询配置
+├── autofills/config.json            # 自动填充配置
+├── duplicateReplyDetection/config.json  # 重复回帖检测配置
+├── rowClickToCheck/config.json      # 勾选范围配置
+├── defaultTime/config.json          # 默认查询时间配置
+├── duplicatePostDetection/config.json   # 重复发帖检测配置
+├── userCloudDiskList/config.json    # 用户网盘名单配置
+└── tableDataExtractor/config.json   # 表格数据提取配置
 ```
+
+路径别名：
+- `@features` → `./src/features/`
+- `@` → `./src/`
 
 ## 配置文件类型
 
-### 1. 导航配置 (`navigation.json`)
+### 1. 导航配置 (`navigation/config.json`)
 
-定义浏览器扩展的导航菜单结构和行为。
+定义论坛导航菜单的显示/隐藏配置。
 
 ```json
 {
-  "version": "1.0.0",
+  "storageKey": "52pjhelper_nav_config",
   "menus": [
     {
-      "id": "general",
-      "title": "通用功能",
-      "items": [
-        {
-          "id": "dark-theme",
-          "title": "深色主题",
-          "description": "自动检测系统主题或手动切换深色模式",
-          "defaultEnabled": true
-        }
-      ]
+      "id": "mn_forum",
+      "name": "网站",
+      "selector": "#mn_forum"
     }
   ]
 }
 ```
 
-### 2. 功能配置 (`features/` 目录)
+### 2. 功能配置 (`<feature>/config.json`)
 
-按功能分组的功能开关配置。
-
-```json
-{
-  "version": "1.0.0",
-  "features": {
-    "dark-theme": {
-      "name": "深色主题",
-      "description": "自动检测系统主题或手动切换深色模式",
-      "category": "general",
-      "defaultEnabled": true,
-      "storageKey": "dark_theme_enabled"
-    }
-  }
-}
-```
-
-### 3. 存储键配置 (`storage-keys.json`)
-
-定义浏览器存储中使用的键名规范。
+每个功能模块独立维护自己的配置文件，定义功能名称、描述、开关状态等：
 
 ```json
 {
-  "version": "1.0.0",
-  "keys": {
-    "user_settings": "user_settings",
-    "feature_toggles": "feature_toggles",
-    "navigation_state": "navigation_state"
-  }
+  "name": "灌水筛选",
+  "description": "在管理页面创建可拖动的过滤卡片",
+  "defaultEnabled": true,
+  "storageKey": "contentFilterEnabled"
 }
 ```
 
 ## 配置加载机制
 
-### 自动加载
+### 通过路径别名导入
 
-配置文件在应用启动时自动加载：
-
-```typescript
-// 配置文件加载器
-import navigationConfig from '@/configs/navigation.json'
-import generalFeatures from '@/configs/features/general.json'
-import adminFeatures from '@/configs/features/admin.json'
-
-// 合并配置
-const allFeatures = {
-  ...generalFeatures.features,
-  ...adminFeatures.features,
-}
-```
-
-### 动态导入
-
-支持按需动态导入配置文件：
+配置文件通过 `@features` 别名导入：
 
 ```typescript
-// 动态加载配置
-const loadFeatureConfig = async (category: string) => {
-  const config = await import(`@/configs/features/${category}.json`)
-  return config.default
-}
+// 导入功能配置
+import contentFilterConfig from '@features/contentFilter/config.json'
+import navigationConfig from '@features/navigation/config.json'
+import versionCheckConfig from '@features/versionCheck/config.json'
 ```
 
 ## 配置管理
 
 ### 1. 配置验证
 
-所有配置文件都包含版本号和结构验证：
+配置文件通过 TypeScript 类型保证结构正确：
 
 ```typescript
-// 配置验证接口
-interface BaseConfig {
-  version: string
-  [key: string]: any
+// 配置接口定义
+interface FeatureConfig {
+  name: string
+  description: string
+  defaultEnabled?: boolean
+  storageKey?: string
 }
 
-// 验证配置版本
-const validateConfig = (config: BaseConfig, expectedVersion: string): boolean => {
-  return config.version === expectedVersion
+// 验证配置
+const validateConfig = (config: unknown): config is FeatureConfig => {
+  const cfg = config as Record<string, unknown>
+  return typeof cfg?.name === 'string' && typeof cfg?.description === 'string'
 }
 ```
 
-### 2. 配置合并
+### 2. 功能配置获取
 
-支持多配置文件合并：
+每个功能从自己的 `config.json` 读取配置：
 
 ```typescript
-// 合并功能配置
-const mergeFeatureConfigs = (configs: FeatureConfig[]): FeatureConfig => {
-  return configs.reduce(
-    (merged, config) => {
-      return {
-        ...merged,
-        features: {
-          ...merged.features,
-          ...config.features,
-        },
-      }
-    },
-    { version: '1.0.0', features: {} },
-  )
+import contentFilterConfig from '@features/contentFilter/config.json'
+
+// 获取功能开关默认值
+const getDefaultEnabled = (config: { defaultEnabled?: boolean }) => {
+  return config.defaultEnabled ?? false
 }
 ```
 
 ### 3. 配置更新
 
-支持运行时配置更新：
+运行时通过 `browser.storage.local` 更新功能状态：
 
 ```typescript
-// 更新配置
-const updateConfig = async (configPath: string, updates: any) => {
-  const currentConfig = await loadConfig(configPath)
-  const newConfig = { ...currentConfig, ...updates }
-
-  // 验证新配置
-  if (validateConfig(newConfig)) {
-    await saveConfig(configPath, newConfig)
-    return true
-  }
-  return false
+// 更新功能开关状态
+const setFeatureEnabled = async (storageKey: string, enabled: boolean) => {
+  await browser.storage.local.set({ [storageKey]: enabled })
 }
 ```
 
@@ -172,26 +127,17 @@ const updateConfig = async (configPath: string, updates: any) => {
 ### 1. 功能开关配置
 
 ```typescript
-// 从配置中获取功能设置
-const getFeatureConfig = (featureId: string) => {
-  const allConfigs = loadAllFeatureConfigs()
-  return allConfigs.features[featureId]
-}
+// 从功能目录的 config.json 中读取配置
+import contentFilterConfig from '@features/contentFilter/config.json'
 
-// 使用配置初始化功能
-const initializeFeature = (featureId: string) => {
-  const config = getFeatureConfig(featureId)
-
-  if (!config) {
-    throw new Error(`未找到功能配置: ${featureId}`)
-  }
+// 初始化功能开关
+const initializeFeature = (config: { name: string; storageKey?: string; defaultEnabled?: boolean }) => {
+  const storageKey = config.storageKey ?? 'unknown'
 
   return {
-    id: featureId,
     name: config.name,
-    description: config.description,
-    defaultEnabled: config.defaultEnabled,
-    storageKey: config.storageKey,
+    storageKey,
+    defaultEnabled: config.defaultEnabled ?? false,
   }
 }
 ```
@@ -200,47 +146,23 @@ const initializeFeature = (featureId: string) => {
 
 ```typescript
 // 从配置生成导航菜单
+import navigationConfig from '@features/navigation/config.json'
+
 const generateNavigationMenu = () => {
-  const config = navigationConfig
-
-  return config.menus.map(menu => ({
+  return navigationConfig.menus.map(menu => ({
     id: menu.id,
-    title: menu.title,
-    items: menu.items.map(item => ({
-      id: item.id,
-      title: item.title,
-      description: item.description,
-      enabled: getFeatureState(item.id),
-    })),
+    name: menu.name,
+    selector: menu.selector,
   }))
-}
-```
-
-### 3. 存储键配置
-
-```typescript
-// 使用规范的存储键
-import storageKeys from '@/configs/storage-keys.json'
-
-const saveUserSettings = async (settings: UserSettings) => {
-  await browser.storage.local.set({
-    [storageKeys.keys.user_settings]: settings,
-  })
-}
-
-const loadUserSettings = async (): Promise<UserSettings> => {
-  const result = await browser.storage.local.get(storageKeys.keys.user_settings)
-  return result[storageKeys.keys.user_settings]
 }
 ```
 
 ## 配置最佳实践
 
-### 1. 版本控制
+### 1. 模块化
 
-- 每个配置文件都必须包含 `version` 字段
-- 版本号遵循语义化版本规范 (SemVer)
-- 重大变更需要升级主版本号
+- 每个功能的配置独立存放在 `src/features/<name>/config.json`
+- 功能之间不共享配置文件
 
 ### 2. 向后兼容
 
@@ -252,75 +174,31 @@ const loadUserSettings = async (): Promise<UserSettings> => {
 
 - 在加载时验证配置结构
 - 提供详细的错误信息
-- 支持配置修复或回退
 
 ### 4. 性能考虑
 
-- 按需加载配置，避免一次性加载所有配置
+- 配置文件通过构建工具静态导入，无需运行时请求
 - 缓存已加载的配置
-- 支持配置热更新
 
 ## 配置调试
 
 ### 1. 配置查看
 
 ```typescript
-// 查看所有配置
-const viewAllConfigs = () => {
-  console.log('导航配置:', navigationConfig)
-  console.log('功能配置:', loadAllFeatureConfigs())
-  console.log('存储键配置:', storageKeys)
-}
-```
+// 查看功能配置
+import contentFilterConfig from '@features/contentFilter/config.json'
+import navigationConfig from '@features/navigation/config.json'
 
-### 2. 配置验证
-
-```typescript
-// 验证所有配置
-const validateAllConfigs = () => {
-  const configs = [
-    { name: 'navigation', config: navigationConfig, version: '1.0.0' },
-    { name: 'features-general', config: generalFeatures, version: '1.0.0' },
-    { name: 'storage-keys', config: storageKeys, version: '1.0.0' },
-  ]
-
-  const results = configs.map(({ name, config, version }) => ({
-    name,
-    valid: validateConfig(config, version),
-    version: config.version,
-  }))
-
-  console.log('配置验证结果:', results)
-  return results.every(result => result.valid)
-}
-```
-
-### 3. 配置导出
-
-```typescript
-// 导出当前配置
-const exportConfigs = () => {
-  const configs = {
-    navigation: navigationConfig,
-    features: loadAllFeatureConfigs(),
-    storageKeys: storageKeys,
-  }
-
-  const blob = new Blob([JSON.stringify(configs, null, 2)], {
-    type: 'application/json',
-  })
-
-  return URL.createObjectURL(blob)
-}
+console.log('灌水筛选配置:', contentFilterConfig)
+console.log('导航配置:', navigationConfig)
 ```
 
 ## 相关文档
 
 - [导航菜单配置](./navigation-config.md) - 导航菜单详细配置说明
 - [功能配置文件](./feature-configs.md) - 功能配置详细说明
-- [存储键命名规范](./storage-keys.md) - 存储键命名规范
 
 ---
 
-_文档版本：1.0.0_  
-_最后更新：2026-04-17_
+_文档版本：2.0.0_  
+_最后更新：2026-05-28_

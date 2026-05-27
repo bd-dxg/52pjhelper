@@ -45,15 +45,10 @@
 ### 代码结构
 
 ```
-src/
-├── entries/
-│   └── content/
-│       └── features/
-│           └── table-selector/
-│               ├── index.ts          # 功能入口文件
-│               ├── table-selector.ts # 分表选择器实现
-│               ├── layout.ts         # 蛇形布局算法
-│               └── config.ts         # 配置管理
+src/features/tableSelector/
+├── config.json              # 配置文件
+├── utils.ts                 # 分表选择器管理
+└── TableSelectorToggle.vue  # 功能开关组件
 ```
 
 ### 核心逻辑
