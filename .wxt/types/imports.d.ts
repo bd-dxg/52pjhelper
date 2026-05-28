@@ -2,11 +2,9 @@
 export {}
 declare global {
   const ContentScriptContext: typeof import('wxt/utils/content-script-context').ContentScriptContext
-  const DEFAULT_NAV_MENUS: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').DEFAULT_NAV_MENUS
   const EffectScope: typeof import('vue').EffectScope
   const InvalidMatchPattern: typeof import('wxt/utils/match-patterns').InvalidMatchPattern
   const MatchPattern: typeof import('wxt/utils/match-patterns').MatchPattern
-  const applyNavConfig: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').applyNavConfig
   const applyTheme: typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager').applyTheme
   const browser: typeof import('wxt/browser').browser
   const computed: typeof import('vue').computed
@@ -17,7 +15,6 @@ declare global {
   const createMessageHelper: typeof import('D:/code/front-end/52pjhelper/src/utils/messageHelper').createMessageHelper
   const createShadowRootUi: typeof import('wxt/utils/content-script-ui/shadow-root').createShadowRootUi
   const createStorageHelper: typeof import('D:/code/front-end/52pjhelper/src/utils/storageHelper').createStorageHelper
-  const createTableDataExtractor: typeof import('D:/code/front-end/52pjhelper/src/utils/tableDataExtractor').createTableDataExtractor
   const createUrlMatcher: typeof import('D:/code/front-end/52pjhelper/src/utils/urlMatcher').createUrlMatcher
   const customRef: typeof import('vue').customRef
   const defineAppConfig: typeof import('wxt/utils/define-app-config').defineAppConfig
@@ -39,9 +36,7 @@ declare global {
   const getUserInfo: typeof import('D:/code/front-end/52pjhelper/src/utils/userInfo').getUserInfo
   const getUserInfoFromCache: typeof import('D:/code/front-end/52pjhelper/src/utils/userInfo').getUserInfoFromCache
   const h: typeof import('vue').h
-  const hideMenu: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').hideMenu
   const initTheme: typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager').initTheme
-  const initializeNavigationHider: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').initializeNavigationHider
   const inject: typeof import('vue').inject
   const injectScript: typeof import('wxt/utils/inject-script').injectScript
   const isProxy: typeof import('vue').isProxy
@@ -49,7 +44,6 @@ declare global {
   const isReadonly: typeof import('vue').isReadonly
   const isRef: typeof import('vue').isRef
   const isShallow: typeof import('vue').isShallow
-  const loadNavConfig: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').loadNavConfig
   const markRaw: typeof import('vue').markRaw
   const messageHelper: typeof import('D:/code/front-end/52pjhelper/src/utils/messageHelper').messageHelper
   const nextTick: typeof import('vue').nextTick
@@ -73,19 +67,16 @@ declare global {
   const readonly: typeof import('vue').readonly
   const ref: typeof import('vue').ref
   const resolveComponent: typeof import('vue').resolveComponent
-  const saveNavConfig: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').saveNavConfig
   const saveUserInfoToCache: typeof import('D:/code/front-end/52pjhelper/src/utils/userInfo').saveUserInfoToCache
   const shallowReactive: typeof import('vue').shallowReactive
   const shallowReadonly: typeof import('vue').shallowReadonly
   const shallowRef: typeof import('vue').shallowRef
-  const showMenu: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').showMenu
   const storage: typeof import('wxt/utils/storage').storage
   const storageHelper: typeof import('D:/code/front-end/52pjhelper/src/utils/storageHelper').storageHelper
   const toRaw: typeof import('vue').toRaw
   const toRef: typeof import('vue').toRef
   const toRefs: typeof import('vue').toRefs
   const toValue: typeof import('vue').toValue
-  const toggleMenu: typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider').toggleMenu
   const triggerRef: typeof import('vue').triggerRef
   const unref: typeof import('vue').unref
   const urlMatcher: typeof import('D:/code/front-end/52pjhelper/src/utils/urlMatcher').urlMatcher
@@ -100,7 +91,6 @@ declare global {
   const useNotification: typeof import('D:/code/front-end/52pjhelper/src/composables/useNotification').useNotification
   const useSlots: typeof import('vue').useSlots
   const useTemplateRef: typeof import('vue').useTemplateRef
-  const versionChecker: typeof import('D:/code/front-end/52pjhelper/src/utils/versionChecker').versionChecker
   const watch: typeof import('vue').watch
   const watchEffect: typeof import('vue').watchEffect
   const watchPostEffect: typeof import('vue').watchPostEffect
@@ -150,14 +140,8 @@ declare global {
   export type { MessageResponse, IMessageHelper } from 'D:/code/front-end/52pjhelper/src/utils/messageHelper'
   import('D:/code/front-end/52pjhelper/src/utils/messageHelper')
   // @ts-ignore
-  export type { NavMenuConfig, UserNavConfig } from 'D:/code/front-end/52pjhelper/src/utils/navigationHider'
-  import('D:/code/front-end/52pjhelper/src/utils/navigationHider')
-  // @ts-ignore
   export type { IStorageHelper } from 'D:/code/front-end/52pjhelper/src/utils/storageHelper'
   import('D:/code/front-end/52pjhelper/src/utils/storageHelper')
-  // @ts-ignore
-  export type { ITableDataExtractor, TableData, TableRow, TableCell } from 'D:/code/front-end/52pjhelper/src/utils/tableDataExtractor'
-  import('D:/code/front-end/52pjhelper/src/utils/tableDataExtractor')
   // @ts-ignore
   export type { Theme } from 'D:/code/front-end/52pjhelper/src/utils/themeManager'
   import('D:/code/front-end/52pjhelper/src/utils/themeManager')
@@ -173,11 +157,9 @@ import { UnwrapRef } from 'vue'
 declare module 'vue' {
   interface ComponentCustomProperties {
     readonly ContentScriptContext: UnwrapRef<typeof import('wxt/utils/content-script-context')['ContentScriptContext']>
-    readonly DEFAULT_NAV_MENUS: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['DEFAULT_NAV_MENUS']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
     readonly InvalidMatchPattern: UnwrapRef<typeof import('wxt/utils/match-patterns')['InvalidMatchPattern']>
     readonly MatchPattern: UnwrapRef<typeof import('wxt/utils/match-patterns')['MatchPattern']>
-    readonly applyNavConfig: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['applyNavConfig']>
     readonly applyTheme: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager')['applyTheme']>
     readonly browser: UnwrapRef<typeof import('wxt/browser')['browser']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
@@ -188,7 +170,6 @@ declare module 'vue' {
     readonly createMessageHelper: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/messageHelper')['createMessageHelper']>
     readonly createShadowRootUi: UnwrapRef<typeof import('wxt/utils/content-script-ui/shadow-root')['createShadowRootUi']>
     readonly createStorageHelper: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/storageHelper')['createStorageHelper']>
-    readonly createTableDataExtractor: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/tableDataExtractor')['createTableDataExtractor']>
     readonly createUrlMatcher: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/urlMatcher')['createUrlMatcher']>
     readonly customRef: UnwrapRef<typeof import('vue')['customRef']>
     readonly defineAppConfig: UnwrapRef<typeof import('wxt/utils/define-app-config')['defineAppConfig']>
@@ -210,9 +191,7 @@ declare module 'vue' {
     readonly getUserInfo: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userInfo')['getUserInfo']>
     readonly getUserInfoFromCache: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userInfo')['getUserInfoFromCache']>
     readonly h: UnwrapRef<typeof import('vue')['h']>
-    readonly hideMenu: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['hideMenu']>
     readonly initTheme: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/themeManager')['initTheme']>
-    readonly initializeNavigationHider: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['initializeNavigationHider']>
     readonly inject: UnwrapRef<typeof import('vue')['inject']>
     readonly injectScript: UnwrapRef<typeof import('wxt/utils/inject-script')['injectScript']>
     readonly isProxy: UnwrapRef<typeof import('vue')['isProxy']>
@@ -220,7 +199,6 @@ declare module 'vue' {
     readonly isReadonly: UnwrapRef<typeof import('vue')['isReadonly']>
     readonly isRef: UnwrapRef<typeof import('vue')['isRef']>
     readonly isShallow: UnwrapRef<typeof import('vue')['isShallow']>
-    readonly loadNavConfig: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['loadNavConfig']>
     readonly markRaw: UnwrapRef<typeof import('vue')['markRaw']>
     readonly messageHelper: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/messageHelper')['messageHelper']>
     readonly nextTick: UnwrapRef<typeof import('vue')['nextTick']>
@@ -244,19 +222,16 @@ declare module 'vue' {
     readonly readonly: UnwrapRef<typeof import('vue')['readonly']>
     readonly ref: UnwrapRef<typeof import('vue')['ref']>
     readonly resolveComponent: UnwrapRef<typeof import('vue')['resolveComponent']>
-    readonly saveNavConfig: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['saveNavConfig']>
     readonly saveUserInfoToCache: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/userInfo')['saveUserInfoToCache']>
     readonly shallowReactive: UnwrapRef<typeof import('vue')['shallowReactive']>
     readonly shallowReadonly: UnwrapRef<typeof import('vue')['shallowReadonly']>
     readonly shallowRef: UnwrapRef<typeof import('vue')['shallowRef']>
-    readonly showMenu: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['showMenu']>
     readonly storage: UnwrapRef<typeof import('wxt/utils/storage')['storage']>
     readonly storageHelper: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/storageHelper')['storageHelper']>
     readonly toRaw: UnwrapRef<typeof import('vue')['toRaw']>
     readonly toRef: UnwrapRef<typeof import('vue')['toRef']>
     readonly toRefs: UnwrapRef<typeof import('vue')['toRefs']>
     readonly toValue: UnwrapRef<typeof import('vue')['toValue']>
-    readonly toggleMenu: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/navigationHider')['toggleMenu']>
     readonly triggerRef: UnwrapRef<typeof import('vue')['triggerRef']>
     readonly unref: UnwrapRef<typeof import('vue')['unref']>
     readonly urlMatcher: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/urlMatcher')['urlMatcher']>
@@ -271,7 +246,6 @@ declare module 'vue' {
     readonly useNotification: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/composables/useNotification')['useNotification']>
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>
     readonly useTemplateRef: UnwrapRef<typeof import('vue')['useTemplateRef']>
-    readonly versionChecker: UnwrapRef<typeof import('D:/code/front-end/52pjhelper/src/utils/versionChecker')['versionChecker']>
     readonly watch: UnwrapRef<typeof import('vue')['watch']>
     readonly watchEffect: UnwrapRef<typeof import('vue')['watchEffect']>
     readonly watchPostEffect: UnwrapRef<typeof import('vue')['watchPostEffect']>

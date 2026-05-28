@@ -23,12 +23,9 @@ declare module '#imports' {
   export { useNotification, notification } from '../src/composables/useNotification';
   export { createFeatureManager, FeatureConfig, IFeatureManager, CreateFeatureManagerOptions } from '../src/utils/featureManager';
   export { createMessageHelper, messageHelper, MessageResponse, IMessageHelper } from '../src/utils/messageHelper';
-  export { DEFAULT_NAV_MENUS, saveNavConfig, loadNavConfig, hideMenu, showMenu, applyNavConfig, toggleMenu, initializeNavigationHider, NavMenuConfig, UserNavConfig } from '../src/utils/navigationHider';
   export { createStorageHelper, storageHelper, IStorageHelper } from '../src/utils/storageHelper';
-  export { createTableDataExtractor, ITableDataExtractor, TableData, TableRow, TableCell } from '../src/utils/tableDataExtractor';
   export { getCurrentTheme, applyTheme, watchThemeChange, initTheme, Theme } from '../src/utils/themeManager';
   export { createUrlMatcher, urlMatcher, UrlMatchMode, UrlMatchRule, IUrlMatcher } from '../src/utils/urlMatcher';
   export { saveUserInfoToCache, getUserInfoFromCache, getUserInfo, watchUserInfo, UserInfo } from '../src/utils/userInfo';
   export { fetchUserViolation, extractUidFromHref } from '../src/utils/userViolationFetcher';
-  export { versionChecker } from '../src/utils/versionChecker';
 }
