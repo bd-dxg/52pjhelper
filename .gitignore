@@ -1,11 +1,7 @@
 node_modules
 dist
-
+.wxt/
 .claude/settings*
-findings.md
-progress.md
-task_plan.md
-testPlan.md
 coverage/
-task/
+Task/
 .env
