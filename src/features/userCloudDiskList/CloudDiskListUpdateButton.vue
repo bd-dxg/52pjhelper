@@ -34,8 +34,8 @@ const updateCloudDiskListData = async (): Promise<void> => {
       active: false, // 在后台打开
     })
 
-    // 等待页面加载完成
-    await new Promise(resolve => setTimeout(resolve, 3000))
+    // 等待页面加载完成（增加等待时间，确保表格数据提取器有足够时间工作）
+    await new Promise(resolve => setTimeout(resolve, 5000))
 
     // 发送消息给content script提取表格数据
     const extractResponse = await browser.tabs.sendMessage(dataSourceTab.id!, {
