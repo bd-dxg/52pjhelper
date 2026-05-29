@@ -36,6 +36,8 @@ export interface IDuplicateReplyDetection {
 export function createDuplicateReplyDetection(): IDuplicateReplyDetection {
   let isEnabled = false
   let styleElement: HTMLStyleElement | null = null
+  let observer: MutationObserver | null = null
+  let observerTimer: ReturnType<typeof setTimeout> | null = null
 
   /**
    * 注入高亮样式
@@ -88,6 +90,37 @@ export function createDuplicateReplyDetection(): IDuplicateReplyDetection {
 
     const notices = document.querySelectorAll('.duplicate-reply-notice')
     notices.forEach(notice => notice.remove())
+  }
+
+  /**
+   * 设置 MutationObserver 监听评分区域变化
+   * 评分后 Discuz 局部刷新 ratelog，需要重新检测热心值状态
+   */
+  const setupObserver = (): void => {
+    const postList = document.querySelector('#postlist') ?? document.querySelector('#thread')
+    if (!postList) return
+
+    observer = new MutationObserver(() => {
+      if (observerTimer) clearTimeout(observerTimer)
+      observerTimer = setTimeout(() => {
+        removeHighlights()
+        detectDuplicateReplies()
+      }, 300)
+    })
+
+    observer.observe(postList, { childList: true, subtree: true })
+  }
+
+  /**
+   * 断开 MutationObserver 并清理定时器
+   */
+  const teardownObserver = (): void => {
+    observer?.disconnect()
+    observer = null
+    if (observerTimer) {
+      clearTimeout(observerTimer)
+      observerTimer = null
+    }
   }
 
   /**
@@ -243,6 +276,7 @@ export function createDuplicateReplyDetection(): IDuplicateReplyDetection {
     await saveConfig()
     injectStyles()
     detectDuplicateReplies()
+    setupObserver()
   }
 
   /**
@@ -253,6 +287,7 @@ export function createDuplicateReplyDetection(): IDuplicateReplyDetection {
 
     isEnabled = false
     await saveConfig()
+    teardownObserver()
     removeStyles()
     removeHighlights()
   }
@@ -282,6 +317,7 @@ export function createDuplicateReplyDetection(): IDuplicateReplyDetection {
     if (isEnabled) {
       injectStyles()
       detectDuplicateReplies()
+      setupObserver()
     }
   }
 
