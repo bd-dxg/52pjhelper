@@ -106,7 +106,7 @@ npx vue-tsc --noEmit
 - [勾选范围](features/row-click-to-check.md) - 点击表格行勾选复选框
 - [灌水筛选](features/content-filter.md) - 可拖动的过滤卡片
 - [重复回帖检测](features/duplicate-reply-detection.md) - 高亮显示当天内同一用户的多次回帖
-- [用户网盘名单](features/admin-features.md#10-用户网盘名单) - 高亮显示网盘名单用户并显示网盘信息
+- [用户网盘名单](features/user-cloud-disk-list.md) - 高亮显示网盘名单用户并显示网盘信息
 
 ### 开发文档
 
