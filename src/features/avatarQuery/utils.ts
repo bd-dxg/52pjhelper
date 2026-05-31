@@ -62,12 +62,14 @@ export function createAvatarQuery(): IAvatarQuery {
       .avatar-query-popup table {
         width: 100% !important;
         border-collapse: collapse !important;
+        table-layout: fixed;
       }
       .avatar-query-popup table th,
       .avatar-query-popup table td {
         padding: 5px !important;
         border: 1px solid #e0e0e0 !important;
         text-align: left !important;
+        overflow-wrap: break-word;
       }
       .avatar-query-popup table th {
         background-color: #f5f5f5 !important;
