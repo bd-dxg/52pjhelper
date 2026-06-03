@@ -4,21 +4,11 @@
  */
 
 import duplicateReplyDetectionConfig from './config.json'
-import { urlMatcher } from '@/utils/urlMatcher'
 import { storageHelper } from '@/utils/storageHelper'
+import { detectDuplicateReplies, removeHighlights } from './detector'
+import { scrollToPostWhenReady } from './scroller'
 
 const STORAGE_KEY = duplicateReplyDetectionConfig.storageKey
-const ADMIN_GROUPS = duplicateReplyDetectionConfig.adminGroups
-
-interface ReplyInfo {
-  element: Element
-  uid: string
-  username: string
-  group: string
-  floor: string
-  time: string
-  hasHotValue: boolean
-}
 
 /**
  * 重复回帖检测管理器接口
@@ -80,19 +70,6 @@ export function createDuplicateReplyDetection(): IDuplicateReplyDetection {
   }
 
   /**
-   * 移除所有高亮和提示
-   */
-  const removeHighlights = (): void => {
-    const highlightedPosts = document.querySelectorAll('.duplicate-reply-highlight')
-    highlightedPosts.forEach(post => {
-      post.classList.remove('duplicate-reply-highlight')
-    })
-
-    const notices = document.querySelectorAll('.duplicate-reply-notice')
-    notices.forEach(notice => notice.remove())
-  }
-
-  /**
    * 设置 MutationObserver 监听评分区域变化
    * 评分后 Discuz 局部刷新 ratelog，需要重新检测热心值状态
    */
@@ -121,135 +98,6 @@ export function createDuplicateReplyDetection(): IDuplicateReplyDetection {
       clearTimeout(observerTimer)
       observerTimer = null
     }
-  }
-
-  /**
-   * 获取当前日期字符串（标准化格式）
-   * 返回 "YYYY-M-D" 格式，与论坛时间格式一致
-   */
-  const getTodayString = (): string => {
-    const today = new Date()
-    const year = today.getFullYear()
-    const month = today.getMonth() + 1
-    const day = today.getDate()
-    return `${year}-${month}-${day}`
-  }
-
-  /**
-   * 从时间字符串中提取日期部分
-   * 论坛时间格式: "2026-5-20 09:39" -> "2026-5-20"
-   */
-  const extractDateFromTime = (timeStr: string): string => {
-    // 按空格分割，取第一部分作为日期
-    const parts = timeStr.split(' ')
-    return parts[0] ?? ''
-  }
-
-  /**
-   * 获取所有回帖信息
-   * DOM 选择器说明:
-   * - [id^="post_"] 匹配所有回帖容器（Discuz 论坛标准结构）
-   * - 排除 post_reply, post_new, post_replytmp 等非回帖元素
-   * - 排除包含 post_rate 的评分元素
-   */
-  const getAllReplies = (): ReplyInfo[] => {
-    const posts = Array.from(document.querySelectorAll('[id^="post_"]')).filter(p => {
-      return !['post_reply', 'post_new', 'post_replytmp'].includes(p.id) && !p.id.includes('post_rate')
-    })
-
-    return posts.map(post => {
-      // 获取用户名
-      const userEl = post.querySelector('.authi a.xw1')
-      const username = userEl?.textContent?.trim() ?? 'N/A'
-
-      // 获取用户 UID
-      const userLink = userEl?.getAttribute('href') ?? ''
-      const uidMatch = userLink.match(/uid=(\d+)/)
-      const uid = uidMatch?.[1] ?? 'N/A'
-
-      // 获取用户分组
-      const groupEl = post.querySelector('.side-group')
-      const group = groupEl?.textContent?.trim() ?? ''
-
-      // 获取楼层号
-      const floorEl = post.querySelector('.pi strong a')
-      const floor = floorEl?.textContent?.trim() ?? 'N/A'
-
-      // 获取发帖时间
-      const timeEl = post.querySelector('em[id^="authorposton"]')
-      const time = timeEl?.textContent?.replace('发表于', '').trim() ?? 'N/A'
-
-      // 检测是否已被管理给予热心值
-      const rateLogEl = post.querySelector('[id^="ratelog_"]')
-      const hasHotValue = rateLogEl?.textContent?.includes('热心值') ?? false
-
-      return {
-        element: post,
-        uid,
-        username,
-        group,
-        floor,
-        time,
-        hasHotValue,
-      }
-    })
-  }
-
-  /**
-   * 检测重复回帖
-   */
-  const detectDuplicateReplies = (): void => {
-    // 检查是否是目标页面
-    const isTargetPage = urlMatcher.isTargetPage(window.location.href, duplicateReplyDetectionConfig.targetPages)
-
-    if (!isTargetPage) {
-      return
-    }
-
-    const todayStr = getTodayString()
-    const allReplies = getAllReplies()
-
-    // 筛选今天的回帖，排除管理组用户（精确匹配日期部分，避免 "5-2" 误匹配 "5-20"）
-    const todayReplies = allReplies.filter(reply => {
-      const replyDate = extractDateFromTime(reply.time)
-      return replyDate === todayStr && !ADMIN_GROUPS.includes(reply.group)
-    })
-
-    // 统计每个用户今天的回帖次数
-    const userReplyCount: Record<string, ReplyInfo[]> = {}
-
-    todayReplies.forEach(reply => {
-      if (reply.uid !== 'N/A') {
-        if (!userReplyCount[reply.uid]) {
-          userReplyCount[reply.uid] = []
-        }
-        userReplyCount[reply.uid].push(reply)
-      }
-    })
-
-    // 找出今天回帖次数 > 1 的用户并高亮
-    Object.values(userReplyCount).forEach(replies => {
-      if (replies.length > 1) {
-        // 检查该用户今日是否有任意回帖获得了热心值
-        const userHasHotValue = replies.some(reply => reply.hasHotValue)
-
-        replies.forEach(reply => {
-          reply.element.classList.add('duplicate-reply-highlight')
-
-          // 只有该用户今日已获热心值时，才在所有回帖上添加提示
-          if (userHasHotValue) {
-            const notice = document.createElement('div')
-            notice.className = 'duplicate-reply-notice'
-            notice.textContent = '今日已获热心值'
-
-            const floorInfoEl = reply.element.querySelector('.plc .pi')
-            if (floorInfoEl) {
-              floorInfoEl.insertBefore(notice, floorInfoEl.firstChild)
-            }
-          }
-        })
-      }
-    })
   }
 
   /**
@@ -310,69 +158,6 @@ export function createDuplicateReplyDetection(): IDuplicateReplyDetection {
   const getStatus = (): boolean => isEnabled
 
   /**
-   * 获取目标帖子元素
-   */
-  const getTargetPost = (): Element | null => {
-    const postIndex = duplicateReplyDetectionConfig.scrollToPost
-    if (!postIndex || postIndex <= 0) return null
-
-    const posts = Array.from(document.querySelectorAll('#postlist [id^="post_"]')).filter(p => {
-      return !['post_reply', 'post_new', 'post_replytmp'].includes(p.id) && !p.id.includes('post_rate')
-    })
-    return posts[postIndex - 1] ?? null
-  }
-
-  /**
-   * 计算目标帖子的绝对滚动位置
-   */
-  const getTargetScrollTop = (): number | null => {
-    const target = getTargetPost()
-    if (!target) return null
-
-    const rect = target.getBoundingClientRect()
-    return rect.top + window.scrollY - 20 // 留 20px 上边距
-  }
-
-  /**
-   * 滚动到指定序号的帖子
-   */
-  const scrollToPost = (behavior: ScrollBehavior = 'smooth'): void => {
-    const scrollTop = getTargetScrollTop()
-    if (scrollTop !== null) {
-      window.scrollTo({ top: scrollTop, behavior })
-    }
-  }
-
-  /**
-   * 等待 DOM 高度稳定后滚动到指定帖子
-   */
-  const scrollToPostWhenReady = (): void => {
-    const postIndex = duplicateReplyDetectionConfig.scrollToPost
-    if (!postIndex || postIndex <= 0) return
-
-    let lastHeight = document.body.scrollHeight
-    let stableCount = 0
-    const requiredStableFrames = 3 // 连续 3 帧高度不变视为稳定
-
-    const check = (): void => {
-      const currentHeight = document.body.scrollHeight
-      if (currentHeight === lastHeight) {
-        stableCount++
-        if (stableCount >= requiredStableFrames) {
-          scrollToPost('instant')
-          return
-        }
-      } else {
-        stableCount = 0
-        lastHeight = currentHeight
-      }
-      requestAnimationFrame(check)
-    }
-
-    requestAnimationFrame(check)
-  }
-
-  /**
    * 初始化
    */
   const init = async (): Promise<void> => {
@@ -385,7 +170,6 @@ export function createDuplicateReplyDetection(): IDuplicateReplyDetection {
     }
   }
 
-  // 异步初始化，不阻塞构造
   void init()
 
   return {
