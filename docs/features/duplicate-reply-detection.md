@@ -20,14 +20,22 @@
 - 楼层号变为红色加粗，快速定位
 - 样式与论坛主题协调
 
-### 3. 功能开关控制
+### 3. 自动定位楼层
+
+- 页面加载完成后自动滚动到指定楼层
+- 等待 DOM 高度稳定后执行滚动，确保动态内容加载完成
+- 支持配置目标楼层序号（`scrollToPost`）
+- 仅在目标页面执行滚动，避免影响其他页面
+- 使用 `instant` 滚动模式，快速定位
+
+### 4. 功能开关控制
 
 - 支持启用/禁用功能切换
 - 配置通过浏览器 storage 本地存储
 - 默认启用，用户可根据需要关闭
 - 集成通知系统，操作反馈更直观
 
-### 4. 页面自动匹配
+### 5. 页面自动匹配
 
 - 自动识别帖子详情页面
 - 使用通配符匹配模式：`https://www.52pojie.cn/thread-*-*-*.html`
@@ -43,14 +51,17 @@
 3. **日期过滤**：筛选出当天的回帖
 4. **重复判断**：基于 UID 统计每个用户的回帖次数
 5. **结果展示**：高亮显示重复回帖的楼层
+6. **自动定位**：等待 DOM 稳定后滚动到指定楼层
 
 ### 代码结构
 
 ```
 src/features/duplicateReplyDetection/
-├── config.json                   # 配置文件
-├── utils.ts                      # 核心逻辑
-└── DuplicateReplyDetectionToggle.vue # 功能开关组件
+├── config.json                        # 配置文件（含 scrollToPost 配置）
+├── utils.ts                           # 核心管理器逻辑
+├── detector.ts                        # 重复检测逻辑
+├── scroller.ts                        # 自动滚动逻辑
+└── DuplicateReplyDetectionToggle.vue  # 功能开关组件
 ```
 
 ### 核心逻辑
@@ -115,13 +126,21 @@ export function createDuplicateReplyDetection(): IDuplicateReplyDetection {
 
 ```json
 {
-  "name": "重复回帖检测",
+  "name": "回帖检测",
   "description": "在帖子详情页面检测当天内同一用户的多次回帖，高亮显示重复回帖的楼层",
   "defaultEnabled": true,
   "storageKey": "duplicateReplyDetectionEnabled",
   "targetPages": [
-    "https://www.52pojie.cn/thread-*-*-*.html"
-  ]
+    "https://www.52pojie.cn/thread-2105755-1-1.html",
+    "https://www.52pojie.cn/forum.php?mod=viewthread&tid=2105755*"
+  ],
+  "adminGroups": [
+    "人在江湖",
+    "仗剑天涯",
+    "踏雪无痕",
+    "独步武林"
+  ],
+  "scrollToPost": 3
 }
 ```
 
@@ -132,6 +151,8 @@ export function createDuplicateReplyDetection(): IDuplicateReplyDetection {
 - **defaultEnabled**：默认启用状态
 - **storageKey**：浏览器存储键名
 - **targetPages**：目标页面匹配模式
+- **adminGroups**：允许使用功能的管理组列表
+- **scrollToPost**：自动滚动到指定楼层序号（从 1 开始），设置为 0 或不设置则禁用自动滚动
 
 ### 存储键
 
@@ -246,6 +267,7 @@ export function createDuplicateReplyDetection(): IDuplicateReplyDetection {
 
 | 版本  | 日期       | 更新内容                               |
 | ----- | ---------- | -------------------------------------- |
+| 1.1.0 | 2026-06-04 | 新增自动定位楼层功能，优化评分后状态更新 |
 | 1.0.0 | 2026-05-20 | 初始版本，实现基本重复回帖检测功能     |
 
 ---
