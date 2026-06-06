@@ -18,6 +18,7 @@ import { initializeRowClickToCheck } from '@features/rowClickToCheck/utils'
 import { createContentFilter } from '@features/contentFilter'
 import { createTableDataExtractor } from '@features/tableDataExtractor/tableDataExtractor'
 import { createUserCloudDiskList } from '@features/userCloudDiskList'
+import { initPopupQuickReply } from '@features/popupQuickReply/utils'
 import * as autoFill from '@features/autofills'
 import type { ManagerInstances } from './messageHandler'
 
@@ -79,6 +80,9 @@ export async function initializeManagers(managers: ManagerInstances): Promise<vo
   // 初始化表格数据提取功能
   managers.tableDataExtractorManager = createTableDataExtractor()
 
-  // 初始化用户黑名单功能
+  // 初始化网盘黑名单功能
   managers.userCloudDiskListManager = createUserCloudDiskList()
+
+  // 初始化弹窗快捷回复功能
+  initPopupQuickReply()
 }

@@ -13,6 +13,7 @@
       <DuplicateReplyDetectionToggle />
       <ContentFilterToggle />
       <UserCloudDiskListToggle />
+      <PopupQuickReplyToggle />
     </div>
   </div>
 </template>
@@ -29,6 +30,7 @@ import RowClickToCheckToggle from '@features/rowClickToCheck/RowClickToCheckTogg
 import DuplicateReplyDetectionToggle from '@features/duplicateReplyDetection/DuplicateReplyDetectionToggle.vue'
 import ContentFilterToggle from '@features/contentFilter/ContentFilterToggle.vue'
 import UserCloudDiskListToggle from '@features/userCloudDiskList/UserCloudDiskListToggle.vue'
+import PopupQuickReplyToggle from '@features/popupQuickReply/PopupQuickReplyToggle.vue'
 
 defineOptions({
   name: 'AdminFeaturesToggle',

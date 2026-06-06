@@ -17,6 +17,7 @@ import type { ITableDataExtractor } from '@features/tableDataExtractor/tableData
 import type { IUserCloudDiskList } from '@features/userCloudDiskList'
 import { applyNavConfig } from '@features/navigation/navigationHider'
 import { saveQuickReplyConfig, initQuickReply, cleanupQuickReply } from '@features/quickReply/utils'
+import { savePopupQuickReplyConfig, initPopupQuickReply, cleanupPopupQuickReply } from '@features/popupQuickReply/utils'
 import { getUserInfo, saveUserInfoToCache } from '@utils/userInfo'
 import { toggleRowClickToCheck, getRowClickToCheckStatus } from '@features/rowClickToCheck/utils'
 import * as autoFill from '@features/autofills'
@@ -567,6 +568,32 @@ export function registerMessageListener(managers: ManagerInstances): void {
         sendResponse({ success: false, message: 'DuplicateReplyDetectionManager not initialized' })
       }
       return false
+    }
+
+    // 弹窗快捷回复功能切换（useFeatureToggle 已内置 1s 防抖，此处无需额外处理竞态）
+    if (message.type === 'TOGGLE_POPUP_QUICK_REPLY') {
+      browser.storage.local.get('popupQuickReplyEnabled').then(result => {
+        const current = result.popupQuickReplyEnabled === undefined ? true : Boolean(result.popupQuickReplyEnabled)
+        const newValue = !current
+        savePopupQuickReplyConfig(newValue).then(() => {
+          if (!newValue) {
+            cleanupPopupQuickReply()
+          } else {
+            initPopupQuickReply()
+          }
+          sendResponse({ success: true, enabled: newValue })
+        })
+      })
+      return true
+    }
+
+    // 获取弹窗快捷回复状态
+    if (message.type === 'GET_POPUP_QUICK_REPLY_STATUS') {
+      browser.storage.local.get('popupQuickReplyEnabled').then(result => {
+        const enabled = result.popupQuickReplyEnabled === undefined ? true : Boolean(result.popupQuickReplyEnabled)
+        sendResponse({ success: true, enabled })
+      })
+      return true
     }
 
     return false

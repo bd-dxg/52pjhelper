@@ -6,6 +6,7 @@
 import type { UserNavConfig } from '@features/navigation/navigationHider'
 import { applyNavConfig } from '@features/navigation/navigationHider'
 import { initQuickReply, cleanupQuickReply } from '@features/quickReply/utils'
+import { initPopupQuickReply, cleanupPopupQuickReply } from '@features/popupQuickReply/utils'
 import { enableRowClickToCheck, disableRowClickToCheck } from '@features/rowClickToCheck/utils'
 import * as autoFill from '@features/autofills'
 import type { ManagerInstances } from './messageHandler'
@@ -166,6 +167,16 @@ export function registerStorageListener(managers: ManagerInstances): void {
           } else {
             managers.duplicateReplyDetectionManager.disable()
           }
+        }
+      }
+
+      // 处理弹窗快捷回复配置变化
+      if (changes.popupQuickReplyEnabled) {
+        const newValue = Boolean(changes.popupQuickReplyEnabled.newValue)
+        if (newValue) {
+          initPopupQuickReply()
+        } else {
+          cleanupPopupQuickReply()
         }
       }
     }
