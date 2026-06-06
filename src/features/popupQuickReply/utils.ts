@@ -135,10 +135,26 @@ export const cleanupPopupQuickReply = (): void => {
         while (list.firstChild) {
           list.removeChild(list.firstChild)
         }
-        // 重新创建原始列表项
+        // 重新创建原始列表项并绑定事件
         for (const itemText of originalItems) {
           const li = document.createElement('li')
           li.textContent = itemText
+
+          // 绑定原始的事件处理程序
+          li.addEventListener('mouseover', () => {
+            li.className = 'xi2 cur1'
+          })
+          li.addEventListener('mouseout', () => {
+            li.className = ''
+          })
+          li.addEventListener('click', () => {
+            // 查找对应的 textarea（#reason）
+            const textarea = document.querySelector('#reason') as HTMLTextAreaElement | null
+            if (textarea) {
+              textarea.value = itemText
+            }
+          })
+
           list.appendChild(li)
         }
         list.removeAttribute('data-original-items')
