@@ -37,7 +37,7 @@
         class="tab-item"
         :class="{ active: activeTab === 'navigation' }"
         @click="switchTab('navigation')">
-        导航菜单设置
+        导航菜单
       </button>
       <button
         role="tab"
@@ -46,21 +46,35 @@
         class="tab-item"
         :class="{ active: activeTab === 'quickQuery' }"
         @click="switchTab('quickQuery')">
-        更多设置
+        功能列表
+      </button>
+      <button
+        role="tab"
+        :aria-selected="activeTab === 'configSync'"
+        :tabindex="activeTab === 'configSync' ? 0 : -1"
+        class="tab-item"
+        :class="{ active: activeTab === 'configSync' }"
+        @click="switchTab('configSync')">
+        配置同步
       </button>
     </nav>
 
     <!-- 选项卡内容 -->
     <div class="tabs-content">
-      <!-- 导航菜单设置 -->
+      <!-- 导航菜单 -->
       <section v-show="activeTab === 'navigation'" role="tabpanel" class="tab-panel" aria-labelledby="navigation-tab">
         <NavigationSettings />
       </section>
 
-      <!-- 便捷查询设置 -->
+      <!-- 功能列表 -->
       <section v-show="activeTab === 'quickQuery'" role="tabpanel" class="tab-panel" aria-labelledby="quickQuery-tab">
         <GeneralFeaturesToggle />
         <AdminFeaturesToggle v-if="isAdmin" />
+      </section>
+
+      <!-- 配置同步 -->
+      <section v-show="activeTab === 'configSync'" role="tabpanel" class="tab-panel" aria-labelledby="configSync-tab">
+        <ConfigSyncToggle />
       </section>
     </div>
 
@@ -76,6 +90,7 @@ import AdminFeaturesToggle from '@com/AdminFeaturesToggle.vue'
 import VersionCheck from '@features/versionCheck/VersionCheck.vue'
 import CloudDiskListUpdateButton from '@features/userCloudDiskList/CloudDiskListUpdateButton.vue'
 import NotificationContainer from '@com/NotificationContainer.vue'
+import ConfigSyncToggle from '@features/configSync/ConfigSyncToggle.vue'
 import { getUserInfoFromCache, type UserInfo } from '@utils/userInfo'
 import { useNotification } from '@/composables/useNotification'
 
@@ -97,7 +112,7 @@ const userInfo = ref<UserInfo>({
   },
 })
 
-const activeTab = ref<'navigation' | 'quickQuery'>('navigation')
+const activeTab = ref<'navigation' | 'quickQuery' | 'configSync'>('navigation')
 const ACTIVE_TAB_STORAGE_KEY = 'activeTab'
 
 // 计算属性：用户是否已登录
@@ -111,14 +126,14 @@ const isAdmin = computed(() => userInfo.value.permissions.isAdmin)
 const loadActiveTab = async () => {
   const result = await browser.storage.local.get(ACTIVE_TAB_STORAGE_KEY)
   const storedTab = result[ACTIVE_TAB_STORAGE_KEY]
-  const validTabs: string[] = ['navigation', 'quickQuery']
+  const validTabs: string[] = ['navigation', 'quickQuery', 'configSync']
   if (storedTab && validTabs.includes(storedTab as string)) {
-    activeTab.value = storedTab as 'navigation' | 'quickQuery'
+    activeTab.value = storedTab as 'navigation' | 'quickQuery' | 'configSync'
   }
 }
 
 // 保存选项卡状态到 storage
-const saveActiveTab = async (tab: 'navigation' | 'quickQuery') => {
+const saveActiveTab = async (tab: 'navigation' | 'quickQuery' | 'configSync') => {
   await browser.storage.local.set({ [ACTIVE_TAB_STORAGE_KEY]: tab })
 }
 
@@ -129,7 +144,7 @@ const handleCloudDiskListUpdate = () => {
 }
 
 // 切换选项卡
-const switchTab = (tab: 'navigation' | 'quickQuery') => {
+const switchTab = (tab: 'navigation' | 'quickQuery' | 'configSync') => {
   activeTab.value = tab
   saveActiveTab(tab)
 }
@@ -196,7 +211,6 @@ const showMessage = (text: string, type: 'success' | 'error' = 'success') => {
   } else {
     error(text, { title: '操作失败' })
   }
-
 }
 </script>
 
