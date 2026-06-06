@@ -99,6 +99,7 @@ npx vue-tsc --noEmit
 - [后台管理功能组](features/admin-features.md) - 头像查询、快捷回复、自动填充、用户黑名单等
 - [头像查询](features/avatar-query.md) - 鼠标悬停显示用户违规记录
 - [快捷回复](features/quick-reply.md) - 举报处理页面快捷回复
+- [弹窗快捷回复](features/popup-quick-reply.md) - 管理弹窗中替换原有快捷回复内容
 - [自动填充](features/auto-fill.md) - 智能表单自动填充
 - [全选功能](features/select-all.md) - 批量操作工具
 - [分表选择器](features/table-selector.md) - 按钮式分表选择界面
@@ -107,6 +108,7 @@ npx vue-tsc --noEmit
 - [灌水筛选](features/content-filter.md) - 可拖动的过滤卡片
 - [重复回帖检测](features/duplicate-reply-detection.md) - 高亮显示当天内同一用户的多次回帖
 - [用户网盘名单](features/user-cloud-disk-list.md) - 高亮显示网盘名单用户并显示网盘信息
+- [配置同步](features/config-sync.md) - 支持配置导入导出
 
 ### 开发文档
 
@@ -189,5 +191,5 @@ npx vue-tsc --noEmit
 
 ---
 
-_最后更新：2026-06-04_
-_文档版本：1.3.0（更新重复回帖检测文档，新增自动定位楼层功能说明）_
+_最后更新：2026-06-06_
+_文档版本：1.4.0（新增弹窗快捷回复和配置同步功能文档）_
