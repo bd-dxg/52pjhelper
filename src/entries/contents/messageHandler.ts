@@ -17,7 +17,7 @@ import type { ITableDataExtractor } from '@features/tableDataExtractor/tableData
 import type { IUserCloudDiskList } from '@features/userCloudDiskList'
 import { applyNavConfig } from '@features/navigation/navigationHider'
 import { saveQuickReplyConfig, initQuickReply, cleanupQuickReply } from '@features/quickReply/utils'
-import { savePopupQuickReplyConfig, initPopupQuickReply, cleanupPopupQuickReply } from '@features/popupQuickReply/utils'
+import { savePopupQuickReplyConfig, initPopupQuickReply, cleanupPopupQuickReply, loadPopupQuickReplyConfig } from '@features/popupQuickReply/utils'
 import { getUserInfo, saveUserInfoToCache } from '@utils/userInfo'
 import { toggleRowClickToCheck, getRowClickToCheckStatus } from '@features/rowClickToCheck/utils'
 import * as autoFill from '@features/autofills'
@@ -572,8 +572,7 @@ export function registerMessageListener(managers: ManagerInstances): void {
 
     // 弹窗快捷回复功能切换（useFeatureToggle 已内置 1s 防抖，此处无需额外处理竞态）
     if (message.type === 'TOGGLE_POPUP_QUICK_REPLY') {
-      browser.storage.local.get('popupQuickReplyEnabled').then(result => {
-        const current = result.popupQuickReplyEnabled === undefined ? true : Boolean(result.popupQuickReplyEnabled)
+      loadPopupQuickReplyConfig().then(current => {
         const newValue = !current
         savePopupQuickReplyConfig(newValue).then(() => {
           if (!newValue) {
@@ -589,8 +588,7 @@ export function registerMessageListener(managers: ManagerInstances): void {
 
     // 获取弹窗快捷回复状态
     if (message.type === 'GET_POPUP_QUICK_REPLY_STATUS') {
-      browser.storage.local.get('popupQuickReplyEnabled').then(result => {
-        const enabled = result.popupQuickReplyEnabled === undefined ? true : Boolean(result.popupQuickReplyEnabled)
+      loadPopupQuickReplyConfig().then(enabled => {
         sendResponse({ success: true, enabled })
       })
       return true

@@ -18,7 +18,7 @@ import { initializeRowClickToCheck } from '@features/rowClickToCheck/utils'
 import { createContentFilter } from '@features/contentFilter'
 import { createTableDataExtractor } from '@features/tableDataExtractor/tableDataExtractor'
 import { createUserCloudDiskList } from '@features/userCloudDiskList'
-import { initPopupQuickReply } from '@features/popupQuickReply/utils'
+import { loadPopupQuickReplyConfig, initPopupQuickReply } from '@features/popupQuickReply/utils'
 import * as autoFill from '@features/autofills'
 import type { ManagerInstances } from './messageHandler'
 
@@ -83,6 +83,14 @@ export async function initializeManagers(managers: ManagerInstances): Promise<vo
   // 初始化网盘黑名单功能
   managers.userCloudDiskListManager = createUserCloudDiskList()
 
-  // 初始化弹窗快捷回复功能
-  initPopupQuickReply()
+  // 初始化弹窗快捷回复功能（检查功能是否启用）
+  loadPopupQuickReplyConfig()
+    .then(enabled => {
+      if (enabled) {
+        initPopupQuickReply()
+      }
+    })
+    .catch(error => {
+      console.error('Failed to load popup quick reply config:', error)
+    })
 }

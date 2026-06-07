@@ -20,10 +20,17 @@ const DEFAULT_PRESETS: PresetConfig = popupQuickReplyConfig.presets
 let cleanupObserver: (() => void) | null = null
 
 /**
+ * 加载快捷回复配置
+ */
+export const loadPopupQuickReplyConfig = async (): Promise<boolean> => {
+  return await storageHelper.loadBoolean(popupQuickReplyConfig.storageKey, popupQuickReplyConfig.defaultEnabled)
+}
+
+/**
  * 保存快捷回复配置
  */
 export const savePopupQuickReplyConfig = async (enabled: boolean): Promise<void> => {
-  await browser.storage.local.set({ popupQuickReplyEnabled: enabled })
+  await storageHelper.saveBoolean(popupQuickReplyConfig.storageKey, enabled)
 }
 
 /**
@@ -33,6 +40,9 @@ export const savePopupQuickReplyConfig = async (enabled: boolean): Promise<void>
  * @param presets 预设列表
  */
 const replaceQuickReplyList = (list: HTMLElement, presets: string[]): void => {
+  // 保存原始高度样式用于恢复
+  const originalHeight = list.style.height
+
   // 移除固定高度样式，让内容自然撑开
   list.style.height = 'auto'
 
@@ -43,6 +53,7 @@ const replaceQuickReplyList = (list: HTMLElement, presets: string[]): void => {
     originalItems.push(li.textContent || '')
   })
   list.setAttribute('data-original-items', JSON.stringify(originalItems))
+  list.setAttribute('data-original-height', originalHeight)
 
   // 清空原有列表项
   while (list.firstChild) {
@@ -125,9 +136,10 @@ export const cleanupPopupQuickReply = (): void => {
   }
 
   // 恢复所有已替换的列表
-  const lists = document.querySelectorAll('#reasonselect[data-original-items]')
+  const lists = document.querySelectorAll<HTMLElement>('#reasonselect[data-original-items]')
   lists.forEach((list) => {
     const originalItemsStr = list.getAttribute('data-original-items')
+    const originalHeight = list.getAttribute('data-original-height')
     if (originalItemsStr) {
       try {
         const originalItems: string[] = JSON.parse(originalItemsStr)
@@ -157,10 +169,16 @@ export const cleanupPopupQuickReply = (): void => {
 
           list.appendChild(li)
         }
+        // 恢复原始高度样式
+        if (originalHeight !== null) {
+          list.style.height = originalHeight
+        }
         list.removeAttribute('data-original-items')
+        list.removeAttribute('data-original-height')
       } catch {
         // JSON 解析失败，移除属性但不恢复内容
         list.removeAttribute('data-original-items')
+        list.removeAttribute('data-original-height')
       }
     }
   })
