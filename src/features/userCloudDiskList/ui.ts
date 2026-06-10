@@ -13,7 +13,7 @@ export const injectStyles = (): void => {
   styleElement = document.createElement('style')
   styleElement.textContent = `
     .user-CloudDiskList-highlight {
-      background-color: black !important;
+      background-color: orange !important;
       color: white !important;
       padding: 2px 4px !important;
       border-radius: 3px !important;
