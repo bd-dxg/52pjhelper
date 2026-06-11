@@ -25,7 +25,7 @@ const managers: ManagerInstances = {
   duplicateReplyDetectionManager: null,
   contentFilterManager: null,
   tableDataExtractorManager: null,
-  userCloudDiskListManager: null,
+  driveSockPuppetManager: null,
 }
 
 export default defineContentScript({

@@ -14,7 +14,7 @@ import type { IDefaultTime } from '@features/defaultTime/utils'
 import type { IDuplicateReplyDetection } from '@features/duplicateReplyDetection/utils'
 import type { IContentFilter } from '@features/contentFilter'
 import type { ITableDataExtractor } from '@features/tableDataExtractor/tableDataExtractor'
-import type { IUserCloudDiskList } from '@features/userCloudDiskList'
+import type { IDriveSockPuppetDetect } from '@features/DriveSockPuppetDetect'
 import { applyNavConfig } from '@features/navigation/navigationHider'
 import { saveQuickReplyConfig, initQuickReply, cleanupQuickReply } from '@features/quickReply/utils'
 import { savePopupQuickReplyConfig, initPopupQuickReply, cleanupPopupQuickReply, loadPopupQuickReplyConfig } from '@features/popupQuickReply/utils'
@@ -38,7 +38,7 @@ export interface ManagerInstances {
   duplicateReplyDetectionManager: IDuplicateReplyDetection | null
   contentFilterManager: IContentFilter | null
   tableDataExtractorManager: ITableDataExtractor | null
-  userCloudDiskListManager: IUserCloudDiskList | null
+  driveSockPuppetManager: IDriveSockPuppetDetect | null
 }
 
 /**
@@ -447,49 +447,49 @@ export function registerMessageListener(managers: ManagerInstances): void {
       return false
     }
 
-    // 用户黑名单功能切换
-    if (message.type === 'TOGGLE_USER_CloudDiskList') {
-      if (managers.userCloudDiskListManager) {
-        managers.userCloudDiskListManager
+    // 检测网盘马甲功能切换
+    if (message.type === 'TOGGLE_DRIVE_SOCK_PUPPET') {
+      if (managers.driveSockPuppetManager) {
+        managers.driveSockPuppetManager
           .toggle()
           .then((enabled: boolean) => {
             sendResponse({ success: true, enabled })
           })
           .catch((error: unknown) => {
-            console.error('Toggle user CloudDiskList failed:', error)
+            console.error('Toggle drive sock puppet failed:', error)
             sendResponse({ success: false, message: 'Toggle failed' })
           })
         return true
       } else {
-        sendResponse({ success: false, message: 'UserCloudDiskListManager not initialized' })
+        sendResponse({ success: false, message: 'DriveSockPuppetManager not initialized' })
         return false
       }
     }
 
-    // 获取用户黑名单状态
-    if (message.type === 'GET_USER_CloudDiskList_STATUS') {
-      if (managers.userCloudDiskListManager) {
-        const enabled = managers.userCloudDiskListManager.getStatus()
+    // 获取检测网盘马甲状态
+    if (message.type === 'GET_DRIVE_SOCK_PUPPET_STATUS') {
+      if (managers.driveSockPuppetManager) {
+        const enabled = managers.driveSockPuppetManager.getStatus()
         sendResponse({ success: true, enabled })
       } else {
-        sendResponse({ success: false, message: 'UserCloudDiskListManager not initialized' })
+        sendResponse({ success: false, message: 'DriveSockPuppetManager not initialized' })
       }
       return false
     }
 
-    // 重新加载用户黑名单数据
-    if (message.type === 'RELOAD_USER_CloudDiskList_DATA') {
-      if (managers.userCloudDiskListManager) {
+    // 重新加载检测网盘马甲数据
+    if (message.type === 'RELOAD_DRIVE_SOCK_PUPPET_DATA') {
+      if (managers.driveSockPuppetManager) {
         // 重新加载数据并重新扫描
-        const userCloudDiskListManager = managers.userCloudDiskListManager as any
-        if (userCloudDiskListManager.reloadData) {
-          userCloudDiskListManager
+        const driveSockPuppetManager = managers.driveSockPuppetManager as any
+        if (driveSockPuppetManager.reloadData) {
+          driveSockPuppetManager
             .reloadData()
             .then(() => {
               sendResponse({ success: true, message: '数据已重新加载' })
             })
             .catch((error: unknown) => {
-              console.error('重新加载用户黑名单数据失败:', error)
+              console.error('重新加载检测网盘马甲数据失败:', error)
               sendResponse({ success: false, message: '重新加载失败' })
             })
           return true
@@ -498,7 +498,7 @@ export function registerMessageListener(managers: ManagerInstances): void {
           return false
         }
       } else {
-        sendResponse({ success: false, message: 'UserCloudDiskListManager not initialized' })
+        sendResponse({ success: false, message: 'DriveSockPuppetManager not initialized' })
         return false
       }
     }
@@ -512,17 +512,17 @@ export function registerMessageListener(managers: ManagerInstances): void {
           tableDataExtractorManager
             .forceExtract()
             .then(async () => {
-              // 提取成功后，立即重新加载用户黑名单数据
-              if (managers.userCloudDiskListManager) {
-                const userCloudDiskListManager = managers.userCloudDiskListManager as any
-                if (userCloudDiskListManager.reloadData) {
-                  await userCloudDiskListManager.reloadData()
-                  sendResponse({ success: true, message: '表格数据已提取并重新加载黑名单' })
+              // 提取成功后，立即重新加载检测网盘马甲数据
+              if (managers.driveSockPuppetManager) {
+                const driveSockPuppetManager = managers.driveSockPuppetManager as any
+                if (driveSockPuppetManager.reloadData) {
+                  await driveSockPuppetManager.reloadData()
+                  sendResponse({ success: true, message: '表格数据已提取并重新加载检测网盘马甲' })
                 } else {
                   sendResponse({ success: true, message: '表格数据已提取（reloadData方法不存在）' })
                 }
               } else {
-                sendResponse({ success: true, message: '表格数据已提取（UserCloudDiskListManager未初始化）' })
+                sendResponse({ success: true, message: '表格数据已提取（DriveSockPuppetManager未初始化）' })
               }
             })
             .catch((error: unknown) => {

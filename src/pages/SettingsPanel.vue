@@ -24,7 +24,7 @@
       <!-- 右上角按钮容器 -->
       <div class="header-buttons-container">
         <VersionCheck />
-        <CloudDiskListUpdateButton @update="handleCloudDiskListUpdate" />
+        <DriveSockPuppetUpdateButton @update="handleSockPuppetUpdate" />
       </div>
     </header>
 
@@ -88,7 +88,7 @@ import NavigationSettings from '@features/navigation/NavigationSettings.vue'
 import GeneralFeaturesToggle from '@com/GeneralFeaturesToggle.vue'
 import AdminFeaturesToggle from '@com/AdminFeaturesToggle.vue'
 import VersionCheck from '@features/versionCheck/VersionCheck.vue'
-import CloudDiskListUpdateButton from '@features/userCloudDiskList/CloudDiskListUpdateButton.vue'
+import DriveSockPuppetUpdateButton from '@features/DriveSockPuppetDetect/DriveSockPuppetUpdateButton.vue'
 import NotificationContainer from '@com/NotificationContainer.vue'
 import ConfigSyncToggle from '@features/configSync/ConfigSyncToggle.vue'
 import { getUserInfoFromCache, type UserInfo } from '@utils/userInfo'
@@ -137,10 +137,10 @@ const saveActiveTab = async (tab: 'navigation' | 'quickQuery' | 'configSync') =>
   await browser.storage.local.set({ [ACTIVE_TAB_STORAGE_KEY]: tab })
 }
 
-// 处理黑名单更新事件
-const handleCloudDiskListUpdate = () => {
+// 处理检测网盘马甲更新事件
+const handleSockPuppetUpdate = () => {
   // 可以在这里添加一些全局处理逻辑，比如刷新页面数据等
-  console.log('黑名单数据已更新')
+  console.log('检测网盘马甲数据已更新')
 }
 
 // 切换选项卡

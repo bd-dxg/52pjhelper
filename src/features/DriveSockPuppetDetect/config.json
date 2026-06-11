@@ -1,0 +1,10 @@
+{
+  "name": "网盘马甲",
+  "description": "高亮显示网盘马甲用户，鼠标悬停显示网盘信息",
+  "storageKey": "driveSockPuppetEnabled",
+  "defaultEnabled": true,
+  "dataStorageKey": "driveSockPuppet_data",
+  "lastUpdateKey": "driveSockPuppet_lastUpdate",
+  "autoUpdateInterval": 86400000,
+  "usernameSelector": ".pls .pi .authi a"
+}
