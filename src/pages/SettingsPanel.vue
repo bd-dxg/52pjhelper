@@ -68,7 +68,7 @@
 
       <!-- 功能列表 -->
       <section v-show="activeTab === 'quickQuery'" role="tabpanel" class="tab-panel" aria-labelledby="quickQuery-tab">
-        <GeneralFeaturesToggle />
+        <!-- <GeneralFeaturesToggle /> -->
         <AdminFeaturesToggle v-if="isAdmin" />
       </section>
 
