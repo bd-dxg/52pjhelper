@@ -17,11 +17,11 @@
     "@wxt-dev/module-vue": "^1.0.3",
     "oxfmt": "^0.36.0",
     "typescript": "^5.9.3",
-    "vue-tsc": "^3.3.2",
-    "wxt": "^0.20.26"
+    "vue-tsc": "^3.3.6",
+    "wxt": "^0.20.27"
   },
   "dependencies": {
-    "vue": "^3.5.35"
+    "vue": "^3.5.39"
   },
   "packageManager": "pnpm@11.5.2"
 }
